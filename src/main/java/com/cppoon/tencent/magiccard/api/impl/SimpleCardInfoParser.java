@@ -17,7 +17,7 @@ import javax.script.ScriptException;
 
 import sun.org.mozilla.javascript.internal.NativeArray;
 
-import com.cppoon.tencent.magiccard.CardInfo;
+import com.cppoon.tencent.magiccard.api.CardInfo;
 import com.cppoon.tencent.magiccard.api.CardInfoParser;
 import com.cppoon.tencent.magiccard.api.CardInfoParserListener;
 

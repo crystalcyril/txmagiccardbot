@@ -12,7 +12,7 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import com.cppoon.tencent.magiccard.CardInfo;
+import com.cppoon.tencent.magiccard.api.CardInfo;
 import com.cppoon.tencent.magiccard.api.CardInfoParser;
 import com.cppoon.tencent.magiccard.api.impl.SimpleCardInfoParser;
 import com.cppoon.tencent.magiccard.util.IOUtil;

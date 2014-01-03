@@ -3,7 +3,6 @@
  */
 package com.cppoon.tencent.magiccard.api;
 
-import com.cppoon.tencent.magiccard.CardTheme;
 
 /**
  * 

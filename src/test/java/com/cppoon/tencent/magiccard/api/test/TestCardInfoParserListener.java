@@ -6,7 +6,7 @@ package com.cppoon.tencent.magiccard.api.test;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.cppoon.tencent.magiccard.CardInfo;
+import com.cppoon.tencent.magiccard.api.CardInfo;
 import com.cppoon.tencent.magiccard.api.CardInfoParserListener;
 
 /**

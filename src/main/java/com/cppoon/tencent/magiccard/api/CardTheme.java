@@ -1,4 +1,4 @@
-package com.cppoon.tencent.magiccard;
+package com.cppoon.tencent.magiccard.api;
 
 import java.util.Date;
 

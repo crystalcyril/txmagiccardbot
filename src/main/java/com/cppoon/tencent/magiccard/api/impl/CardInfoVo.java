@@ -5,7 +5,7 @@ package com.cppoon.tencent.magiccard.api.impl;
 
 import java.util.Date;
 
-import com.cppoon.tencent.magiccard.CardInfo;
+import com.cppoon.tencent.magiccard.api.CardInfo;
 
 /**
  * @author Cyril

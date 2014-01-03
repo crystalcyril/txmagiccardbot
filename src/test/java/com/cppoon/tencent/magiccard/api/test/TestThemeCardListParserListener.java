@@ -6,8 +6,9 @@ package com.cppoon.tencent.magiccard.api.test;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.cppoon.tencent.magiccard.CardTheme;
+import com.cppoon.tencent.magiccard.api.CardTheme;
 import com.cppoon.tencent.magiccard.api.ThemeCardListParserListener;
+import com.cppoon.tencent.magiccard.api.ThemeComposeRule;
 
 /**
  * @author Cyril
@@ -44,6 +45,10 @@ public class TestThemeCardListParserListener implements
 
 		themes.put(ct.getId(), ct);
 
+	}
+
+	public int getCount() {
+		return themes.size();
 	}
 
 }
