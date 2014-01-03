@@ -70,7 +70,6 @@ public class ThemeComposerListParserTest {
 		assertTrue("childen card IDs", Arrays.equals(new int[] { 4716,4712,4713 }, rule.getChildrenCardIds()));
 		assertEquals("build time", 3600, rule.getBuildTime());
 		
-		
 	}
 
 }
