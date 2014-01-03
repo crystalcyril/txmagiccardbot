@@ -67,9 +67,6 @@ public class SimpleCardInfoParser implements CardInfoParser {
 
 		String s = null;
 
-		ScriptEngineManager manager = new ScriptEngineManager();
-		ScriptEngine engine = manager.getEngineByName("JavaScript");
-
 		while ((s = reader.readLine()) != null) {
 
 			// stop condition.
@@ -92,23 +89,22 @@ public class SimpleCardInfoParser implements CardInfoParser {
 			if (ci != null) {
 				fireCardInfoParsed(ci);
 			}
-			
-			System.out.println("parsed card info: " + ci);
 
 		}
 
 	}
-	
+
 	protected void fireCardInfoParsed(CardInfo ci) {
-		
-		if (listener == null) return;
-		
+
+		if (listener == null)
+			return;
+
 		try {
 			listener.cardInfoParsed(ci);
 		} catch (Throwable t) {
 			// mute all error
 		}
-		
+
 	}
 
 	protected CardInfo parseCardInfo(String s) {
@@ -165,13 +161,13 @@ public class SimpleCardInfoParser implements CardInfoParser {
 				c.setTimeZone(TimeZone.getTimeZone("GMT-8"));
 				r.setTime(c.getTime());
 			}
-			
+
 			// column 10: item no.
 			Double itemNo = (Double) arr.get(9, null);
 			r.setItemNo((int) Math.round(itemNo));
 
 			return r;
-			
+
 		} catch (ScriptException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
