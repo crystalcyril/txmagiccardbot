@@ -22,10 +22,10 @@ import com.cppoon.tencent.magiccard.api.CardInfoParser;
 import com.cppoon.tencent.magiccard.api.CardInfoParserListener;
 
 /**
- * 
+ * Simple implementation of the <code>CardInfoParser</code>.
  * 
  * @author Cyril
- * 
+ * @since 0.1.0
  */
 public class SimpleCardInfoParser implements CardInfoParser {
 
