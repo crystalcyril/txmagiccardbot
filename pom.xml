@@ -16,12 +16,43 @@
 
 	<dependencies>
 
+		<!-- HTTP communication -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3.3</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- logging -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+		<!-- require as long as there are common-logging dependencies required
+		     and slf4j is in use. -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>1.7.6</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>15.0</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- Testing -->
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -30,5 +61,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
 	<inceptionYear>2013</inceptionYear>
+
 </project>
