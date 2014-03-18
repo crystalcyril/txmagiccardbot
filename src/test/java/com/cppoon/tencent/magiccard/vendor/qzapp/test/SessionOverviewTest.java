@@ -73,7 +73,7 @@ public class SessionOverviewTest {
 		//
 		assertEquals("free steal stove count", 1, acOverview.getStealStoveAvailableCount());
 		assertEquals("total steal stove count", 1, acOverview.getStealStoveSize());
-
+		
 	}
 
 }

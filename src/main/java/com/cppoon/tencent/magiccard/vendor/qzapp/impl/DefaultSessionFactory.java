@@ -3,6 +3,8 @@
  */
 package com.cppoon.tencent.magiccard.vendor.qzapp.impl;
 
+import com.cppoon.tencent.magiccard.http.client.HttpClientFactory;
+import com.cppoon.tencent.magiccard.http.client.HttpComponentsHttpClientFactory;
 import com.cppoon.tencent.magiccard.vendor.qzapp.Session;
 import com.cppoon.tencent.magiccard.vendor.qzapp.SessionFactory;
 
@@ -14,12 +16,19 @@ import com.cppoon.tencent.magiccard.vendor.qzapp.SessionFactory;
  */
 public class DefaultSessionFactory implements SessionFactory {
 
+	HttpClientFactory httpClientFactory = new HttpComponentsHttpClientFactory();
+
 	@Override
 	public Session createSession(String username, String password) {
 
-		SessionImpl session = new SessionImpl(username, password);
+		SessionImpl session = new SessionImpl(httpClientFactory, username,
+				password);
 
 		return session;
+	}
+
+	public void setHttpClientFactory(HttpClientFactory httpClientFactory) {
+		this.httpClientFactory = httpClientFactory;
 	}
 
 }
