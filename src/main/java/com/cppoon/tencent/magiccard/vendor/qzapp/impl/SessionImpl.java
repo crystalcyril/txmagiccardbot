@@ -42,7 +42,9 @@ public class SessionImpl implements Session {
 
 	private CookieStore cookieStore;
 
-	SessionAuthStatus authStatus;
+	private SessionAuthStatus authStatus;
+	
+	private AccountHomePageParser accountHomePageParser;
 
 	// credential begins
 
