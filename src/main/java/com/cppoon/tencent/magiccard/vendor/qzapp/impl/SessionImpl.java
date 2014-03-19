@@ -24,6 +24,7 @@ import com.cppoon.tencent.magiccard.http.client.HttpClientFactory;
 import com.cppoon.tencent.magiccard.vendor.qzapp.AccountOverview;
 import com.cppoon.tencent.magiccard.vendor.qzapp.Session;
 import com.cppoon.tencent.magiccard.vendor.qzapp.SessionAuthStatus;
+import com.cppoon.tencent.magiccard.vendor.qzapp.parser.AccountHomePageParser;
 
 /**
  * 
@@ -100,7 +101,7 @@ public class SessionImpl implements Session {
 		if (authStatus == SessionAuthStatus.AUTHENTICATED)
 			return;
 
-		HttpPost loginRequest = buildLoginRequest(username, password);
+//		HttpPost loginRequest = buildLoginRequest(username, password);
 
 	}
 

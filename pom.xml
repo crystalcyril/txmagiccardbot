@@ -29,6 +29,21 @@
 			</exclusions>
 		</dependency>
 
+		<!-- for parsing HTML -->
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.7.3</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3</version>
+		</dependency>
+
+
 		<!-- logging -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
@@ -36,8 +51,8 @@
 			<version>1.1.1</version>
 		</dependency>
 
-		<!-- require as long as there are common-logging dependencies required
-		     and slf4j is in use. -->
+		<!-- require as long as there are common-logging dependencies required 
+			and slf4j is in use. -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>

@@ -1,0 +1,60 @@
+<configuration debug="true" scan="true" scanPeriod="10 seconds">
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<!--
+			encoders are assigned in the type 
+			ch.qos.logback.classic.encoder.PatternLayoutEncoder by default.
+		-->
+		<encoder>
+			<pattern>test - %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	
+	<logger name="org.apache.http" level="ERROR" />
+	
+	<logger name="com.cppoon" level="TRACE" />
+	
+	<!--
+	<logger name="org.hibernate.tool.hbm2ddl" level="DEBUG" />
+	<logger name="org.hibernate.type" level="TRACE" />
+	<logger name="org.hibernate.SQL" level="TRACE" />
+	<logger name="org.hibernate" level="DEBUG" />
+	-->
+
+	<logger name="org.hibernate" level="INFO" />
+
+	<!-- 
+	<logger name="org.springframework" level="DEBUG" />
+	 -->
+	
+	<!-- Struts2 -->
+	<logger name="org.apache.struts2" level="INFO" />
+	<logger name="org.apache.struts2.components.ActionComponent" level="ERROR" />
+	<logger name="com.opensymphony.xwork2" level="WARN" />
+	<!-- this is struts profiling. -->
+	<logger name="com.opensymphony.xwork2.util.profiling" level="TRACE" />
+	
+	<!-- Apache Shiro -->
+	<logger name="org.apache.shiro.realm.AuthorizingRealm" level="WARN" />
+	
+	<logger name="org.apache.commons.configuration" level="DEBUG" />
+	
+	<!--
+		the  
+	 -->
+	<logger name="org.apache.shiro.session.mgt.AbstractValidatingSessionManager" level="WARN" />
+	
+	
+	<logger name="org.displaytag" level="INFO" />
+	
+	<logger name="com.googlecode.scopeplugin" level="INFO" />
+	
+	<!-- 
+	<logger name="httpclient.wire" level="DEBUG" />
+	 -->
+
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>
