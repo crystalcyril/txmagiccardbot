@@ -42,11 +42,25 @@ public class LoginPageParser20140319 implements LoginPageParser {
 		LoginForm ret = new LoginForm();
 
 		parseHtmlForm(ret, html);
+		
+		boolean valid = validate(ret);
+		if (!valid) return null;
 
 		return ret;
 
 	}
 	
+	private boolean validate(LoginForm ret) {
+		
+		if (StringUtils.isEmpty(ret.getAid())) return false;
+		if (StringUtils.isEmpty(ret.getFormSubmitUrl())) return false;
+		if (StringUtils.isEmpty(ret.getGoUrl())) return false;
+		if (StringUtils.isEmpty(ret.getLoginUrl())) return false;
+		if (StringUtils.isEmpty(ret.getSidType())) return false;
+		
+		return true;
+	}
+
 	protected void parseHtmlForm(LoginForm ret, String html) {
 
 		Matcher m = getPatternForm().matcher(html);

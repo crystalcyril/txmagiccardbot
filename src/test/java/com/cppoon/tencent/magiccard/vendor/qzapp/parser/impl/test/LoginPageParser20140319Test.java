@@ -3,7 +3,9 @@
  */
 package com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.nio.charset.Charset;
 
@@ -60,7 +62,26 @@ public class LoginPageParser20140319Test {
 		assertEquals("sidtype", "1", form.getSidType());
 		assertEquals("aid", "nLoginqz", form.getAid());
 		
-		
 	}
 
+
+	@Test
+	public void testParse_Fail_MissingFormHiddenValue() throws Exception {
+		
+		LoginPageParser20140319 parser = new LoginPageParser20140319();
+
+		String html = Resources
+				.toString(
+						Resources
+								.getResource("com/cppoon/tencent/magiccard/vendor/qzapp/parser/impl/test/qzone_login_page-20140318-missing-attribute.html"),
+						Charset.forName("UTF-8"));
+		
+		LoginForm form = parser.parse(html);
+		
+		//
+		// verification time.
+		//
+		assertNull("login form", form);
+		
+	}
 }
