@@ -9,7 +9,7 @@ import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
 /**
- * 
+ * A HTTP client factory which returns <code>HttpClient</code>.
  * 
  * @author Cyril
  * @since 0.1.0
@@ -27,8 +27,7 @@ public class HttpComponentsHttpClientFactory implements HttpClientFactory {
 
 		httpClient = HttpClientBuilder.create()
 				.setConnectionManager(clientConnectionManager)
-				.setRedirectStrategy(new LaxRedirectStrategy())
-				.build();
+				.setRedirectStrategy(new LaxRedirectStrategy()).build();
 
 	}
 
