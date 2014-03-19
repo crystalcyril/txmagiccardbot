@@ -19,6 +19,11 @@ public enum SessionAuthStatus {
 	/**
 	 * The session is not authenticated.
 	 */
-	UNAUTHENTICATED
+	UNAUTHENTICATED,
+
+	/**
+	 * The session is being authenticated
+	 */
+	AUTHENTICATING
 
 }

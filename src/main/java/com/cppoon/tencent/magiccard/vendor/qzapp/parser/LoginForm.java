@@ -30,15 +30,14 @@ public class LoginForm implements Serializable {
 	public String getFormSubmitUrl() {
 		return formSubmitUrl;
 	}
-	
+
 	/**
-	 * @param formSubmitUrl the formSubmitUrl to set
+	 * @param formSubmitUrl
+	 *            the formSubmitUrl to set
 	 */
 	public void setFormSubmitUrl(String formSubmitUrl) {
 		this.formSubmitUrl = formSubmitUrl;
 	}
-
-
 
 	/**
 	 * @return the loginUrl
@@ -77,6 +76,10 @@ public class LoginForm implements Serializable {
 
 		values.put(key, value);
 
+	}
+
+	public Map<String, String> getFormFields() {
+		return this.values;
 	}
 
 	@Override

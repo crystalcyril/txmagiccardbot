@@ -5,6 +5,7 @@ package com.cppoon.tencent.magiccard.http.client;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
 /**
@@ -25,7 +26,9 @@ public class HttpComponentsHttpClientFactory implements HttpClientFactory {
 		clientConnectionManager = new PoolingHttpClientConnectionManager();
 
 		httpClient = HttpClientBuilder.create()
-				.setConnectionManager(clientConnectionManager).build();
+				.setConnectionManager(clientConnectionManager)
+				.setRedirectStrategy(new LaxRedirectStrategy())
+				.build();
 
 	}
 

@@ -11,7 +11,7 @@
 	</appender>
 	
 	
-	<logger name="org.apache.http" level="ERROR" />
+	<logger name="org.apache.http" level="DEBUG" />
 	
 	<logger name="com.cppoon" level="TRACE" />
 	
