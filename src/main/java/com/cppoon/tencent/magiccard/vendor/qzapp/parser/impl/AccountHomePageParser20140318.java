@@ -74,6 +74,11 @@ public class AccountHomePageParser20140318 implements AccountHomePageParser {
 			return null;
 		}
 		
+		// parse stoves
+		if (!parseStoves(ret, html)) {
+			return null;
+		}
+		
 		
 		// TODO Auto-generated method stub
 		return ret;
@@ -220,6 +225,26 @@ public class AccountHomePageParser20140318 implements AccountHomePageParser {
 		
 	}
 
+
+	/**
+	 * What a stove consists of:
+	 * 
+	 * <ul>
+	 * <li>Card theme name</li>
+	 * <li>Card name</li>
+	 * <li>Card cost</li>
+	 * <li>Compose status</li>
+	 * <li>Compose time left (applicable only if card is being synthesized)</li>
+	 * </ul>
+	 * 
+	 *
+	 */
+	protected boolean parseStoves(AccountOverview ret, String html) {
+		
+		
+		
+		return true;
+	}
 	
 	protected Pattern getPlayerLevelAndExperiencePattern() {
 		if (pPlayerLevel == null) {
