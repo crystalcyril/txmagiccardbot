@@ -49,9 +49,14 @@ public class AccountHomePageParser20140318 implements AccountHomePageParser {
 	private Pattern pCardsInCardExchangeBox;
 	
 	/**
-	 * Regular expression for extracting stove status area.
+	 * Regular expression for extracting stoves status area.
 	 */
 	private Pattern pStoveSection;
+	
+	/**
+	 * Regular expression for extracting stolen stoves status area.
+	 */
+	private Pattern pStolenStoveSection;
 	
 	
 	/* (non-Javadoc)
@@ -88,8 +93,12 @@ public class AccountHomePageParser20140318 implements AccountHomePageParser {
 			return null;
 		}
 		
+		// parse stolen stoves
+		if (!parseStolenStoves(ret, html)) {
+			return null;
+		}
 		
-		// TODO Auto-generated method stub
+		
 		return ret;
 	}
 
@@ -253,6 +262,7 @@ public class AccountHomePageParser20140318 implements AccountHomePageParser {
 		Matcher m = getStoveSectionPattern().matcher(html);
 		
 		if (!m.find()) {
+			log.warn("unable to locate stoves section");
 			return false;
 		}
 		
@@ -263,6 +273,26 @@ public class AccountHomePageParser20140318 implements AccountHomePageParser {
 		ret.setStoveInfos(stoves);
 		return true;
 	}
+	
+	protected boolean parseStolenStoves(AccountOverview ret, String html) {
+		
+		Matcher m = getStolenStoveSectionPattern().matcher(html);
+		
+		if (!m.find()) {
+			log.warn("unable to locate stolen stoves section");
+			return false;
+		}
+		
+		String stolenStoveHtml = m.group(1);
+		
+		if (!parseStolenStoves(ret, stolenStoveHtml)) {
+			log.warn("an error occurred when parsing stolen stoves section");
+			return false;
+		}
+		
+		return true;
+	}
+
 	
 	protected Pattern getPlayerLevelAndExperiencePattern() {
 		if (pPlayerLevel == null) {
@@ -297,6 +327,13 @@ public class AccountHomePageParser20140318 implements AccountHomePageParser {
 			pStoveSection = Pattern.compile("【炼卡位】(.*?)【偷炉位】", Pattern.DOTALL);
 		}
 		return pStoveSection;
+	}
+	
+	protected Pattern getStolenStoveSectionPattern() {
+		if (pStolenStoveSection == null) {
+			pStolenStoveSection = Pattern.compile("【偷炉位】(.*?)<br\\s*/>\\s*?<br\\s*/>", Pattern.DOTALL);
+		}
+		return pStolenStoveSection;
 	}
 	
 }
