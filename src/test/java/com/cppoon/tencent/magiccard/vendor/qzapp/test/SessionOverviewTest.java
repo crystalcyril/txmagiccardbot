@@ -60,9 +60,11 @@ public class SessionOverviewTest {
 		
 		assertEquals("authentication status", SessionAuthStatus.AUTHENTICATED, session.getAuthStatus());
 		
+		assertNotNull("account overview", acOverview);
+		
 		
 		assertEquals("player level", 1, acOverview.getPlayerLevel());
-		assertEquals("coin", 13200, acOverview.getCoins());
+		assertEquals("coin", 13900, acOverview.getCoins(), 0);
 		assertEquals("cards in deck", 16, acOverview.getCardsInDeck());
 		assertEquals("available slots in exchange card box", 0, acOverview.getCardsInCardExchangeBox());
 		assertEquals("total slots in exchange card box", 10, acOverview.getCardExchangeBoxSize());

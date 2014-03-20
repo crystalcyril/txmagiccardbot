@@ -152,6 +152,7 @@ public class SessionImpl implements Session {
 			HttpResponse response = httpClient.execute(request, httpContext);
 
 			String html = EntityUtils.toString(response.getEntity());
+			return accountHomePageParser.parse(html);
 			
 		} catch (ClientProtocolException e) {
 			log.warn("error when reading game main page", e);
@@ -159,10 +160,6 @@ public class SessionImpl implements Session {
 			log.warn("error when reading game main page", e);
 		}
 		
-		
-		// parse the response
-		
-		// TODO Auto-generated method stub
 		return null;
 	}
 
