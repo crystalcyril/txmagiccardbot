@@ -3,6 +3,9 @@
  */
 package com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -14,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.cppoon.tencent.magiccard.api.StoveStatus;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.StolenStove;
+import com.cppoon.tencent.magiccard.vendor.qzapp.parser.StoveInfo;
 
 /**
  * 
@@ -32,7 +36,123 @@ public class StolenStoveParser20140319 {
 	 */
 	Pattern pCardInfo;
 	
+	/**
+	 * Regular expression for identifying the first line of stove slot.
+	 */
+	Pattern pNewSlotLine;
+	
 	public List<StolenStove> parse(String html) {
+		
+		ArrayList<StolenStove> ret = new ArrayList<StolenStove>();
+		
+		BufferedReader br = new BufferedReader(new StringReader(html));
+		
+		String s;
+		StolenStove si = null;
+		boolean isCardInfo, isNewSlot, skipToNextSlot;
+		
+		try {
+			
+			String cardThemeName, cardName, sCardPrice;
+			
+			skipToNextSlot = false;
+			
+			while ((s = br.readLine()) != null) {
+				
+				Matcher mCardInfo = getCardInfoPattern().matcher(s);
+				Matcher mNewSlotLine = getNewSlotLinePattern().matcher(s);
+				
+				isCardInfo = false;
+				isNewSlot = false;
+				
+				if (mCardInfo.find()) {
+					isCardInfo = true;
+					isNewSlot = true;
+				} else if (mNewSlotLine.find()) {
+					isNewSlot = true;
+				}
+				
+				
+				if (skipToNextSlot) {
+					if (!isCardInfo) continue;
+					
+					// reset status.
+					skipToNextSlot = false;
+				}
+				
+				
+				if (isNewSlot) {
+					// save any previous extracted stove
+					if (si != null) {
+						ret.add(si);
+						si = null;
+					}
+					
+					cardThemeName = null;
+					cardName = null;
+					sCardPrice = null;
+					
+				}
+				
+				if (isNewSlot) {
+					
+					// we need to skip until end of line or next slot.
+					if (isUnopenedSlot(s)) {
+						skipToNextSlot = true;
+						continue;
+					}
+					
+					si = new StolenStove();
+				}
+				
+				// if it contains card information, parse it.
+				if (isCardInfo) {
+					
+					si = new StolenStove();
+
+					cardThemeName = StringUtils.trim(mCardInfo.group(1));
+					cardName = StringUtils.trim(mCardInfo.group(2));
+					sCardPrice = StringUtils.trim(mCardInfo.group(3));
+					
+					si.setCardThemeName(cardThemeName);
+					si.setCardName(cardName);
+					try {
+						si.setCardPrice(Double.parseDouble(sCardPrice));
+					} catch (NumberFormatException e) {
+						log.warn("error parsing card price", e);
+						return null;
+					}
+					
+					continue;
+				}
+				
+				//
+				// handle stove status parsing
+				//
+				StoveStatus stoveStatus = parseStoveStatus(s);
+				if (stoveStatus != null) {
+					si.setStatus(stoveStatus);
+				}
+				
+				
+			}
+			
+		} catch (IOException e) {
+			// impossible to reach there.
+			log.error("an impossible error has occurred when reading stove html", e);
+			return null;
+		}
+		
+		
+		return ret;
+		
+	}
+	
+	protected boolean isUnopenedSlot(String html) {
+		return (html.contains("红钻特权") || html.contains("开通红钻")); 
+	}
+	
+	public List<StolenStove> parse_old(String html) {
 
 		ArrayList<StolenStove> ret = new ArrayList<StolenStove>();
 
@@ -42,11 +162,17 @@ public class StolenStoveParser20140319 {
 			String stoveHtml = m.group();
 			log.trace("group: [[{}]]", stoveHtml);
 			
+			// we don't handle unopened stoves
 			if (stoveHtml.contains("红钻特权") || stoveHtml.contains("开通红钻")) {
 				continue;
 			}
 			
 			StolenStove si = parseStove(stoveHtml);
+			
+			if (si == null) {
+				log.warn("an error occurred when parsing stove");
+				return null;
+			}
 			
 			ret.add(si);
 		}
@@ -55,11 +181,28 @@ public class StolenStoveParser20140319 {
 		
 	}
 	
+	/**
+	 * Extract stove information.
+	 */
 	protected StolenStove parseStove(String html) {
 		
 		StolenStove ret = new StolenStove();
 		
 		if (!parseStoveStatus(ret, html)) {
+			return null;
+		}
+		
+		switch (ret.getStatus()) {
+		case IDLE:
+			break;
+		case SYNTHESIZED:
+			if (!parseCardInfo(ret, html)) return null;
+			break;
+		case SYNTHESIZING:
+			if (!parseCardInfo(ret, html)) return null;
+			break;
+		default:
+			log.warn("unknonw stove status {}", ret.getStatus());
 			return null;
 		}
 		
@@ -70,21 +213,31 @@ public class StolenStoveParser20140319 {
 	protected boolean parseStoveStatus(StolenStove ret, String html) {
 		
 		if (html.contains("已合成")) {
-			
 			ret.setStatus(StoveStatus.SYNTHESIZED);
-			if (!parseCardInfo(ret, html)) return false;
-			
 			return true;
 		} else if (html.contains("空闲中")) {
 			ret.setStatus(StoveStatus.IDLE);
 			return true;
 		} else if (html.contains("合成中")) {
 			ret.setStatus(StoveStatus.SYNTHESIZING);
-			if (!parseCardInfo(ret, html)) return false;
 			return true;
 		}
 		
 		return false;
+		
+	}
+	
+	protected StoveStatus parseStoveStatus(String html) {
+		
+		if (html.contains("已合成")) {
+			return StoveStatus.SYNTHESIZED;
+		} else if (html.contains("空闲中")) {
+			return StoveStatus.IDLE;
+		} else if (html.contains("合成中")) {
+			return StoveStatus.SYNTHESIZING;
+		}
+		
+		return null;
 		
 	}
 	
@@ -123,7 +276,8 @@ public class StolenStoveParser20140319 {
             // <a href="http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_stove_steal?sid=AZSJbIiayt5edHh3EYpub1iJ">偷炉</a>
             //<br />
 //			pStoves = Pattern.compile("\\d+\\s*\\.\\s*(.*?)(?:<br\\s*/>\\s+\\d+\\.|<br\\s*/>\\s*<br\\s*/>)", Pattern.DOTALL);
-			pStoves = Pattern.compile("\\d+\\s*\\.\\s*(.*?)<br\\s*/?>", Pattern.DOTALL);
+//			pStoves = Pattern.compile("\\d+\\s*\\.\\s*(.*)<br\\s*/?>", Pattern.DOTALL);
+			pStoves = Pattern.compile("<br\\s*/?>\\s*\\d+\\s*\\.\\s*(.+?)", Pattern.DOTALL);
 		}
 		return pStoves;
 	}
@@ -131,10 +285,18 @@ public class StolenStoveParser20140319 {
 	protected Pattern getCardInfoPattern() {
 		if (pCardInfo == null) {
 			// 2. 瓢虫物语-茄二十八星瓢虫[40]
-            // <br />
-			pCardInfo = Pattern.compile("\\s*(.+?)-(.+?)\\s*\\[\\s*(\\d+)\\s*\\]", Pattern.DOTALL);
+			pCardInfo = Pattern.compile("\\s*?\\d+\\s*\\.\\s*(.+?)-(.+?)\\s*\\[\\s*(\\d+)\\s*\\]", Pattern.DOTALL);
 		}
 		return pCardInfo;
+	}
+	
+	protected Pattern getNewSlotLinePattern() {
+		if (pNewSlotLine == null) {
+			// Example patterns.
+			// 2. 未偷炉(红钻特权)
+			pNewSlotLine = Pattern.compile("\\s*?\\d+\\s*\\.\\s*(.+?)", Pattern.DOTALL);
+		}
+		return pNewSlotLine;
 	}
 	
 }
