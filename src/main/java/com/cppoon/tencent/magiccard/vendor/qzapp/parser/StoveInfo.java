@@ -23,6 +23,8 @@ public class StoveInfo {
 
 	private int slotId;
 
+	private long synthesisRemainingTime;
+	
 	/**
 	 * @return the cardThemeName
 	 */
@@ -98,4 +100,22 @@ public class StoveInfo {
 		this.slotId = slotId;
 	}
 
+	/**
+	 * Returns the number of seconds required to complete the synthesis.
+	 * 
+	 * @return the synthesisRemainingTime
+	 */
+	public long getSynthesisRemainingTime() {
+		return synthesisRemainingTime;
+	}
+
+	/**
+	 * Sets the number of seconds required to complete the synthesis.
+	 * 
+	 * @param synthesisRemainingTime the synthesisRemainingTime to set
+	 */
+	public void setSynthesisRemainingTime(long synthesisRemainingTime) {
+		this.synthesisRemainingTime = synthesisRemainingTime;
+	}
+	
 }
