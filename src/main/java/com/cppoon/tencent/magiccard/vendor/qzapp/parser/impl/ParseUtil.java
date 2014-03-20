@@ -4,6 +4,7 @@
 package com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl;
 
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 
@@ -41,6 +42,28 @@ public abstract class ParseUtil {
 		}
 		return ret;
 		
+	}
+	
+	/**
+	 * Returns a regular expression pattern for extracting stove status with
+	 * synthesizing card and remaining time.
+	 * <p>
+	 * 
+	 * The text to extract is <code>合成中 03:25:53</code>.
+	 * <p>
+	 * 
+	 * The following {@link Matcher} groups will be returned:
+	 * 
+	 * <ul>
+	 * <li>group 1: Hour</li>
+	 * <li>group 2: Minute</li>
+	 * <li>group 3: Second</li>
+	 * </ul>
+	 * 
+	 * @return
+	 */
+	public static Pattern getStoveSynthesizingPattern() {
+		return Pattern.compile("合成中\\s*(\\d+):(\\d+):(\\d+)");
 	}
 	
 }

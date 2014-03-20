@@ -76,16 +76,17 @@ public class StoveParser20140320Test {
 		assertEquals("synthsize status", StoveStatus.SYNTHESIZED, si.getStatus());
 		assertEquals("slot ID", 1, si.getSlotId());
 
-		// slot 3
-		si = stoves.get(2);
-		assertNull("card theme name", si.getCardThemeName());
-		assertNull("card name", si.getCardName());
-		assertEquals("card price", 0, si.getCardPrice(), 0);
-		assertEquals("synthsize status", StoveStatus.IDLE, si.getStatus());
-		assertEquals("slot ID", 2, si.getSlotId());
+		// slot 3 to 5
+		for (int i = 2; i <= 4; i++) {
+			si = stoves.get(i); // 2 to 4
+			assertNull("card theme name", si.getCardThemeName());
+			assertNull("card name", si.getCardName());
+			assertEquals("card price", 0, si.getCardPrice(), 0);
+			assertEquals("synthsize status", StoveStatus.IDLE, si.getStatus());
+			assertEquals("slot ID", i, si.getSlotId());
+		}
 		
-		
-		assertEquals("number of parsed stoves", 4, stoves.size());
+		assertEquals("number of parsed stoves", 5, stoves.size());
 
 
 	}
