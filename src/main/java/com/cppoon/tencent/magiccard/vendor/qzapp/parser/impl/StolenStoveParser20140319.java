@@ -41,6 +41,11 @@ public class StolenStoveParser20140319 {
 	 */
 	Pattern pNewSlotLine;
 	
+	/**
+	 * Regular expression for extracting time format in HH:mm:ss.
+	 */
+	Pattern pTimeFormat;
+	
 	public List<StolenStove> parse(String html) {
 		
 		ArrayList<StolenStove> ret = new ArrayList<StolenStove>();
@@ -132,6 +137,17 @@ public class StolenStoveParser20140319 {
 				StoveStatus stoveStatus = parseStoveStatus(s);
 				if (stoveStatus != null) {
 					si.setStatus(stoveStatus);
+					
+					// for "synthesizing" line, it contains a line telling 
+					// the time required to complete the synthesis.
+					if (stoveStatus == StoveStatus.SYNTHESIZING) {
+						Long timeRemaining = parseTimeRemaining(s);
+						if (timeRemaining == null) {
+							return null;
+						}
+						si.setSynthesisRemainingTime(timeRemaining);
+					}
+					
 				}
 				
 				
@@ -268,6 +284,33 @@ public class StolenStoveParser20140319 {
 		
 	}
 	
+	protected Long parseTimeRemaining(String html) {
+		
+		Matcher m = getTimeFormatPattern().matcher(html);
+		
+		if (!m.find()) {
+			return null;		// not found.
+		}
+
+		long multiplier = 60 * 60;
+		long ret = 0;
+		
+		for (int i = 1; i <= 3; i++) {
+			
+			String sValue = StringUtils.trim(m.group(i));
+			try {
+				long value = Long.parseLong(sValue);
+				ret += value * multiplier;
+				multiplier /= 60;
+			} catch (NumberFormatException e) {
+				log.warn("error parsing stolen stove remaining time component", e);
+			}
+			
+		}
+		
+		return ret;
+	}
+	
 
 	protected Pattern getStovePattern() {
 		if (pStoves == null) {
@@ -297,6 +340,13 @@ public class StolenStoveParser20140319 {
 			pNewSlotLine = Pattern.compile("\\s*?\\d+\\s*\\.\\s*(.+?)", Pattern.DOTALL);
 		}
 		return pNewSlotLine;
+	}
+	
+	protected Pattern getTimeFormatPattern() {
+		if (pTimeFormat == null) {
+			pTimeFormat = Pattern.compile("(\\d+)\\s*:\\s*(\\d+)\\s*:\\s*(\\d+)");
+		}
+		return pTimeFormat;
 	}
 	
 }

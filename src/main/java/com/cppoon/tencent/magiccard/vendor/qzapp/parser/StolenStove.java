@@ -20,6 +20,8 @@ public class StolenStove {
 	private double cardPrice;
 
 	private StoveStatus status;
+	
+	private long synthesisRemainingTime;
 
 	/**
 	 * @return the cardThemeName
@@ -79,6 +81,24 @@ public class StolenStove {
 	 */
 	public void setStatus(StoveStatus status) {
 		this.status = status;
+	}
+
+	/**
+	 * Returns the number of seconds required to complete the synthesis.
+	 * 
+	 * @return the synthesisRemainingTime
+	 */
+	public long getSynthesisRemainingTime() {
+		return synthesisRemainingTime;
+	}
+
+	/**
+	 * Sets the number of seconds required to complete the synthesis.
+	 * 
+	 * @param synthesisRemainingTime the synthesisRemainingTime to set
+	 */
+	public void setSynthesisRemainingTime(long synthesisRemainingTime) {
+		this.synthesisRemainingTime = synthesisRemainingTime;
 	}
 
 }

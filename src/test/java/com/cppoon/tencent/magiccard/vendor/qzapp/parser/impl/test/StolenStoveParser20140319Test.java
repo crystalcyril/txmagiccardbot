@@ -126,6 +126,7 @@ public class StolenStoveParser20140319Test {
 		assertEquals("card name", "茄二十八星瓢虫", si.getCardName());
 		assertEquals("card price", 40, si.getCardPrice(), 0);
 		assertEquals("stove status", StoveStatus.SYNTHESIZING, si.getStatus());
+		assertEquals("synthesis remaining time", 393, si.getSynthesisRemainingTime());
 		
 	}
 }
