@@ -3,7 +3,8 @@
  */
 package com.cppoon.tencent.magiccard.vendor.qzapp.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.After;
 import org.junit.Before;
@@ -75,7 +76,9 @@ public class SessionOverviewTest {
 		//
 		assertEquals("free steal stove count", 1, acOverview.getStealStoveAvailableCount());
 		assertEquals("total steal stove count", 1, acOverview.getStealStoveSize());
+
+		AccountOverviewUtil.print(acOverview);
 		
 	}
-
+	
 }
