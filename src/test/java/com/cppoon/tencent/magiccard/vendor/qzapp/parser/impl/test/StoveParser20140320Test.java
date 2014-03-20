@@ -45,7 +45,7 @@ public class StoveParser20140320Test {
 	public void testParse_OK() throws Exception {
 
 		String html = ParserTestUtil
-				.readResourceAsString("com/cppoon/tencent/magiccard/vendor/qzapp/parser/impl/test/mfkp_mainpage_stove_only-20140319.htm");
+				.readResourceAsString("com/cppoon/tencent/magiccard/vendor/qzapp/parser/impl/test/mfkp_mainpage_stove_only_synthesized_and_idle-20140319.htm");
 
 		//
 		// WHEN

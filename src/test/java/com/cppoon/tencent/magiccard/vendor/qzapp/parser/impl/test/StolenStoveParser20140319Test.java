@@ -102,7 +102,7 @@ public class StolenStoveParser20140319Test {
 	@Test
 	public void testParse_OK_StoveSynthesizing() throws Exception {
 		
-		String html = ParserTestUtil.readResourceAsString("com/cppoon/tencent/magiccard/vendor/qzapp/parser/impl/test/mfkp_mainpage_stolen_stove_only_stolen_stove_synthesizing-20140319.htm");
+		String html = ParserTestUtil.readResourceAsString("com/cppoon/tencent/magiccard/vendor/qzapp/parser/impl/test/mfkp_mainpage_stolen_stove_only_stove_synthesizing-20140319.htm");
 		
 		List<StolenStove> stoves = parser.parse(html);
 		
