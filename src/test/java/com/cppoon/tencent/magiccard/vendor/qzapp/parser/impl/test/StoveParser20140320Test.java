@@ -66,6 +66,7 @@ public class StoveParser20140320Test {
 		assertEquals("card name", "刀币", si.getCardName());
 		assertEquals("card price", 168, si.getCardPrice(), 0);
 		assertEquals("synthsize status", StoveStatus.SYNTHESIZED, si.getStatus());
+		assertEquals("synthsis remaining time", 0, si.getSynthesisRemainingTime());
 		assertEquals("slot ID", 0, si.getSlotId());
 		
 		// slot 2
@@ -74,6 +75,7 @@ public class StoveParser20140320Test {
 		assertEquals("card name", "茄二十八星瓢虫", si.getCardName());
 		assertEquals("card price", 40, si.getCardPrice(), 0);
 		assertEquals("synthsize status", StoveStatus.SYNTHESIZED, si.getStatus());
+		assertEquals("synthsis remaining time", 0, si.getSynthesisRemainingTime());
 		assertEquals("slot ID", 1, si.getSlotId());
 
 		// slot 3 to 5
@@ -83,6 +85,7 @@ public class StoveParser20140320Test {
 			assertNull("card name", si.getCardName());
 			assertEquals("card price", 0, si.getCardPrice(), 0);
 			assertEquals("synthsize status", StoveStatus.IDLE, si.getStatus());
+			assertEquals("synthsis remaining time", 0, si.getSynthesisRemainingTime());
 			assertEquals("slot ID", i, si.getSlotId());
 		}
 		
