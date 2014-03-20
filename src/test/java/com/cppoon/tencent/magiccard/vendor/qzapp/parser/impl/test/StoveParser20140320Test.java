@@ -133,7 +133,7 @@ public class StoveParser20140320Test {
 		assertEquals("card name", "七星瓢虫", si.getCardName());
 		assertEquals("card price", 150, si.getCardPrice(), 0);
 		assertEquals("synthsize status", StoveStatus.SYNTHESIZING, si.getStatus());
-		assertEquals("synthsie remaining time", 2877, si.getSynthesisRemainingTime());
+		assertEquals("synthsie remaining time", 2517, si.getSynthesisRemainingTime());
 		assertEquals("slot ID", 2, si.getSlotId());
 		
 		// slot 4
@@ -147,7 +147,6 @@ public class StoveParser20140320Test {
 		
 		// slot 5
 		si = stoves.get(4);
-		si = stoves.get(3);
 		assertNull("card theme name", si.getCardThemeName());
 		assertNull("card name", si.getCardName());
 		assertEquals("card price", 0, si.getCardPrice(), 0);

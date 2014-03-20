@@ -37,6 +37,8 @@ public class StoveParser20140320 {
 	
 	Pattern pCardInfo;
 	
+	Pattern pSynthesisRemainingTime;
+	
 	public List<StoveInfo> parse(String html) {
 		
 		Matcher m = getStovePattern().matcher(html);
@@ -47,10 +49,6 @@ public class StoveParser20140320 {
 			
 			log.trace("parsed stove section: [[{}]]", m.group());
 			
-//			for (int i = 0; i < m.groupCount(); i++) {
-//				log.trace(" group #{}: [[{}]]", i, m.group(i));
-//			}
-//			
 			StoveInfo si = new StoveInfo();
 			
 			Matcher mCardInfo = getCardInfoPattern().matcher(m.group(2));
@@ -79,6 +77,13 @@ public class StoveParser20140320 {
 				return null;
 			}
 			
+			if (si.getStatus() == StoveStatus.SYNTHESIZING) {
+				if (!parseSynthesisRemainingTime(si, m.group(0))) {
+					return null;
+				}
+			}
+			
+			// parse slot ID
 			if (!parseSlotId(ret, si, m.group(0))) {
 				return null;
 			}
@@ -101,7 +106,31 @@ public class StoveParser20140320 {
 		} else if (html.contains("空炉位")) {
 			ret.setStatus(StoveStatus.IDLE);
 			return true;
+		} else if (html.contains("合成中")) {
+			ret.setStatus(StoveStatus.SYNTHESIZING);
+			return true;
 		}
+		
+		return true;
+		
+	}
+
+	protected boolean parseSynthesisRemainingTime(StoveInfo ret, String html) {
+		
+		Matcher m = getSynthesisRemainingTimePattern().matcher(html);
+		
+		// report failure if pattern not found.
+		if (!m.find()) {
+			return false;
+		}
+		
+		Long v = ParseUtil.parseClockToSeconds(m);
+		
+		if (v == null) {
+			return false;
+		}
+		
+		ret.setSynthesisRemainingTime(v);
 		
 		return true;
 		
@@ -214,6 +243,13 @@ public class StoveParser20140320 {
 			pCardInfo = Pattern.compile("\\s*(.+?)-(.+?)\\s*\\[\\s*(\\d+)\\s*\\]", Pattern.DOTALL);
 		}
 		return pCardInfo;
+	}
+	
+	protected Pattern getSynthesisRemainingTimePattern() {
+		if (pSynthesisRemainingTime == null) {
+			pSynthesisRemainingTime = Pattern.compile("(\\d+)\\s*:\\s*(\\d+)\\s*:\\s*(\\d+)");
+		}
+		return pSynthesisRemainingTime;
 	}
 	
 }
