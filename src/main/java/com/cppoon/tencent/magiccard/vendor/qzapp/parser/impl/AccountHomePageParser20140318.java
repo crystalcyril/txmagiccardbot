@@ -3,6 +3,7 @@
  */
 package com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.cppoon.tencent.magiccard.vendor.qzapp.AccountOverview;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.AccountHomePageParser;
+import com.cppoon.tencent.magiccard.vendor.qzapp.parser.StoveInfo;
 
 /**
  * 
@@ -23,6 +25,8 @@ public class AccountHomePageParser20140318 implements AccountHomePageParser {
 	
 	private static final Logger log = LoggerFactory.getLogger(AccountHomePageParser20140318.class);
 
+	StoveParser20140320 stovesParser = new StoveParser20140320();
+	
 	/**
 	 * Regular expression for extracting player level.
 	 */
@@ -43,6 +47,11 @@ public class AccountHomePageParser20140318 implements AccountHomePageParser {
 	 * cards and box size).
 	 */
 	private Pattern pCardsInCardExchangeBox;
+	
+	/**
+	 * Regular expression for extracting stove status area.
+	 */
+	private Pattern pStoveSection;
 	
 	
 	/* (non-Javadoc)
@@ -235,14 +244,23 @@ public class AccountHomePageParser20140318 implements AccountHomePageParser {
 	 * <li>Card cost</li>
 	 * <li>Compose status</li>
 	 * <li>Compose time left (applicable only if card is being synthesized)</li>
+	 * <li>Stove slot ID (0-based)</li>
 	 * </ul>
 	 * 
-	 *
 	 */
 	protected boolean parseStoves(AccountOverview ret, String html) {
 		
+		Matcher m = getStoveSectionPattern().matcher(html);
 		
+		if (!m.find()) {
+			return false;
+		}
 		
+		String stoveHtml = m.group(1);
+		List<StoveInfo> stoves = stovesParser.parse(stoveHtml);
+		if (stoves == null) return false;
+		
+		ret.setStoveInfos(stoves);
 		return true;
 	}
 	
@@ -269,9 +287,16 @@ public class AccountHomePageParser20140318 implements AccountHomePageParser {
 	
 	protected Pattern getCardExchangeBoxPattern() {
 		if (pCardsInCardExchangeBox == null) {
-			pCardsInCardExchangeBox = Pattern.compile("查看换卡箱\\s*\\([^\\d]*(\\d+)\\s*/[^\\d]*(\\d+).*?\\)");
+			pCardsInCardExchangeBox = Pattern.compile("查看换卡箱\\s*\\([^\\d]*(\\d+)\\s*/[^\\d]*(\\d+).*?\\)", Pattern.DOTALL);
 		}
 		return pCardsInCardExchangeBox;
+	}
+	
+	protected Pattern getStoveSectionPattern() {
+		if (pStoveSection == null) {
+			pStoveSection = Pattern.compile("【炼卡位】(.*?)【偷炉位】", Pattern.DOTALL);
+		}
+		return pStoveSection;
 	}
 	
 }
