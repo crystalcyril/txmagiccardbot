@@ -6,6 +6,7 @@ package com.cppoon.tencent.magiccard.vendor.qzapp;
 import java.util.List;
 
 import com.cppoon.tencent.magiccard.api.StoveStatus;
+import com.cppoon.tencent.magiccard.vendor.qzapp.parser.StolenStove;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.StoveInfo;
 
 /**
@@ -31,6 +32,8 @@ public class AccountOverview {
 	private int cardExchangeBoxSize;
 	
 	List<StoveInfo> stoves;
+	
+	List<StolenStove> stolenStoves;
 	
 
 	/**
@@ -179,14 +182,26 @@ public class AccountOverview {
 		return count;
 	}
 
-	public Object getStealStoveAvailableCount() {
-		// TODO Auto-generated method stub
-		return null;
+	public int getStealStoveAvailableCount() {
+		if (stolenStoves == null) return 0;
+		
+		int count = 0;
+		for (StolenStove s : stolenStoves) {
+			if (s.getStatus() == StoveStatus.IDLE) {
+				count++;
+			}
+		}
+		
+		return count;
+
 	}
 
-	public Object getStealStoveSize() {
-		// TODO Auto-generated method stub
-		return null;
+	public int getStealStoveSize() {
+		return stolenStoves == null ? 0 : stolenStoves.size();
+	}
+
+	public void setStolenStoveInfos(List<StolenStove> stolenStoves) {
+		this.stolenStoves = stolenStoves;
 	}
 
 }

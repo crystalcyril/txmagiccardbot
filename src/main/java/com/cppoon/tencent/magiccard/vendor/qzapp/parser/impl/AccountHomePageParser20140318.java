@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.cppoon.tencent.magiccard.vendor.qzapp.AccountOverview;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.AccountHomePageParser;
+import com.cppoon.tencent.magiccard.vendor.qzapp.parser.StolenStove;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.StoveInfo;
 
 /**
@@ -26,6 +27,8 @@ public class AccountHomePageParser20140318 implements AccountHomePageParser {
 	private static final Logger log = LoggerFactory.getLogger(AccountHomePageParser20140318.class);
 
 	StoveParser20140320 stovesParser = new StoveParser20140320();
+	
+	StolenStoveParser20140319 stolenStovesParser = new StolenStoveParser20140319();
 	
 	/**
 	 * Regular expression for extracting player level.
@@ -97,7 +100,6 @@ public class AccountHomePageParser20140318 implements AccountHomePageParser {
 		if (!parseStolenStoves(ret, html)) {
 			return null;
 		}
-		
 		
 		return ret;
 	}
@@ -285,10 +287,10 @@ public class AccountHomePageParser20140318 implements AccountHomePageParser {
 		
 		String stolenStoveHtml = m.group(1);
 		
-		if (!parseStolenStoves(ret, stolenStoveHtml)) {
-			log.warn("an error occurred when parsing stolen stoves section");
-			return false;
-		}
+		List<StolenStove> stoves = stolenStovesParser.parse(stolenStoveHtml);
+		if (stoves == null) return false;
+		
+		ret.setStolenStoveInfos(stoves);
 		
 		return true;
 	}
