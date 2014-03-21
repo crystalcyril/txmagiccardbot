@@ -38,6 +38,7 @@ import com.cppoon.tencent.magiccard.vendor.qzapp.AccountOverview;
 import com.cppoon.tencent.magiccard.vendor.qzapp.Session;
 import com.cppoon.tencent.magiccard.vendor.qzapp.SessionAuthStatus;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.AccountHomePageParser;
+import com.cppoon.tencent.magiccard.vendor.qzapp.parser.ExchangeBoxSlot;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.LoginForm;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.LoginPageParser;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.AccountHomePageParser20140318;
@@ -347,6 +348,14 @@ public class SessionImpl implements Session {
 	@Override
 	public SessionAuthStatus getAuthStatus() {
 		return authStatus;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.cppoon.tencent.magiccard.vendor.qzapp.Session#getSafeBoxCards()
+	 */
+	@Override
+	public List<ExchangeBoxSlot> getSafeBoxCards() {
+		throw new UnsupportedOperationException("implements me");
 	}
 
 	/**

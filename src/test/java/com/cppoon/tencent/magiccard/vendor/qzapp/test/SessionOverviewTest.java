@@ -46,14 +46,20 @@ public class SessionOverviewTest {
 	@Test
 	public void testGetGameOverview_OK() throws Exception {
 		
+		String username = TestAccount.getUsername();
+		String password = TestAccount.getPassword();
+		
 		SessionFactory sm = new DefaultSessionFactory();
-		Session session = sm.createSession("2904233460", "qqmagiccard169_");
+		Session session = sm.createSession(username, password);
 		
 		
 		//
 		// WHEN
 		//
 		AccountOverview acOverview = session.getAccountOverview();
+		
+		AccountOverviewUtil.print(acOverview);
+		
 		
 		//
 		// Lots of assertion.
@@ -65,7 +71,7 @@ public class SessionOverviewTest {
 		
 		
 		assertEquals("player level", 1, acOverview.getPlayerLevel());
-		assertEquals("coin", 13900, acOverview.getCoins(), 0);
+		assertEquals("coin", 15400, acOverview.getCoins(), 0);
 		assertEquals("cards in deck", 16, acOverview.getCardsInDeck());
 		assertEquals("available slots in exchange card box", 0, acOverview.getCardsInCardExchangeBox());
 		assertEquals("total slots in exchange card box", 10, acOverview.getCardExchangeBoxSize());
@@ -77,8 +83,6 @@ public class SessionOverviewTest {
 		assertEquals("free steal stove count", 1, acOverview.getStealStoveAvailableCount());
 		assertEquals("total steal stove count", 1, acOverview.getStealStoveSize());
 
-		AccountOverviewUtil.print(acOverview);
-		
 	}
 	
 }

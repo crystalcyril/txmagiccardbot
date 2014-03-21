@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public abstract class ParseUtil {
 
 	/**
-	 * Extracts the time with format <strong>hh:mm:ss</strong> to number of 
+	 * Extracts the time with format <strong>hh:mm:ss</strong> to number of
 	 * seconds.
 	 * 
 	 * @param m
@@ -23,10 +23,12 @@ public abstract class ParseUtil {
 	 */
 	public static final Long parseClockToSeconds(Matcher m) {
 
-		if (m == null) throw new IllegalArgumentException("missing matcher");
-		
+		if (m == null)
+			throw new IllegalArgumentException("missing matcher");
+
 		if (m.groupCount() != 3)
-			throw new IllegalArgumentException("matcher should have exactly 3 groups");
+			throw new IllegalArgumentException(
+					"matcher should have exactly 3 groups");
 
 		long ret = 0;
 		long multiplier = 3600;
@@ -41,9 +43,9 @@ public abstract class ParseUtil {
 			}
 		}
 		return ret;
-		
+
 	}
-	
+
 	/**
 	 * Returns a regular expression pattern for extracting stove status with
 	 * synthesizing card and remaining time.
@@ -65,5 +67,49 @@ public abstract class ParseUtil {
 	public static Pattern getStoveSynthesizingPattern() {
 		return Pattern.compile("合成中\\s*(\\d+):(\\d+):(\\d+)");
 	}
-	
+
+	/**
+	 * 
+	 * 
+	 * @return
+	 */
+	public static String getCardInfoPatternString() {
+
+		// 2. 非洲风光-尼罗河[420]
+		return "\\d+\\s*\\.\\s*([^-]+)-([^-]+)\\s*\\[\\s*\\d+\\s*\\]";
+
+	}
+
+	/**
+	 * Returns a regular expression pattern which can extract the following:
+	 * 
+	 * <ol>
+	 * <li>Position</li>
+	 * <li>Card theme name</li>
+	 * <li>Card name</li>
+	 * <li>Card Price</li>
+	 * </ol>
+	 * 
+	 * This pattern can be applied to the stoves page, exchange card box
+	 * and safe box pages. An example is as follow:
+	 * 
+	 * <pre>
+	 * 1. 斩仙-云玉仙[10]
+	 * </pre>
+	 * 
+	 * For the above, the values are:
+	 * 
+	 * <ol>
+	 * <li>Position: 1</li>
+	 * <li>Card theme name: 斩仙</li>
+	 * <li>Card name: 云玉仙</li>
+	 * <li>Card Price: 10</li>
+	 * </ol>
+	 * 
+	 * @return
+	 */
+	public static Pattern getCardInfoPattern() {
+		return Pattern.compile(getCardInfoPatternString(), Pattern.DOTALL);
+	}
+
 }
