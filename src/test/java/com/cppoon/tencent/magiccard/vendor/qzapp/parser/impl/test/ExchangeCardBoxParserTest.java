@@ -3,7 +3,10 @@
  */
 package com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.CardBoxInfo;
+import com.cppoon.tencent.magiccard.vendor.qzapp.parser.CardBoxInfo.PageLink;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.ExchangeBoxSlot;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.ExchangeCardBoxParser20140320;
 
@@ -72,6 +76,9 @@ public class ExchangeCardBoxParserTest {
 		assertNotNull("slots", slots);
 
 		assertTrue("slots should be empty", slots.isEmpty());
+		
+		
+		commonCardBoxInfoAssertion(info);
 
 	}
 
@@ -161,7 +168,21 @@ public class ExchangeCardBoxParserTest {
 			}
 		}
 		
-
+		
+		commonCardBoxInfoAssertion(info);
+		
 	}
 
+	protected void commonCardBoxInfoAssertion(CardBoxInfo info) {
+		
+		assertEquals("number of pages", 0, info.getCurrentPage());
+		assertNotNull("page links", info.getPageLinks());
+		
+		PageLink plink = info.getPageLinks().get(0);
+		
+		assertEquals("page number of first link", 0, plink.getPageNumber());
+		assertTrue("isCurrent of first link", plink.isCurrent());
+		
+	}
+	
 }

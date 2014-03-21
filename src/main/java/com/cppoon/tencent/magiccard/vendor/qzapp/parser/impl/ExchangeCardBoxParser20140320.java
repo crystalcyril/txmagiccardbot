@@ -19,6 +19,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.CardBoxInfo;
+import com.cppoon.tencent.magiccard.vendor.qzapp.parser.CardBoxInfo.PageLink;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.ExchangeBoxSlot;
 
 /**
@@ -32,6 +33,44 @@ public class ExchangeCardBoxParser20140320 {
 	Pattern pSafeBoxUrl;
 
 	Pattern pExchangeBoxUrl;
+	
+	
+	private static final class PageLinkImpl implements CardBoxInfo.PageLink {
+
+		boolean current = false;
+		
+		int pageNumber = 0;
+
+		/**
+		 * @return the current
+		 */
+		public boolean isCurrent() {
+			return current;
+		}
+
+		/**
+		 * @param current the current to set
+		 */
+		public void setCurrent(boolean current) {
+			this.current = current;
+		}
+
+		/**
+		 * @return the pageNumber
+		 */
+		public int getPageNumber() {
+			return pageNumber;
+		}
+
+		/**
+		 * @param pageNumber the pageNumber to set
+		 */
+		public void setPageNumber(int pageNumber) {
+			this.pageNumber = pageNumber;
+		}
+
+	}
+	
 	
 	public CardBoxInfo parse(String html) {
 
@@ -51,6 +90,8 @@ public class ExchangeCardBoxParser20140320 {
 		
 		// parse exchange box URL
 		parseExchangeBoxUrl(ret, html);
+		
+		parsePageLink(ret);
 
 		return ret;
 
@@ -114,6 +155,18 @@ public class ExchangeCardBoxParser20140320 {
 		return pExchangeBoxUrl;
 	}
 
+	protected void parsePageLink(CardBoxInfo ret) {
+		
+		PageLinkImpl plink = new PageLinkImpl();
+		plink.setCurrent(true);
+		plink.setPageNumber(0);
+		
+		ArrayList<PageLink> pageLinks = new ArrayList<PageLink>();
+		pageLinks.add(plink);
+		ret.setPageLinks(pageLinks);
+		
+	}
+	
 	private static class SlotParser {
 
 		boolean isEof = false;

@@ -13,11 +13,23 @@ import java.util.List;
  */
 public class CardBoxInfo {
 
+	public static interface PageLink {
+		
+		boolean isCurrent();
+		
+		int getPageNumber();
+		
+	}
+
 	private List<ExchangeBoxSlot> slots;
 
+	private List<PageLink> pageLinks;
+	
 	private String safeBoxUrl;
 	
 	private String exchangeBoxUrl;
+	
+	private int pages;
 
 	public CardBoxInfo(List<ExchangeBoxSlot> slots) {
 		super();
@@ -50,12 +62,39 @@ public class CardBoxInfo {
 	public String getExchangeBoxUrl() {
 		return exchangeBoxUrl;
 	}
+	
+	/**
+	 * @return the pageLinks
+	 */
+	public List<PageLink> getPageLinks() {
+		return pageLinks;
+	}
+
+	/**
+	 * @param pageLinks the pageLinks to set
+	 */
+	public void setPageLinks(List<PageLink> pageLinks) {
+		this.pageLinks = pageLinks;
+	}
 
 	/**
 	 * @param exchangeBoxUrl the exchangeBoxUrl to set
 	 */
 	public void setExchangeBoxUrl(String exchangeBoxUrl) {
 		this.exchangeBoxUrl = exchangeBoxUrl;
+	}
+
+	public int getCurrentPage() {
+		if (pageLinks == null) return 0;
+		
+		for (PageLink link : pageLinks) {
+			if (link.isCurrent()) {
+				return link.getPageNumber();
+			}
+		}
+		
+		return 0;
+		
 	}
 	
 }

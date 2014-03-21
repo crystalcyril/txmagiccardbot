@@ -5,7 +5,6 @@ package com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.test;
 
 import static org.junit.Assert.*;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.junit.After;
@@ -70,28 +69,12 @@ public class SafeBoxParser20140320Test {
 
 		List<ExchangeBoxSlot> slots = info.getSlots();
 		
-//					1. 蜻蜓款款飞-蜻蜓款款飞[150]
-//		            <br />
-//		            <a href="http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_move?sid=AQ1xjDbBy3bqoQUIxKw8ZFl7&type=1&slot=2&card=2373&p=1">放入换卡箱</a>
-//		            <br />
-//		            2. 蜻蜓款款飞-褐斑蜻蜓[10]
-//		            <br />
-//		            <a href="http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_move?sid=AQ1xjDbBy3bqoQUIxKw8ZFl7&type=1&slot=1&card=2368&p=1">放入换卡箱</a>
-//		            <br />
-//		            3. 蜻蜓款款飞-大团扇春蜓[10]
 		
 		assertNotNull("slots", slots);
 
 		// number of items in slots
 		assertEquals("slots count", 3, slots.size());
 
-		// check slots
-		ExchangeBoxSlot slot = null;
-		Iterator<ExchangeBoxSlot> iter = slots.iterator();
-		
-		// slot
-		slot = iter.next();
-		
 		// card theme name
 		// card name
 		// card price
@@ -106,6 +89,9 @@ public class SafeBoxParser20140320Test {
 					"http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_move?sid=AQ1xjDbBy3bqoQUIxKw8ZFl7&type=1&slot=0&card=2369&p=1" },
 		};
 		
+		//
+		// verify slots
+		//
 		for (int i = 0; i < slots.size(); i++) {
 			
 			Object[] expectedCardData = expected[i];
@@ -125,93 +111,20 @@ public class SafeBoxParser20140320Test {
 			}
 		}
 		
-	}
-
-	@Test
-	public void testParse_OK_SlotsNotFull() throws Exception {
-
-		String html = ParserTestUtil
-				.readResourceAsString("com/cppoon/tencent/magiccard/vendor/qzapp/parser/impl/test/mfkp_xchg_cardbox-notfull-20140321.htm");
-
 		//
-		// WHEN
+		// verify pages
 		//
-		CardBoxInfo info = parser.parse(html);
-
-		//
-		// THEN
-		//
-		assertNotNull("return value from parse()", info);
-
-		assertEquals(
-				"return value from parse()",
-				"http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_box?sid=AVMIxjV6_RFGeQ58M3VuPbVD&t=1",
-				info.getSafeBoxUrl());
-
-		List<ExchangeBoxSlot> slots = info.getSlots();
-		assertNotNull("slots", slots);
-
-		// number of items in slots
-		assertEquals("slots count", 6, slots.size());
+		assertEquals("number of pages", 3, info.getPageLinks());
+		assertEquals("current page", 0, info.getCurrentPage());	// 0-based
 		
-		// check slots
-		ExchangeBoxSlot slot = null;
-		Iterator<ExchangeBoxSlot> iter = slots.iterator();
+		List<CardBoxInfo.PageLink> links = info.getPageLinks();
 		
-		// slot
-		slot = iter.next();
+		assertEquals("number of page links", 1, links.size());
+		CardBoxInfo.PageLink plink = links.get(0);
 		
-		// card theme name
-		// card name
-		// card price
-		// card ID
-		// slot ID
-		Object[][] expected = {
-				{ "斩仙", "云玉仙", 10.0, 4850, 8, 
-					"http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_sell?sid=AVMIxjV6_RFGeQ58M3VuPbVD&card=4850&slot=8",
-					"http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_move?sid=AVMIxjV6_RFGeQ58M3VuPbVD&type=0&slot=8&card=4850" },  
-				{ "非洲风光", "尼罗河", 420.0, 4531, 4,
-					"http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_sell?sid=AVMIxjV6_RFGeQ58M3VuPbVD&card=4531&slot=4",
-					"http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_move?sid=AVMIxjV6_RFGeQ58M3VuPbVD&type=0&slot=4&card=4531" },  
-				{ "陕北民窑", "西安钟楼", 480.0, 2795, 1,
-					"http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_sell?sid=AVMIxjV6_RFGeQ58M3VuPbVD&card=2795&slot=1",
-					"http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_move?sid=AVMIxjV6_RFGeQ58M3VuPbVD&type=0&slot=1&card=2795" },  
-				{ "道具卡", "百变卡", 9999.0, 1162, 0,
-					null,
-					"http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_move?sid=AVMIxjV6_RFGeQ58M3VuPbVD&type=0&slot=0&card=1162" },  
-				{ "道具卡", "百变卡", 9999.0, 1162, 2,
-					null,
-					"http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_move?sid=AVMIxjV6_RFGeQ58M3VuPbVD&type=0&slot=2&card=1162" },  
-				{ "道具卡", "百变卡", 9999.0, 1162, 16,
-					null, 
-					"http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_move?sid=AVMIxjV6_RFGeQ58M3VuPbVD&type=0&slot=16&card=1162" } 
-		};
-
-		for (int i = 0; i < slots.size(); i++) {
-			
-			Object[] expectedCardData = expected[i];
-			ExchangeBoxSlot actualSlot = slots.get(i);
-			
-			assertEquals("card theme name", (String)expectedCardData[0], actualSlot.getCardThemeName());
-			assertEquals("card name", (String)expectedCardData[1], actualSlot.getCardName());
-			assertEquals("card price", (double)(Double)expectedCardData[2], actualSlot.getCardPrice(), 0.00);
-			assertEquals("card ID", (int)(Integer)expectedCardData[3], actualSlot.getCardId());
-			assertEquals("slot ID", (int)(Integer)expectedCardData[4], actualSlot.getSlotId());
-			
-			// sell URL
-			if (expectedCardData[5] == null) {
-				assertNull("sell URL", actualSlot.getSellUrl());
-			} else {
-				assertEquals("sell URL", expectedCardData[5], actualSlot.getSellUrl());
-			}
-			
-			// put to safe box URL
-			if (expectedCardData[6] == null) {
-				assertNull("sell URL", actualSlot.getPutToSafeBoxUrl());
-			} else {
-				assertEquals("sell URL", expectedCardData[6], actualSlot.getPutToSafeBoxUrl());
-			}
-		}
+		assertEquals("page link number", 0, plink.getPageNumber());
+		assertTrue("page link number", plink.isCurrent());
+		
 		
 	}
 

@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @since 0.1.0
  */
 public class ExchangeBoxSlot implements Serializable {
-
+	
 	/**
 	 * 
 	 */
