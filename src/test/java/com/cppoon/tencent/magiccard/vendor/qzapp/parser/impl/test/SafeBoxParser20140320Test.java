@@ -118,7 +118,8 @@ public class SafeBoxParser20140320Test {
 	}
 
 	/**
-	 * 
+	 * Parse a page which contains a total of three pages, which the 
+	 * current page is the first page.
 	 */
 	@Test
 	public void testParse_OK_Page1of3() throws Exception {
@@ -219,6 +220,95 @@ public class SafeBoxParser20140320Test {
 		assertEquals("page URL", "http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_box?sid=AVMIxjV6_RFGeQ58M3VuPbVD&t=1&n=3", plink.getUrl());
 		
 	}
+	
+	
+	/**
+	 * Parse a page which contains a total of three pages, which the 
+	 * current page is the last page.
+	 */
+	@Test
+	public void testParse_OK_Page3of3() throws Exception {
+
+		String html = ParserTestUtil
+				.readResourceAsString("com/cppoon/tencent/magiccard/vendor/qzapp/parser/impl/test/mfkp_xchg_safebox-3of3page-20140321.htm");
+
+		//
+		// WHEN
+		//
+		CardBoxInfo info = parser.parse(html);
+
+		//
+		// THEN
+		//
+		assertNotNull("return value from parse()", info);
+
+		assertEquals(
+				"exchange box URL",
+				"http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_box?sid=AVMIxjV6_RFGeQ58M3VuPbVD",
+				info.getExchangeBoxUrl());
+
+		List<ExchangeBoxSlot> slots = info.getSlots();
+		
+		assertNotNull("slots", slots);
+
+		// number of items in slots
+		assertEquals("slots count", 3, slots.size());
+
+		// card theme name
+		// card name
+		// card price
+		// card ID
+		// slot ID
+		Object[][] expected = {
+				{ "道具卡", "百变卡", 9999.0, 1162, 20, 
+					"http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_move?sid=AVMIxjV6_RFGeQ58M3VuPbVD&type=1&slot=20&card=1162&p=3" },
+				{ "道具卡", "百变卡", 9999.0, 1162, 18, 
+					"http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_move?sid=AVMIxjV6_RFGeQ58M3VuPbVD&type=1&slot=18&card=1162&p=3" },
+				{ "道具卡", "百变卡", 9999.0, 1162, 7, 
+					"http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_move?sid=AVMIxjV6_RFGeQ58M3VuPbVD&type=1&slot=7&card=1162&p=3" },
+		};
+		
+		
+		//
+		// verify slots
+		//
+		for (int i = 0; i < expected.length; i++) {
+			
+			Object[] expectedCardData = expected[i];
+			ExchangeBoxSlot actualSlot = slots.get(i);
+			
+			assertCardSlotInformation(expectedCardData, actualSlot);
+
+		}
+		
+		//
+		// verify pages
+		//
+		assertEquals("number of pages", 3, info.getPageLinks().size());
+		assertEquals("current page", 2, info.getCurrentPage());	// 0-based
+		
+		List<CardBoxInfo.PageLink> links = info.getPageLinks();
+		CardBoxInfo.PageLink plink;
+		
+		assertEquals("number of page links", 3, links.size());
+		
+		plink = links.get(0);
+		assertEquals("page link number", 0, plink.getPageNumber());
+		assertFalse("page link number", plink.isCurrent());
+		assertEquals("page URL", "http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_box?sid=AVMIxjV6_RFGeQ58M3VuPbVD&t=1&n=1", plink.getUrl());
+		
+		plink = links.get(1);
+		assertEquals("page link number", 1, plink.getPageNumber());
+		assertFalse("page link number", plink.isCurrent());
+		assertEquals("page URL", "http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_box?sid=AVMIxjV6_RFGeQ58M3VuPbVD&t=1&n=2", plink.getUrl());
+		
+		plink = links.get(2);
+		assertEquals("page link number", 2, plink.getPageNumber());
+		assertTrue("page link number", plink.isCurrent());
+		assertNull("page URL", plink.getUrl());
+		
+	}
+
 	
 	protected void assertCardSlotInformation(Object[] expectedCardData, ExchangeBoxSlot actualSlot) {
 		
