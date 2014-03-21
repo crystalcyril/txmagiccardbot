@@ -16,6 +16,8 @@ public class CardBoxInfo {
 	private List<ExchangeBoxSlot> slots;
 
 	private String safeBoxUrl;
+	
+	private String exchangeBoxUrl;
 
 	public CardBoxInfo(List<ExchangeBoxSlot> slots) {
 		super();
@@ -42,4 +44,18 @@ public class CardBoxInfo {
 		this.safeBoxUrl = safeBoxUrl;
 	}
 
+	/**
+	 * @return the exchangeBoxUrl
+	 */
+	public String getExchangeBoxUrl() {
+		return exchangeBoxUrl;
+	}
+
+	/**
+	 * @param exchangeBoxUrl the exchangeBoxUrl to set
+	 */
+	public void setExchangeBoxUrl(String exchangeBoxUrl) {
+		this.exchangeBoxUrl = exchangeBoxUrl;
+	}
+	
 }

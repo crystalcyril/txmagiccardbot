@@ -31,6 +31,8 @@ public class ExchangeCardBoxParser20140320 {
 
 	Pattern pSafeBoxUrl;
 
+	Pattern pExchangeBoxUrl;
+	
 	public CardBoxInfo parse(String html) {
 
 		return doParse(html);
@@ -46,6 +48,9 @@ public class ExchangeCardBoxParser20140320 {
 
 		// parse safe box URL.
 		parseSafeBoxUrl(ret, html);
+		
+		// parse exchange box URL
+		parseExchangeBoxUrl(ret, html);
 
 		return ret;
 
@@ -67,8 +72,24 @@ public class ExchangeCardBoxParser20140320 {
 		}
 
 		String href = m.group(1);
-		href = StringEscapeUtils.unescapeHtml4(href);
+		href = StringEscapeUtils.unescapeHtml4(StringUtils.trim(href));
 		ret.setSafeBoxUrl(href);
+
+		return true;
+
+	}
+	
+	protected boolean parseExchangeBoxUrl(CardBoxInfo ret, String html) {
+
+		Matcher m = getExchangeBoxUrlPattern().matcher(html);
+
+		if (!m.find()) {
+			return false;
+		}
+
+		String href = m.group(1);
+		href = StringEscapeUtils.unescapeHtml4(StringUtils.trim(href));
+		ret.setExchangeBoxUrl(href);
 
 		return true;
 
@@ -83,6 +104,14 @@ public class ExchangeCardBoxParser20140320 {
 					"<a\\s+href=\"([^\\s]+?)\"\\s*>保险箱</a>", Pattern.DOTALL);
 		}
 		return pSafeBoxUrl;
+	}
+	
+	protected Pattern getExchangeBoxUrlPattern() {
+		if (pExchangeBoxUrl == null) {
+			pExchangeBoxUrl = Pattern.compile(
+					"<a\\s+href=\"([^\\s]+?)\"\\s*>换卡箱</a>", Pattern.DOTALL);
+		}
+		return pExchangeBoxUrl;
 	}
 
 	private static class SlotParser {
@@ -220,6 +249,8 @@ public class ExchangeCardBoxParser20140320 {
 				slot.setSellUrl(href);
 			} else if ("放入保险箱".equals(linkText)) {
 				slot.setPutToSafeBoxUrl(href);
+			} else if ("放入换卡箱".equals(linkText)) {
+				slot.setPutToExchangeBoxUrl(href);
 			}
 			
 		}
@@ -274,7 +305,7 @@ public class ExchangeCardBoxParser20140320 {
 			if (pSellCard == null) {
 				// example HTML:
 				// <a href="http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_sell?sid=AVMIxjV6_RFGeQ58M3VuPbVD&amp;card=4850&amp;slot=8">出售</a>
-				pSellCard = Pattern.compile("<a\\s+href=\"(.+?)\"\\s*>\\s*(出售|放入保险箱)\\s*</a>", Pattern.DOTALL); 
+				pSellCard = Pattern.compile("<a\\s+href=\"(.+?)\"\\s*>\\s*(出售|放入保险箱|放入换卡箱)\\s*</a>", Pattern.DOTALL); 
 			}
 			
 		}

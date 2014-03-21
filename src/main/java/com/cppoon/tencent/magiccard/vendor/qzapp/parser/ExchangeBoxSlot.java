@@ -32,6 +32,8 @@ public class ExchangeBoxSlot implements Serializable {
 
 	private String putToSafeBoxUrl;
 
+	private String putToExchangeBoxUrl;
+	
 	/**
 	 * @return the cardThemeName
 	 */
@@ -135,6 +137,20 @@ public class ExchangeBoxSlot implements Serializable {
 	 */
 	public void setPutToSafeBoxUrl(String putToSafeBoxUrl) {
 		this.putToSafeBoxUrl = putToSafeBoxUrl;
+	}
+	
+	/**
+	 * @return the putToExchangeBoxUrl
+	 */
+	public String getPutToExchangeBoxUrl() {
+		return putToExchangeBoxUrl;
+	}
+
+	/**
+	 * @param putToExchangeBoxUrl the putToExchangeBoxUrl to set
+	 */
+	public void setPutToExchangeBoxUrl(String putToExchangeBoxUrl) {
+		this.putToExchangeBoxUrl = putToExchangeBoxUrl;
 	}
 
 	/*
