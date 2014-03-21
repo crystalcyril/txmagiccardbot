@@ -97,18 +97,8 @@ public class SafeBoxParser20140320Test {
 			Object[] expectedCardData = expected[i];
 			ExchangeBoxSlot actualSlot = slots.get(i);
 			
-			assertEquals("card theme name", (String)expectedCardData[0], actualSlot.getCardThemeName());
-			assertEquals("card name", (String)expectedCardData[1], actualSlot.getCardName());
-			assertEquals("card price", (double)(Double)expectedCardData[2], actualSlot.getCardPrice(), 0.00);
-			assertEquals("card ID", (int)(Integer)expectedCardData[3], actualSlot.getCardId());
-			assertEquals("slot ID", (int)(Integer)expectedCardData[4], actualSlot.getSlotId());
-			
-			// put to safe box URL
-			if (expectedCardData[5] == null) {
-				assertNull("put to exchange box URL", actualSlot.getPutToExchangeBoxUrl());
-			} else {
-				assertEquals("put to exchange box URL", expectedCardData[5], actualSlot.getPutToExchangeBoxUrl());
-			}
+			assertCardSlotInformation(expectedCardData, actualSlot);
+
 		}
 		
 		//
@@ -190,36 +180,16 @@ public class SafeBoxParser20140320Test {
 			Object[] expectedCardData = expected[i];
 			ExchangeBoxSlot actualSlot = slots.get(i);
 			
-			assertEquals("card theme name", (String)expectedCardData[0], actualSlot.getCardThemeName());
-			assertEquals("card name", (String)expectedCardData[1], actualSlot.getCardName());
-			assertEquals("card price", (double)(Double)expectedCardData[2], actualSlot.getCardPrice(), 0.00);
-			assertEquals("card ID", (int)(Integer)expectedCardData[3], actualSlot.getCardId());
-			assertEquals("slot ID", (int)(Integer)expectedCardData[4], actualSlot.getSlotId());
-			
-			// put to safe box URL
-			if (expectedCardData[5] == null) {
-				assertNull("put to exchange box URL", actualSlot.getPutToExchangeBoxUrl());
-			} else {
-				assertEquals("put to exchange box URL", expectedCardData[5], actualSlot.getPutToExchangeBoxUrl());
-			}
+			assertCardSlotInformation(expectedCardData, actualSlot);
+
 		}
 		for (int i = 0; i < expected_18to20.length; i++) {
 			
 			Object[] expectedCardData = expected_18to20[i];
 			ExchangeBoxSlot actualSlot = slots.get(i + 17);
 			
-			assertEquals("card theme name", (String)expectedCardData[0], actualSlot.getCardThemeName());
-			assertEquals("card name", (String)expectedCardData[1], actualSlot.getCardName());
-			assertEquals("card price", (double)(Double)expectedCardData[2], actualSlot.getCardPrice(), 0.00);
-			assertEquals("card ID", (int)(Integer)expectedCardData[3], actualSlot.getCardId());
-			assertEquals("slot ID", (int)(Integer)expectedCardData[4], actualSlot.getSlotId());
+			assertCardSlotInformation(expectedCardData, actualSlot);
 			
-			// put to safe box URL
-			if (expectedCardData[5] == null) {
-				assertNull("put to exchange box URL", actualSlot.getPutToExchangeBoxUrl());
-			} else {
-				assertEquals("put to exchange box URL", expectedCardData[5], actualSlot.getPutToExchangeBoxUrl());
-			}
 		}
 		
 		//
@@ -249,4 +219,22 @@ public class SafeBoxParser20140320Test {
 		assertEquals("page URL", "http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_box?sid=AVMIxjV6_RFGeQ58M3VuPbVD&t=1&n=3", plink.getUrl());
 		
 	}
+	
+	protected void assertCardSlotInformation(Object[] expectedCardData, ExchangeBoxSlot actualSlot) {
+		
+		assertEquals("card theme name", (String)expectedCardData[0], actualSlot.getCardThemeName());
+		assertEquals("card name", (String)expectedCardData[1], actualSlot.getCardName());
+		assertEquals("card price", (double)(Double)expectedCardData[2], actualSlot.getCardPrice(), 0.00);
+		assertEquals("card ID", (int)(Integer)expectedCardData[3], actualSlot.getCardId());
+		assertEquals("slot ID", (int)(Integer)expectedCardData[4], actualSlot.getSlotId());
+		
+		// put to safe box URL
+		if (expectedCardData[5] == null) {
+			assertNull("put to exchange box URL", actualSlot.getPutToExchangeBoxUrl());
+		} else {
+			assertEquals("put to exchange box URL", expectedCardData[5], actualSlot.getPutToExchangeBoxUrl());
+		}
+		
+	}
+	
 }
