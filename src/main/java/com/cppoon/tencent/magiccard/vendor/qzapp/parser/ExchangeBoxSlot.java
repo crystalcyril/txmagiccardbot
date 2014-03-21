@@ -19,14 +19,18 @@ public class ExchangeBoxSlot implements Serializable {
 	private static final long serialVersionUID = 4931474991014442519L;
 
 	private String cardThemeName;
-	
+
 	private String cardName;
-	
+
 	private double cardPrice;
-	
+
 	private int cardId;
-	
+
 	private int slotId;
+
+	private String sellUrl;
+
+	private String putToSafeBoxUrl;
 
 	/**
 	 * @return the cardThemeName
@@ -36,7 +40,8 @@ public class ExchangeBoxSlot implements Serializable {
 	}
 
 	/**
-	 * @param cardThemeName the cardThemeName to set
+	 * @param cardThemeName
+	 *            the cardThemeName to set
 	 */
 	public void setCardThemeName(String cardThemeName) {
 		this.cardThemeName = cardThemeName;
@@ -50,7 +55,8 @@ public class ExchangeBoxSlot implements Serializable {
 	}
 
 	/**
-	 * @param cardName the cardName to set
+	 * @param cardName
+	 *            the cardName to set
 	 */
 	public void setCardName(String cardName) {
 		this.cardName = cardName;
@@ -64,7 +70,8 @@ public class ExchangeBoxSlot implements Serializable {
 	}
 
 	/**
-	 * @param cardPrice the cardPrice to set
+	 * @param cardPrice
+	 *            the cardPrice to set
 	 */
 	public void setCardPrice(double cardPrice) {
 		this.cardPrice = cardPrice;
@@ -78,7 +85,8 @@ public class ExchangeBoxSlot implements Serializable {
 	}
 
 	/**
-	 * @param cardId the cardId to set
+	 * @param cardId
+	 *            the cardId to set
 	 */
 	public void setCardId(int cardId) {
 		this.cardId = cardId;
@@ -92,13 +100,46 @@ public class ExchangeBoxSlot implements Serializable {
 	}
 
 	/**
-	 * @param slotId the slotId to set
+	 * @param slotId
+	 *            the slotId to set
 	 */
 	public void setSlotId(int slotId) {
 		this.slotId = slotId;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * @return the sellUrl
+	 */
+	public String getSellUrl() {
+		return sellUrl;
+	}
+
+	/**
+	 * @param sellUrl
+	 *            the sellUrl to set
+	 */
+	public void setSellUrl(String sellUrl) {
+		this.sellUrl = sellUrl;
+	}
+
+	/**
+	 * @return the putToSafeBoxUrl
+	 */
+	public String getPutToSafeBoxUrl() {
+		return putToSafeBoxUrl;
+	}
+
+	/**
+	 * @param putToSafeBoxUrl
+	 *            the putToSafeBoxUrl to set
+	 */
+	public void setPutToSafeBoxUrl(String putToSafeBoxUrl) {
+		this.putToSafeBoxUrl = putToSafeBoxUrl;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -107,5 +148,5 @@ public class ExchangeBoxSlot implements Serializable {
 				+ ", cardPrice=" + cardPrice + ", cardId=" + cardId
 				+ ", slotId=" + slotId;
 	}
-	
+
 }

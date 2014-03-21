@@ -76,7 +76,7 @@ public abstract class ParseUtil {
 	public static String getCardInfoPatternString() {
 
 		// 2. 非洲风光-尼罗河[420]
-		return "\\d+\\s*\\.\\s*([^-]+)-([^-]+)\\s*\\[\\s*\\d+\\s*\\]";
+		return "\\d+\\s*\\.\\s*([^-]+)-([^-]+)\\s*\\[\\s*(\\d+)\\s*\\]";
 
 	}
 

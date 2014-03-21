@@ -215,8 +215,6 @@ public class StolenStoveParser20140319 {
 			// 1. 空闲中
             // <a href="http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_stove_steal?sid=AZSJbIiayt5edHh3EYpub1iJ">偷炉</a>
             //<br />
-//			pStoves = Pattern.compile("\\d+\\s*\\.\\s*(.*?)(?:<br\\s*/>\\s+\\d+\\.|<br\\s*/>\\s*<br\\s*/>)", Pattern.DOTALL);
-//			pStoves = Pattern.compile("\\d+\\s*\\.\\s*(.*)<br\\s*/?>", Pattern.DOTALL);
 			pStoves = Pattern.compile("<br\\s*/?>\\s*\\d+\\s*\\.\\s*(.+?)", Pattern.DOTALL);
 		}
 		return pStoves;
