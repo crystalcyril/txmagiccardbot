@@ -17,6 +17,8 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.CardBoxInfo;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.CardBoxInfo.PageLink;
@@ -29,17 +31,21 @@ import com.cppoon.tencent.magiccard.vendor.qzapp.parser.ExchangeBoxSlot;
  * @since 0.1.0
  */
 public class ExchangeCardBoxParser20140320 {
+	
+	protected Logger log = LoggerFactory.getLogger(getClass());
 
 	Pattern pSafeBoxUrl;
 
 	Pattern pExchangeBoxUrl;
 	
 	
-	private static final class PageLinkImpl implements CardBoxInfo.PageLink {
+	protected static final class PageLinkImpl implements CardBoxInfo.PageLink {
 
 		boolean current = false;
 		
 		int pageNumber = 0;
+		
+		private String url;
 
 		/**
 		 * @return the current
@@ -69,6 +75,29 @@ public class ExchangeCardBoxParser20140320 {
 			this.pageNumber = pageNumber;
 		}
 
+		/**
+		 * @return the url
+		 */
+		public String getUrl() {
+			return url;
+		}
+
+		/**
+		 * @param url the url to set
+		 */
+		public void setUrl(String url) {
+			this.url = url;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString() {
+			return "current=" + current + ", pageNumber=" + pageNumber
+					+ ", url=" + url;
+		}
+		
 	}
 	
 	
@@ -91,7 +120,7 @@ public class ExchangeCardBoxParser20140320 {
 		// parse exchange box URL
 		parseExchangeBoxUrl(ret, html);
 		
-		parsePageLink(ret);
+		parsePageLink(ret, html);
 
 		return ret;
 
@@ -155,7 +184,7 @@ public class ExchangeCardBoxParser20140320 {
 		return pExchangeBoxUrl;
 	}
 
-	protected void parsePageLink(CardBoxInfo ret) {
+	protected void parsePageLink(CardBoxInfo ret, String html) {
 		
 		PageLinkImpl plink = new PageLinkImpl();
 		plink.setCurrent(true);

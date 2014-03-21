@@ -19,6 +19,8 @@ public class CardBoxInfo {
 		
 		int getPageNumber();
 		
+		String getUrl();
+		
 	}
 
 	private List<ExchangeBoxSlot> slots;
