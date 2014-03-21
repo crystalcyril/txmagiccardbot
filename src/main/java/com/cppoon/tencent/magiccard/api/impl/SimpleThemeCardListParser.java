@@ -20,8 +20,42 @@ import com.cppoon.tencent.magiccard.api.ThemeCardListParser;
 import com.cppoon.tencent.magiccard.api.ThemeCardListParserListener;
 
 /**
- * @author Cyril
+ * Concrete implementation of <code>ThemeCardListParser</code>, which parses
+ * the card theme information from the <code>card_info_v3.js</code> file, 
+ * with Javascirpt variable <code>theme_card_list</code>
  * 
+ * The format of the Javascript file is:
+ * 
+ * <pre>
+ * [61,'时尚中国风',3,1254048859,0,1,300,540,0x000000,'61|60|70|71','',[226,225,224,223,222,221,220,219,218,217,216,215,214,213,212,211,210,209,208,207,206,205,204,203,202,201],1,8,1309831121,1271289600,0,50],
+ * </pre>
+ * 
+ * There is a Javascript comment in the variable declaration:
+ * 
+ * <pre>
+ * //theme_id, theme_name,theme_Difficulty,theme_PublishTime,theme_PickRate, theme_Enable, theme_Prize,theme_Score,theme_color, gift, text,
+ * //card1_id,..,cardn_id,theme_type,version,time,offtime,flash_src_tid
+ * </pre>
+ * 
+ * Analysis of above data fragment:
+ * 
+ * <ol>
+ * <li><strong>61</strong>: theme ID.</li>
+ * <li><strong>时尚中国风</strong>: theme name.</li>
+ * <li><strong>3</strong>: theme difficulty, that is, number of "stars" of the theme.</li>
+ * <li><strong>1254048859</strong>: theme publish time (epoch time). The corresponding value 
+ * in Java is <code>new java.util.Date(1254048859 * 1000)</code> = 
+ * GMT: Sun, 27 Sep 2009 10:54:19. You can convert the time using the 
+ * web site http://www.epochconverter.com/</li>
+ * <li><strong>0</strong>: theme pick rate. <strong>no idea of this field yet</strong>.</li>
+ * <li><strong>1</strong>:</li>
+ * <li></li>
+ * <li></li>
+ * </ol>
+ * 
+ * 
+ * @author Cyril
+ * @since 0.1.0
  */
 public class SimpleThemeCardListParser implements ThemeCardListParser {
 
