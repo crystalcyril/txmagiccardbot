@@ -40,7 +40,7 @@ public class CardRepositoryTest {
 	@Test
 	public void test_AddToEmptyRepository() {
 
-//		repository.addTheme()
+//		repository.get
 		
 	}
 

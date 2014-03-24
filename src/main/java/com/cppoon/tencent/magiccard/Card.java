@@ -6,7 +6,7 @@ package com.cppoon.tencent.magiccard;
 import java.util.Date;
 
 /**
- * API to the card.
+ * Defines the API of a card.
  * 
  * @author Cyril
  * @since 0.1.0
@@ -74,6 +74,6 @@ public interface Card {
 	 * @return the composition formula, or <code>null</code> if this card
 	 *         requires no synthesis.
 	 */
-	CardComposition getComposition();
+	CardSynthesisFormula getComposition();
 
 }
