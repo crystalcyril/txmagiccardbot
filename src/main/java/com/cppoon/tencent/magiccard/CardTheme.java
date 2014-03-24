@@ -4,6 +4,7 @@
 package com.cppoon.tencent.magiccard;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Defines the API of a card theme.
@@ -72,5 +73,12 @@ public interface CardTheme {
 	 * @return the expiryTime
 	 */
 	Date getExpiryTime();
+
+	/**
+	 * Returns the top level cards this theme is made of.
+	 * 
+	 * @return
+	 */
+	List<Card> getChildrenCards();
 
 }

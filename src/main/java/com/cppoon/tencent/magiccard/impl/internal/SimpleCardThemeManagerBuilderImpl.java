@@ -12,8 +12,9 @@ import com.cppoon.tencent.magiccard.impl.CardThemeImpl;
 
 /**
  * 
+ * 
  * @author Cyril
- *
+ * @since 0.1.0
  */
 public class SimpleCardThemeManagerBuilderImpl implements CardThemeManager.Builder {
 

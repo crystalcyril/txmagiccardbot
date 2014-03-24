@@ -7,8 +7,9 @@ import java.io.InputStream;
 
 /**
  * 
- * @author Cyril
  * 
+ * @author Cyril
+ * @since 0.1.0
  */
 public interface CardInfoParser {
 
@@ -18,6 +19,11 @@ public interface CardInfoParser {
 	 */
 	void setListener(CardInfoParserListener listener);
 
+	/**
+	 * 
+	 * 
+	 * @param is
+	 */
 	void parse(InputStream is);
 
 }

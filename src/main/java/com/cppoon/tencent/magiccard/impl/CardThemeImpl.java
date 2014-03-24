@@ -4,7 +4,9 @@
 package com.cppoon.tencent.magiccard.impl;
 
 import java.util.Date;
+import java.util.List;
 
+import com.cppoon.tencent.magiccard.Card;
 import com.cppoon.tencent.magiccard.CardTheme;
 
 /**
@@ -217,6 +219,14 @@ public class CardThemeImpl implements CardTheme {
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.cppoon.tencent.magiccard.CardTheme#getChildrenCards()
+	 */
+	@Override
+	public List<Card> getChildrenCards() {
+		return null;
 	}
 
 }
