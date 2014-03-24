@@ -11,26 +11,26 @@ public interface ThemeComposeRule {
 	/**
 	 * @return the themeId
 	 */
-	public abstract int getThemeId();
+	int getThemeId();
 
 	/**
 	 * @return the state
 	 */
-	public abstract int getState();
+	int getState();
 
 	/**
 	 * @return the targetCardId
 	 */
-	public abstract int getTargetCardId();
+	int getTargetCardId();
 
 	/**
 	 * @return the childrenCardIds
 	 */
-	public abstract int[] getChildrenCardIds();
+	int[] getChildrenCardIds();
 
 	/**
 	 * @return the buildTime
 	 */
-	public abstract int getBuildTime();
+	int getBuildTime();
 
 }

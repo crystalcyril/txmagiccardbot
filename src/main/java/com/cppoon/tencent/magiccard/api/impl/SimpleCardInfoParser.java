@@ -158,7 +158,7 @@ public class SimpleCardInfoParser implements CardInfoParser {
 				Calendar c = Calendar.getInstance();
 				d = new Date(Math.round(time) * 1000);
 				c.setTime(d);
-				c.setTimeZone(TimeZone.getTimeZone("GMT-8"));
+				c.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 				r.setTime(c.getTime());
 			}
 
