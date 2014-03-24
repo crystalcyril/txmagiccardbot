@@ -3,11 +3,13 @@
  */
 package com.cppoon.tencent.magiccard.impl;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import com.cppoon.tencent.magiccard.Card;
 import com.cppoon.tencent.magiccard.CardSynthesisFormula;
 import com.cppoon.tencent.magiccard.CardTheme;
+import com.cppoon.tencent.magiccard.impl.internal.CardSynthesisFormulaImpl;
 
 /**
  * 
@@ -36,6 +38,8 @@ public class CardImpl implements Card {
 	int itemNo;
 	
 	boolean enabled;
+	
+	CardSynthesisFormula formula;
 
 	/* (non-Javadoc)
 	 * @see com.cppoon.tencent.magiccard.Card#getId()
@@ -98,8 +102,7 @@ public class CardImpl implements Card {
 	 */
 	@Override
 	public int getVersion() {
-		// TODO Auto-generated method stub
-		return 0;
+		return version;
 	}
 
 	/* (non-Javadoc)
@@ -196,8 +199,18 @@ public class CardImpl implements Card {
 	 */
 	@Override
 	public CardSynthesisFormula getComposition() {
-		// TODO Auto-generated method stub
-		return null;
+		return formula;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.cppoon.tencent.magiccard.Card#setSynthesisFormula(int, com.cppoon.tencent.magiccard.Card[])
+	 */
+	@Override
+	public void setSynthesisFormula(long synthesisTime, Card[] cards) {
+		
+		CardSynthesisFormula formula = new CardSynthesisFormulaImpl(this, synthesisTime, Arrays.asList(cards));
+		this.formula = formula;
+		
+	}
+	
 }

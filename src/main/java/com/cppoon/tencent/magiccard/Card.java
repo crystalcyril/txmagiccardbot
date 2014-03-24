@@ -75,5 +75,13 @@ public interface Card {
 	 *         requires no synthesis.
 	 */
 	CardSynthesisFormula getComposition();
+	
+	/**
+	 * 
+	 * 
+	 * @param synthesisTime
+	 * @param cards
+	 */
+	void setSynthesisFormula(long synthesisTime, Card[] cards);
 
 }
