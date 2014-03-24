@@ -63,9 +63,15 @@ public class CardManagerTest {
 		// create a card theme
 		CardTheme theme = buildDefaultTestTheme();
 
+		//
+		// WHEN
+		//
 		Card card = cardManager.createBuilder().id(29).theme(theme)
 				.name("城市街道").price(40).type(1).version(1).build();
 
+		//
+		// THEN
+		//
 		assertNotNull("created card", card);
 
 		assertEquals("theme", theme, card.getTheme());
@@ -79,7 +85,7 @@ public class CardManagerTest {
 		assertEquals("pick rate", 0, card.getPickRate());
 		assertEquals("price", 40.0, card.getPrice(), 0.00);
 		assertEquals("pick rate", 0, card.getPickRate());
-		assertNull("synthesis formulat", card.getSynthesisFormula());
+		assertNull("synthesis formula", card.getSynthesisFormula());
 		assertNull("time", card.getTime());
 		assertEquals("type", 1, card.getType());
 		assertEquals("version", 1, card.getVersion());
