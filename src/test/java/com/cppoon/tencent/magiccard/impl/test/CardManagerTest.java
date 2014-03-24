@@ -84,10 +84,12 @@ public class CardManagerTest {
 		assertEquals("type", 1, card.getType());
 		assertEquals("version", 1, card.getVersion());
 		
+		// the theme should now consist of 4 cards.
+		
 	}
 
 	/**
-	 * We made the following virtual card suit
+	 * We made the following virtual card suit.
 	 * 
 	 */
 	@Test
@@ -120,9 +122,9 @@ public class CardManagerTest {
 		assertEquals("number of material cards in formula", 3,
 				actualMaterialCards.size());
 		assertEquals("material card 1", card_id_30, actualMaterialCards.get(0));
-		assertEquals("material card 1", card_id_31, actualMaterialCards.get(1));
-		assertEquals("material card 1", card_id_33, actualMaterialCards.get(2));
-		assertNotEquals("material card 1", card_id_31,
+		assertEquals("material card 2", card_id_31, actualMaterialCards.get(1));
+		assertEquals("material card 3", card_id_33, actualMaterialCards.get(2));
+		assertNotEquals("material card 1 is not", card_id_31,
 				actualMaterialCards.get(0));
 
 	}
