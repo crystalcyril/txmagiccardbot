@@ -37,7 +37,7 @@ public interface Card {
 	 * 
 	 * @return
 	 */
-	int getPrice();
+	double getPrice();
 
 	int getType();
 
