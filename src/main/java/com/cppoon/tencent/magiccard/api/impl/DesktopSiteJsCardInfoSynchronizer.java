@@ -56,7 +56,7 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 	protected void doSynchonize() {
 		
 		
-
+		
 	}
 
 	protected void doParseData(InputStream is) {
