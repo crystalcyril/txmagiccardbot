@@ -27,23 +27,39 @@ import com.cppoon.tencent.magiccard.api.ThemeComposeRule;
  * @since 0.1.0
  */
 public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
-		ThemeCardListParserListener, CardInfoParserListener, ThemeComposeListParserListener {
+		ThemeCardListParserListener, CardInfoParserListener,
+		ThemeComposeListParserListener {
 
 	CardThemeManager cardThemeManager;
 
 	CardManager cardManager;
-	
-	Map<Integer /*card ID*/, CardInfo> cardInfos;
-	
-	Map<Integer /*theme ID*/, CardTheme> cardThemes;
-	
-	List<ThemeComposeRule> themComposeRules;
-	
+
+	Map<Integer /* card ID */, CardInfo> parsedCardInfos;
+
+	Map<Integer /* theme ID */, CardTheme> parsedCardThemes;
+
+	List<ThemeComposeRule> parsedThemComposeRules;
 
 	@Override
 	public void synchronize(InputStream is) {
-		
+
 		reset();
+
+		// parse data.
+		doParseData(is);
+
+		// process the data.
+		doSynchonize();
+
+	}
+
+	protected void doSynchonize() {
+		
+		
+
+	}
+
+	protected void doParseData(InputStream is) {
 
 		ThemeCardListParser themeCardListParser = new SimpleThemeCardListParser();
 		SimpleCardInfoParser cardInfoParser = new SimpleCardInfoParser();
@@ -54,43 +70,49 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 		cardInfoParser.parse(is);
 
 	}
-	
-	protected void reset() {
-		
-		cardInfos = new Hashtable<Integer, CardInfo>();
-		cardThemes = new Hashtable<Integer, CardTheme>();
-		themComposeRules = new ArrayList<ThemeComposeRule>();
-		
-	}
-	
 
-	/* (non-Javadoc)
-	 * @see com.cppoon.tencent.magiccard.api.ThemeComposeListParserListener#themeComposeRuleParsed(com.cppoon.tencent.magiccard.api.ThemeComposeRule)
+	protected void reset() {
+
+		parsedCardInfos = new Hashtable<Integer, CardInfo>();
+		parsedCardThemes = new Hashtable<Integer, CardTheme>();
+		parsedThemComposeRules = new ArrayList<ThemeComposeRule>();
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.cppoon.tencent.magiccard.api.ThemeComposeListParserListener#
+	 * themeComposeRuleParsed(com.cppoon.tencent.magiccard.api.ThemeComposeRule)
 	 */
 	@Override
 	public void themeComposeRuleParsed(ThemeComposeRule rule) {
-		themComposeRules.add(rule);
+		parsedThemComposeRules.add(rule);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.cppoon.tencent.magiccard.api.CardInfoParserListener#cardInfoParsed(com.cppoon.tencent.magiccard.api.CardInfo)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cppoon.tencent.magiccard.api.CardInfoParserListener#cardInfoParsed
+	 * (com.cppoon.tencent.magiccard.api.CardInfo)
 	 */
 	@Override
 	public void cardInfoParsed(CardInfo ci) {
-		cardInfos.put(ci.getId(), ci);
+		parsedCardInfos.put(ci.getId(), ci);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see com.cppoon.tencent.magiccard.api.ThemeCardListParserListener#cardThemeParsed(com.cppoon.tencent.magiccard.api.CardTheme)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cppoon.tencent.magiccard.api.ThemeCardListParserListener#cardThemeParsed
+	 * (com.cppoon.tencent.magiccard.api.CardTheme)
 	 */
 	@Override
 	public void cardThemeParsed(CardTheme ct) {
-		cardThemes.put(ct.getId(), ct);
+		parsedCardThemes.put(ct.getId(), ct);
 	}
-
-
-
 
 	public void setCardThemeManager(CardThemeManager cardThemeManager) {
 		this.cardThemeManager = cardThemeManager;
