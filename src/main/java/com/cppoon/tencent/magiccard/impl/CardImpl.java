@@ -198,7 +198,7 @@ public class CardImpl implements Card {
 	 * @see com.cppoon.tencent.magiccard.Card#getComposition()
 	 */
 	@Override
-	public CardSynthesisFormula getComposition() {
+	public CardSynthesisFormula getSynthesisFormula() {
 		return formula;
 	}
 

@@ -74,7 +74,7 @@ public interface Card {
 	 * @return the composition formula, or <code>null</code> if this card
 	 *         requires no synthesis.
 	 */
-	CardSynthesisFormula getComposition();
+	CardSynthesisFormula getSynthesisFormula();
 	
 	/**
 	 * 

@@ -53,11 +53,12 @@ public class CardManagerTest {
 	}
 
 	/**
+	 * Test to create one card.
 	 * 
 	 * [29,40,'城市街道',40,1,0,1,1,0,1027529,[0]],
 	 */
 	@Test
-	public void testAddCard_One() {
+	public void testCreateCard_CreateOne() {
 
 		// create a card theme
 		CardTheme theme = buildDefaultTestTheme();
@@ -69,22 +70,22 @@ public class CardManagerTest {
 
 		assertEquals("theme", theme, card.getTheme());
 		assertEquals("theme", theme.getId(), card.getTheme().getId());
-		
-		// card has no synthesis formular
-		assertNull("card synthesis formula", card.getComposition());
+
+		// card has no synthesis formula
+		assertNull("card synthesis formula", card.getSynthesisFormula());
 		assertEquals("card synthesis formula", 29, card.getId());
 		assertEquals("item number", 0, card.getItemNo());
 		assertEquals("name", "城市街道", card.getName());
 		assertEquals("pick rate", 0, card.getPickRate());
 		assertEquals("price", 40.0, card.getPrice(), 0.00);
 		assertEquals("pick rate", 0, card.getPickRate());
+		assertNull("synthesis formulat", card.getSynthesisFormula());
 		assertNull("time", card.getTime());
 		assertEquals("type", 1, card.getType());
 		assertEquals("version", 1, card.getVersion());
-
+		
 	}
 
-	
 	/**
 	 * We made the following virtual card suit
 	 * 
@@ -93,7 +94,7 @@ public class CardManagerTest {
 	public void testAddSynthesisRule() {
 
 		CardTheme theme = buildDefaultTestTheme();
-		
+
 		Card card_40price = cardManager.createBuilder().id(35).theme(theme)
 				.name("酷帅打扮").price(40).type(1).version(1).build();
 		// card IDs: 30,31,33
@@ -108,20 +109,22 @@ public class CardManagerTest {
 		// WHEN
 		card_40price.setSynthesisFormula(3600, new Card[] { card_id_30,
 				card_id_31, card_id_33 });
-		
+
 		// THEN
-		CardSynthesisFormula formula = card_40price.getComposition();
+		CardSynthesisFormula formula = card_40price.getSynthesisFormula();
 		assertNotNull("synthesis formula", formula);
-		
+
 		assertEquals("synthesis time", formula.getTime(), 3600);
 		List<Card> actualMaterialCards = formula.getMaterials();
 		assertNotNull("material cards", actualMaterialCards);
-		assertEquals("number of material cards in formula", 3, actualMaterialCards.size());
+		assertEquals("number of material cards in formula", 3,
+				actualMaterialCards.size());
 		assertEquals("material card 1", card_id_30, actualMaterialCards.get(0));
 		assertEquals("material card 1", card_id_31, actualMaterialCards.get(1));
 		assertEquals("material card 1", card_id_33, actualMaterialCards.get(2));
-		assertNotEquals("material card 1", card_id_31, actualMaterialCards.get(0));
-		
+		assertNotEquals("material card 1", card_id_31,
+				actualMaterialCards.get(0));
+
 	}
 
 	protected CardTheme buildDefaultTestTheme() {
