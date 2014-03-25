@@ -123,7 +123,6 @@ public class CardInfoSynchronizerTest {
 		assertEquals("name", "整套搭配", topCard.getName());
 		assertEquals("pick rate", 0, topCard.getPickRate());
 		assertEquals("price", 150.0, topCard.getPrice(), 0);
-//		assertEquals("", 38, card.getSynthesisFormula());
 		assertEquals("theme", theme, topCard.getTheme());
 		assertNull("time", topCard.getTime());
 		assertEquals("type", 1, topCard.getType());
@@ -142,7 +141,9 @@ public class CardInfoSynchronizerTest {
 		Card tier2Card;
 		// the children cards should be: ID = 37,35,29
 		Iterator<Card> tier2CardsIter = tier2Cards.iterator();
+		//
 		// check 1st card in tier 2 cards
+		//
 		tier2Card = tier2CardsIter.next();
 		assertEquals("ID", 37, tier2Card.getId());
 		assertEquals("item number", 0, tier2Card.getItemNo());
@@ -153,7 +154,9 @@ public class CardInfoSynchronizerTest {
 		assertNull("time", tier2Card.getTime());
 		assertEquals("type", 1, tier2Card.getType());
 		assertEquals("version", 3, tier2Card.getVersion());
+		//
 		// check 2nd card
+		//
 		tier2Card = tier2CardsIter.next();
 		assertEquals("ID", 35, tier2Card.getId());
 		assertEquals("item number", 0, tier2Card.getItemNo());
