@@ -64,7 +64,7 @@ public class CardThemeRepositoryTest {
 		assertEquals("pick rate", 0, theme.getPickRate());
 		assertEquals("name", "时尚男套装", theme.getName());
 		assertEquals("publish time", new Date(1251970023 * 1000), theme.getPublishTime());
-		assertEquals("score", 0, theme.getScore());
+		assertEquals("score", 0, theme.getExperience());
 		assertEquals("time", new Date(1309831119 * 1000), theme.getTime());
 		assertEquals("type", 0, theme.getType());
 		assertEquals("version", 0, theme.getVersion());

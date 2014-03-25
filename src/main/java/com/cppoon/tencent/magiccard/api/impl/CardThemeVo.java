@@ -26,9 +26,9 @@ public class CardThemeVo implements CardTheme {
 
 	boolean enabled;
 
-	int prize;
+	double coins;
 
-	int score;
+	int experience;
 
 	int[] cardIds;
 
@@ -153,16 +153,18 @@ public class CardThemeVo implements CardTheme {
 	 * @see com.cppoon.tencent.magiccard.api.impl.CardTheme#getPrize()
 	 */
 
-	public int getPrize() {
-		return prize;
+	public double getCoins() {
+		return coins;
 	}
 
 	/**
-	 * @param prize
+	 * 
+	 * 
+	 * @param coins
 	 *            the prize to set
 	 */
-	public void setPrize(int prize) {
-		this.prize = prize;
+	public void setCoins(double coins) {
+		this.coins = coins;
 	}
 
 	/*
@@ -171,8 +173,8 @@ public class CardThemeVo implements CardTheme {
 	 * @see com.cppoon.tencent.magiccard.api.impl.CardTheme#getScore()
 	 */
 
-	public int getScore() {
-		return score;
+	public int getExperience() {
+		return experience;
 	}
 
 	/**
@@ -180,7 +182,7 @@ public class CardThemeVo implements CardTheme {
 	 *            the score to set
 	 */
 	public void setScore(int score) {
-		this.score = score;
+		this.experience = score;
 	}
 
 	/*

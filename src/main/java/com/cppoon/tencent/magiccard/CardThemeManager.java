@@ -30,6 +30,8 @@ public interface CardThemeManager {
 
 		Builder type(int type);
 
+		Builder coins(double prize);
+		
 		Builder version(int version);
 
 		Builder color(int color);
@@ -37,6 +39,8 @@ public interface CardThemeManager {
 		Builder time(Date when);
 
 		Builder expiryTime(Date when);
+		
+		Builder experience(int experience);
 
 		/**
 		 * Build the theme.
@@ -61,5 +65,20 @@ public interface CardThemeManager {
 	 *         theme is known.
 	 */
 	Set<CardTheme> getAllThemes();
+
+	/**
+	 * Find theme by ID.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	com.cppoon.tencent.magiccard.CardTheme findThemeById(int id);
+
+	/**
+	 * Register card theme with matching ID.
+	 * 
+	 * @param cardTheme
+	 */
+	void registerTheme(com.cppoon.tencent.magiccard.CardTheme cardTheme);
 
 }

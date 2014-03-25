@@ -3,10 +3,14 @@
  */
 package com.cppoon.tencent.magiccard.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.cppoon.tencent.magiccard.Card;
+import com.cppoon.tencent.magiccard.CardSynthesisFormula;
 import com.cppoon.tencent.magiccard.CardTheme;
 
 /**
@@ -25,7 +29,7 @@ public class CardThemeImpl implements CardTheme {
 
 	private int pickRate;
 
-	private int prize;
+	private double coins;
 
 	private Date publishTime;
 
@@ -40,6 +44,14 @@ public class CardThemeImpl implements CardTheme {
 	private int version;
 
 	private boolean enabled;
+
+	Set<Card> cards;
+
+	public CardThemeImpl() {
+		super();
+
+		cards = new HashSet<Card>();
+	}
 
 	/**
 	 * @return the id
@@ -104,16 +116,17 @@ public class CardThemeImpl implements CardTheme {
 	/**
 	 * @return the prize
 	 */
-	public int getPrize() {
-		return prize;
+	public double getCoins() {
+		return coins;
 	}
 
 	/**
-	 * @param prize
+	 * 
+	 * @param coins
 	 *            the prize to set
 	 */
-	public void setPrize(int prize) {
-		this.prize = prize;
+	public void setCoins(double coins) {
+		this.coins = coins;
 	}
 
 	/**
@@ -134,7 +147,7 @@ public class CardThemeImpl implements CardTheme {
 	/**
 	 * @return the score
 	 */
-	public int getScore() {
+	public int getExperience() {
 		return score;
 	}
 
@@ -221,12 +234,70 @@ public class CardThemeImpl implements CardTheme {
 		this.enabled = enabled;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cppoon.tencent.magiccard.CardTheme#getChildrenCards()
 	 */
 	@Override
 	public List<Card> getChildrenCards() {
-		return null;
+		
+		// find all cards which are NOT required by other cards.
+		// iterate all synthesis formulas.
+		//
+		// however, there are cases which all cards in a theme requires NO
+		// synthesis.
+		//
+		// so, this finally breaks down to:
+		// - any card which are NOT a synthesis material of any card are 
+		//   considered as top cards.
+		
+
+		// Step 1: Find all card IDs which ARE NOT top cards.
+		Set<Integer> extractIds = new HashSet<Integer>();
+		for (Card card : cards) {
+			
+			CardSynthesisFormula formula = card.getSynthesisFormula();
+			
+			// this card requires no synthesis. MAYBE a top card.
+			if (formula == null) {
+				continue;
+			}
+			
+			// otherwise, any material cards in the formula ARE NOT 
+			// top cards.
+			for (Card material : formula.getMaterials()) {
+				extractIds.add(material.getId());
+			}
+		}
+		
+		// Step 2: Find out the top cards
+		ArrayList<Card> ret = new ArrayList<Card>();
+		for (Card card : cards) {
+			if (!extractIds.contains(card.getId())) {
+				ret.add(card);
+			}
+		}
+		
+		return ret;
+	}
+
+	public void addCard(CardImpl card) {
+		
+		this.cards.add(card);
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "id=" + id + ", name=" + name + ", difficulty=" + difficulty
+				+ ", pickRate=" + pickRate + ", coins=" + coins
+				+ ", publishTime=" + publishTime + ", score=" + score
+				+ ", time=" + time + ", expiryTime=" + expiryTime + ", type="
+				+ type + ", version=" + version + ", enabled=" + enabled;
 	}
 
 }

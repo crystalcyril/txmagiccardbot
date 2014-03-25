@@ -35,14 +35,15 @@ public interface CardTheme {
 	boolean isEnabled();
 
 	/**
-	 * @return the prize
+	 * 
+	 * @return the coins
 	 */
-	int getPrize();
+	double getCoins();
 
 	/**
 	 * @return the score
 	 */
-	int getScore();
+	int getExperience();
 
 	/**
 	 * @return the cardIds

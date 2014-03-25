@@ -191,7 +191,7 @@ public class SimpleThemeCardListParser implements ThemeCardListParser {
 
 			// column 7: prize
 			int prize = (int) Math.round((Double) arr.get(6, null));
-			r.setPrize(prize);
+			r.setCoins(prize);
 
 			// column 8: score
 			int score = (int) Math.round((Double) arr.get(7, null));

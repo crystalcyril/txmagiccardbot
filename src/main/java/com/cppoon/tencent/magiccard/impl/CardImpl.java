@@ -18,30 +18,32 @@ import com.cppoon.tencent.magiccard.impl.internal.CardSynthesisFormulaImpl;
  * @since 0.1.0
  */
 public class CardImpl implements Card {
-	
+
 	int id;
-	
+
 	CardTheme theme;
-	
+
 	String name;
-	
+
 	int pickRate;
-	
+
 	double price;
-	
+
 	Date time;
-	
+
 	int type;
-	
+
 	int version;
-	
+
 	int itemNo;
-	
+
 	boolean enabled;
-	
+
 	CardSynthesisFormula formula;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cppoon.tencent.magiccard.Card#getId()
 	 */
 	@Override
@@ -49,7 +51,9 @@ public class CardImpl implements Card {
 		return id;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cppoon.tencent.magiccard.Card#getTheme()
 	 */
 	@Override
@@ -57,7 +61,9 @@ public class CardImpl implements Card {
 		return theme;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cppoon.tencent.magiccard.Card#getName()
 	 */
 	@Override
@@ -65,7 +71,9 @@ public class CardImpl implements Card {
 		return name;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cppoon.tencent.magiccard.Card#getPrice()
 	 */
 	@Override
@@ -73,7 +81,9 @@ public class CardImpl implements Card {
 		return price;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cppoon.tencent.magiccard.Card#getType()
 	 */
 	@Override
@@ -81,7 +91,9 @@ public class CardImpl implements Card {
 		return type;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cppoon.tencent.magiccard.Card#getPickRate()
 	 */
 	@Override
@@ -89,7 +101,9 @@ public class CardImpl implements Card {
 		return pickRate;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cppoon.tencent.magiccard.Card#isEnabled()
 	 */
 	@Override
@@ -97,7 +111,9 @@ public class CardImpl implements Card {
 		return enabled;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cppoon.tencent.magiccard.Card#getVersion()
 	 */
 	@Override
@@ -105,16 +121,19 @@ public class CardImpl implements Card {
 		return version;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cppoon.tencent.magiccard.Card#getTime()
 	 */
 	@Override
 	public Date getTime() {
-		// TODO Auto-generated method stub
-		return null;
+		return time;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cppoon.tencent.magiccard.Card#getItemNo()
 	 */
 	@Override
@@ -122,79 +141,109 @@ public class CardImpl implements Card {
 		return 0;
 	}
 
-	
-	
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 
 	/**
-	 * @param theme the theme to set
+	 * @param theme
+	 *            the theme to set
 	 */
 	public void setTheme(CardTheme theme) {
+		
+		// detach from old card theme
+		if (this.theme != null && (theme != this.theme)) {
+			
+		}
+		
+		
+		// attach to new card theme
+		
+		if (theme != null) {
+			// not the same theme
+			
+			// XXX to do detact from old theme.
+			
+			// attach to new card theme.
+			CardThemeImpl themeImpl = (CardThemeImpl) theme;
+			
+			themeImpl.addCard(this);
+		}
+		
 		this.theme = theme;
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * @param pickRate the pickRate to set
+	 * @param pickRate
+	 *            the pickRate to set
 	 */
 	public void setPickRate(int pickRate) {
 		this.pickRate = pickRate;
 	}
 
 	/**
-	 * @param price the price to set
+	 * @param price
+	 *            the price to set
 	 */
 	public void setPrice(double price) {
 		this.price = price;
 	}
 
 	/**
-	 * @param time the time to set
+	 * @param time
+	 *            the time to set
 	 */
 	public void setTime(Date time) {
 		this.time = time;
 	}
 
 	/**
-	 * @param type the type to set
+	 * @param type
+	 *            the type to set
 	 */
 	public void setType(int type) {
 		this.type = type;
 	}
 
 	/**
-	 * @param version the version to set
+	 * @param version
+	 *            the version to set
 	 */
 	public void setVersion(int version) {
 		this.version = version;
 	}
 
 	/**
-	 * @param itemNo the itemNo to set
+	 * @param itemNo
+	 *            the itemNo to set
 	 */
 	public void setItemNo(int itemNo) {
 		this.itemNo = itemNo;
 	}
 
 	/**
-	 * @param enabled the enabled to set
+	 * @param enabled
+	 *            the enabled to set
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cppoon.tencent.magiccard.Card#getComposition()
 	 */
 	@Override
@@ -202,15 +251,19 @@ public class CardImpl implements Card {
 		return formula;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.cppoon.tencent.magiccard.Card#setSynthesisFormula(int, com.cppoon.tencent.magiccard.Card[])
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.cppoon.tencent.magiccard.Card#setSynthesisFormula(int,
+	 * com.cppoon.tencent.magiccard.Card[])
 	 */
 	@Override
 	public void setSynthesisFormula(long synthesisTime, Card[] cards) {
-		
-		CardSynthesisFormula formula = new CardSynthesisFormulaImpl(this, synthesisTime, Arrays.asList(cards));
+
+		CardSynthesisFormula formula = new CardSynthesisFormulaImpl(this,
+				synthesisTime, Arrays.asList(cards));
 		this.formula = formula;
-		
+
 	}
-	
+
 }

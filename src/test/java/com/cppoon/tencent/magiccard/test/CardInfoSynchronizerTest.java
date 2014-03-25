@@ -98,14 +98,14 @@ public class CardInfoSynchronizerTest {
 		assertEquals("difficulty", 1, theme.getDifficulty());
 		assertNull("expiry time", theme.getExpiryTime());
 		assertEquals(40, 1, theme.getId());
-		assertEquals("时尚男套装", 1, theme.getName());
+		assertEquals("name", "时尚男套装", theme.getName());
 		assertEquals("pick rate", 0, theme.getPickRate());
-		assertEquals("experience", 100, theme.getPrize());
+		assertEquals("prize", 100, theme.getCoins(), 0.0);
 		assertEquals("publish time", new Date(1251970023000L), theme.getPublishTime());
-		assertEquals("bonus experience", 200, theme.getScore());
+		assertEquals("bonus experience", 200, theme.getExperience());
 		assertEquals("time", new Date(1309831119000L), theme.getTime());
 		assertEquals("type", 0, theme.getType());
-		assertEquals("version", 1, theme.getVersion());
+		assertEquals("version", 4, theme.getVersion());
 		assertTrue("enabled", theme.isEnabled());
 		
 		//

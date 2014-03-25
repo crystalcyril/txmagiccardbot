@@ -9,6 +9,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import com.cppoon.tencent.magiccard.Card;
 import com.cppoon.tencent.magiccard.CardInfoSynchronizer;
 import com.cppoon.tencent.magiccard.CardManager;
 import com.cppoon.tencent.magiccard.CardThemeManager;
@@ -55,16 +56,100 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 
 	protected void doSynchonize() {
 		
+		// process themes first
+		processThemes();
+		
+		// then cards
+		processCards();
+		
+		// then card synthesis rules.
+		processCardSynthesisRules();
 		
 		
 	}
+	
+	private void processCardSynthesisRules() {
+		
+	}
+
+	private void processCards() {
+		
+		for (CardInfo cardInfo : parsedCardInfos.values()) {
+			
+			
+			
+		}
+		
+	}
+
+	protected void processThemes() {
+		
+		for (CardTheme parsedCardTheme : parsedCardThemes.values()) {
+			
+			com.cppoon.tencent.magiccard.CardTheme cardTheme = cardThemeManager.findThemeById(parsedCardTheme.getId());
+			if (cardTheme == null) {
+				// it is a new card theme
+				cardTheme = cardThemeManager.createBuilder()
+					.difficulty(parsedCardTheme.getDifficulty())
+					.experience(parsedCardTheme.getExperience())
+					.expiryTime(parsedCardTheme.getExpiryTime())
+					.id(parsedCardTheme.getId())
+					.name(parsedCardTheme.getName())
+					.coins(parsedCardTheme.getCoins())
+					.publishTime(parsedCardTheme.getPublishTime())
+					.time(parsedCardTheme.getTime())
+					.type(parsedCardTheme.getType())
+					.version(parsedCardTheme.getVersion()).build();
+				
+				// we need to build the complete theme hierarchy now for this 
+				// new theme.
+				buildNewTheme(cardTheme);
+				
+				cardThemeManager.registerTheme(cardTheme);
+				
+			}
+			
+		}
+		
+	}
+	
+	protected void buildNewTheme(com.cppoon.tencent.magiccard.CardTheme cardTheme) {
+		
+		for (CardInfo parsedCardInfo : parsedCardInfos.values()) {
+			
+			// only process cards with matching theme ID.
+			if (parsedCardInfo.getThemeId() != cardTheme.getId()) {
+				continue;
+			}
+			
+			Card card = cardManager.createBuilder()
+				.id(parsedCardInfo.getId())
+				.name(parsedCardInfo.getName())
+				.price(parsedCardInfo.getPrice())
+				.theme(cardTheme)
+				.time(cardTheme.getTime())
+				.type(cardTheme.getType())
+				.version(cardTheme.getVersion())
+				.build();
+			
+		}
+		
+	}
+	
 
 	protected void doParseData(InputStream is) {
 
 		ThemeCardListParser themeCardListParser = new SimpleThemeCardListParser();
+		themeCardListParser.setListener(this);
+		
 		SimpleCardInfoParser cardInfoParser = new SimpleCardInfoParser();
+		cardInfoParser.setListener(this);
+		
 		SimpleThemeComposeListParser themeComposeListParser = new SimpleThemeComposeListParser();
+		themeComposeListParser.setListener(this);
 
+		// star parsing
+		
 		themeCardListParser.parse(is);
 		themeComposeListParser.parse(is);
 		cardInfoParser.parse(is);

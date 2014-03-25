@@ -63,8 +63,8 @@ public class ThemeCardListParserTest {
 		assertEquals("publish time", new Date(1251970023000L), cardTheme.getPublishTime());
 		assertEquals("pick rate", 0, cardTheme.getPickRate());
 		assertTrue("enabled", cardTheme.isEnabled());
-		assertEquals("prize", 100, cardTheme.getPrize());
-		assertEquals("score", 200, cardTheme.getScore());
+		assertEquals("prize", 100, cardTheme.getCoins());
+		assertEquals("score", 200, cardTheme.getExperience());
 		assertTrue("card IDs", Arrays.equals(new int[] { 66,65,64,39,38,37,36,35,33,32,31,30,29 }, 
 				cardTheme.getCardIds()));
 		assertEquals("theme type", 0, cardTheme.getType());
@@ -80,8 +80,8 @@ public class ThemeCardListParserTest {
 		assertEquals("publish time", new Date(1388592000000L), cardTheme.getPublishTime());
 		assertEquals("pick rate", 800, cardTheme.getPickRate());
 		assertTrue("enabled", cardTheme.isEnabled());
-		assertEquals("prize", 888, cardTheme.getPrize());
-		assertEquals("score", 888, cardTheme.getScore());
+		assertEquals("prize", 888, cardTheme.getCoins());
+		assertEquals("score", 888, cardTheme.getExperience());
 		assertTrue("card IDs", Arrays.equals(new int[] { 4740,4739,4738,4737,4736,4735,4734,4733,4732,4731,4730,4729 }, 
 				cardTheme.getCardIds()));
 		assertEquals("theme type", 2, cardTheme.getType());
