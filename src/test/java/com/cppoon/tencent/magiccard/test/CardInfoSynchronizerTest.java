@@ -167,7 +167,9 @@ public class CardInfoSynchronizerTest {
 		assertNull("time", tier2Card.getTime());
 		assertEquals("type", 1, tier2Card.getType());
 		assertEquals("version", 1, tier2Card.getVersion());
-		// check 3rd card
+		//
+		// check 3rd card.
+		//
 		tier2Card = tier2CardsIter.next();
 		assertEquals("ID", 29, tier2Card.getId());
 		assertEquals("item number", 0, tier2Card.getItemNo());
