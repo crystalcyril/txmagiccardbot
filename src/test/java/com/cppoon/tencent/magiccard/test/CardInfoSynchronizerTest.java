@@ -125,7 +125,7 @@ public class CardInfoSynchronizerTest {
 		assertEquals("price", 150.0, topCard.getPrice(), 0);
 //		assertEquals("", 38, card.getSynthesisFormula());
 		assertEquals("theme", theme, topCard.getTheme());
-		assertEquals("time", new Date(1309831119000L), topCard.getTime());
+		assertNull("time", topCard.getTime());
 		assertEquals("type", 1, topCard.getType());
 		assertEquals("version", 1, topCard.getVersion());
 

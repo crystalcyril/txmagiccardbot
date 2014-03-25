@@ -158,9 +158,9 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 				.name(parsedCardInfo.getName())
 				.price(parsedCardInfo.getPrice())
 				.theme(cardTheme)
-				.time(cardTheme.getTime())
-				.type(cardTheme.getType())
-				.version(cardTheme.getVersion())
+				.time(parsedCardInfo.getTime())
+				.type(parsedCardInfo.getType())
+				.version(parsedCardInfo.getVersion())
 				.build();
 			
 		}
