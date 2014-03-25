@@ -44,7 +44,7 @@ public class ThemeComposerListParserTestUtil {
 			
 		} else {
 			
-			fail("I don't suppoprt check compose rule for card ID " + cardId);
+			fail("I don't support check compose rule for card ID " + cardId);
 			
 		}
 		

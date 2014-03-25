@@ -7,12 +7,10 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 import org.junit.Test;
 
 import com.cppoon.tencent.magiccard.api.ThemeComposeListParser;
-import com.cppoon.tencent.magiccard.api.ThemeComposeRule;
 import com.cppoon.tencent.magiccard.api.impl.SimpleThemeComposeListParser;
 import com.cppoon.tencent.magiccard.util.IOUtil;
 import com.google.common.io.Resources;
