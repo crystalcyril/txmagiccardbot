@@ -58,7 +58,7 @@ public class CardInfoParserTest {
 		assertEquals("card ID", 29, cardInfo.getId());
 		assertEquals("theme ID", 40, cardInfo.getThemeId());
 		assertEquals("card name", "城市街道", cardInfo.getName());
-		assertEquals("price", 40, cardInfo.getPrice());
+		assertEquals("price", 40.0D, cardInfo.getPrice(), 0.0);
 		assertEquals("type", 1, cardInfo.getType());
 		assertEquals("pick rate", 0, cardInfo.getPickRate());
 		assertTrue("enabled", cardInfo.isEnabled());
@@ -72,7 +72,7 @@ public class CardInfoParserTest {
 		assertEquals("card ID", 4740, cardInfo.getId());
 		assertEquals("theme ID", 313, cardInfo.getThemeId());
 		assertEquals("card name", "生肖鼠", cardInfo.getName());
-		assertEquals("price", 214, cardInfo.getPrice());
+		assertEquals("price", 214.00D, cardInfo.getPrice(), 0.00D);
 		assertEquals("type", 0, cardInfo.getType());
 		assertEquals("pick rate", 0, cardInfo.getPickRate());
 		assertTrue("enabled", cardInfo.isEnabled());
@@ -82,5 +82,5 @@ public class CardInfoParserTest {
 		
 		
 	}
-
+	
 }

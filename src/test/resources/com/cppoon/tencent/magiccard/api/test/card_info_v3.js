@@ -4473,7 +4473,7 @@ var gift_list = [
 [1052,1,'680744','十二生肖2'],
 [1053,1,'680745','十二生肖3'],
 [1054,1,'680746','十二生肖4']
-]
+];
 
 
 //card_id,theme_id,CardName,Price,Type,PickRate, Enable, version, time, item no, [mana]

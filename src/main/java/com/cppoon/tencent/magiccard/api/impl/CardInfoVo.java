@@ -19,7 +19,7 @@ public class CardInfoVo implements CardInfo {
 
 	String name;
 
-	int price;
+	double price;
 
 	int type;
 
@@ -69,11 +69,11 @@ public class CardInfoVo implements CardInfo {
 		this.name = name;
 	}
 
-	public int getPrice() {
+	public double getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 

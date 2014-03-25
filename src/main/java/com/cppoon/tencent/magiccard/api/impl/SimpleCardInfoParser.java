@@ -157,7 +157,7 @@ public class SimpleCardInfoParser implements CardInfoParser {
 
 			// column 4: price
 			Double price = (Double) arr.get(3, null);
-			r.setPrice((int) Math.round(price));
+			r.setPrice(price);
 
 			// column 5: Type
 			Double type = (Double) arr.get(4, null);
