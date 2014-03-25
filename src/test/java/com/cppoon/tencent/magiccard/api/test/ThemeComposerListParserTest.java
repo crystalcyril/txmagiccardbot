@@ -54,21 +54,11 @@ public class ThemeComposerListParserTest {
 		assertEquals("number of compose rules", 2987, listener.getCount());
 
 		// check the first record
-		ThemeComposeRule rule = listener.getByCardId(42);
-		assertEquals("theme ID", 45, rule.getThemeId());
-		assertEquals("state", 1, rule.getState());
-		assertEquals("target card ID", 42, rule.getTargetCardId());
-		assertTrue("childen card IDs", Arrays.equals(new int[] { 41,40,43 }, rule.getChildrenCardIds()));
-		assertEquals("build time", 14400, rule.getBuildTime());
+		ThemeComposerListParserTestUtil.assertThemeComposeRuleOfCardIdIsCorrect(listener.getByCardId(42), 42);
 		
 		// check the latest card at the time of coding.
 		// 312,1,4717,4716,4712,4713,3600
-		rule = listener.getByCardId(4717);
-		assertEquals("theme ID", 312, rule.getThemeId());
-		assertEquals("state", 1, rule.getState());
-		assertEquals("target card ID", 4717, rule.getTargetCardId());
-		assertTrue("childen card IDs", Arrays.equals(new int[] { 4716,4712,4713 }, rule.getChildrenCardIds()));
-		assertEquals("build time", 3600, rule.getBuildTime());
+		ThemeComposerListParserTestUtil.assertThemeComposeRuleOfCardIdIsCorrect(listener.getByCardId(4717), 4717);
 		
 	}
 

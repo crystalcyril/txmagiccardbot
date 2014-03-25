@@ -8,7 +8,6 @@ import java.util.Map;
 
 import com.cppoon.tencent.magiccard.api.CardTheme;
 import com.cppoon.tencent.magiccard.api.ThemeCardListParserListener;
-import com.cppoon.tencent.magiccard.api.ThemeComposeRule;
 
 /**
  * @author Cyril

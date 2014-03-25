@@ -13,6 +13,9 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sun.org.mozilla.javascript.internal.NativeArray;
 
 import com.cppoon.tencent.magiccard.api.CardTheme;
@@ -59,6 +62,8 @@ import com.cppoon.tencent.magiccard.api.ThemeCardListParserListener;
  */
 public class SimpleThemeCardListParser implements ThemeCardListParser {
 
+	Logger log = LoggerFactory.getLogger(getClass());
+	
 	ScriptEngineManager manager = new ScriptEngineManager();
 	ScriptEngine engine = manager.getEngineByName("JavaScript");
 	
@@ -108,6 +113,7 @@ public class SimpleThemeCardListParser implements ThemeCardListParser {
 			}
 
 		} catch (IOException e) {
+			log.error("error parsing for card information", e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

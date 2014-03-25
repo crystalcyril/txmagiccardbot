@@ -150,8 +150,8 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 
 		// star parsing
 		
-		themeCardListParser.parse(is);
 		themeComposeListParser.parse(is);
+		themeCardListParser.parse(is);
 		cardInfoParser.parse(is);
 
 	}
