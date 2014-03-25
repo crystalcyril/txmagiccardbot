@@ -132,6 +132,12 @@ public class CardManagerTest {
 		assertEquals("material card 3", card_id_33, actualMaterialCards.get(2));
 		assertNotEquals("material card 1 is not", card_id_31,
 				actualMaterialCards.get(0));
+		
+		// the top card should be ID=35
+		assertEquals("number of theme's children card", 1, theme.getChildrenCards().size());
+		Card actualTopCard = theme.getChildrenCards().get(0);
+		assertEquals("top card ID", 35, actualTopCard.getId());
+		
 
 	}
 
