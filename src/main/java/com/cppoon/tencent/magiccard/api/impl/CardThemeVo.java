@@ -3,6 +3,7 @@
  */
 package com.cppoon.tencent.magiccard.api.impl;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import com.cppoon.tencent.magiccard.api.CardTheme;
@@ -275,4 +276,17 @@ public class CardThemeVo implements CardTheme {
 		this.expiryTime = expiryTime;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "id=" + id + ", name=" + name + ", difficulty=" + difficulty
+				+ ", publishTime=" + publishTime + ", pickRate=" + pickRate
+				+ ", enabled=" + enabled + ", coins=" + coins + ", experience="
+				+ experience + ", cardIds=" + Arrays.toString(cardIds)
+				+ ", type=" + type + ", version=" + version + ", time=" + time
+				+ ", expiryTime=" + expiryTime;
+	}
+	
 }

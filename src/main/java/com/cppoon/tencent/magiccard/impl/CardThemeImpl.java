@@ -287,6 +287,19 @@ public class CardThemeImpl implements CardTheme {
 		this.cards.add(card);
 		
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.cppoon.tencent.magiccard.CardTheme#getCardById(int)
+	 */
+	@Override
+	public Card getCardById(int cardId) {
+		
+		for (Card card : cards) {
+			if (card.getId() == cardId) return card;
+		}
+		
+		return null;	// not found
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

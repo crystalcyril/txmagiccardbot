@@ -9,6 +9,9 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.cppoon.tencent.magiccard.Card;
 import com.cppoon.tencent.magiccard.CardInfoSynchronizer;
 import com.cppoon.tencent.magiccard.CardManager;
@@ -29,6 +32,8 @@ import com.cppoon.tencent.magiccard.api.ThemeComposeRule;
 public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 		ThemeCardListParserListener, CardInfoParserListener,
 		ThemeComposeListParserListener {
+	
+	private static Logger log = LoggerFactory.getLogger(DesktopSiteJsCardInfoSynchronizer.class);
 
 	CardThemeManager cardThemeManager;
 
@@ -69,15 +74,42 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 	
 	private void processCardSynthesisRules() {
 		
+		for (ThemeComposeRule rule : parsedThemComposeRules) {
+
+			// find out the card
+			
+			com.cppoon.tencent.magiccard.CardTheme theme = cardThemeManager.findThemeById(rule.getThemeId());
+			
+			if (theme == null) {
+				log.warn("card theme (id={}) cannot be found, card synthesis rule will be ignored", rule.getThemeId());
+				continue;
+			}
+			
+			com.cppoon.tencent.magiccard.Card targetCard = theme.getCardById(rule.getTargetCardId());
+			ArrayList<Card> materials = new ArrayList<Card>();
+			for (int cardId : rule.getChildrenCardIds()) {
+				Card material = theme.getCardById(cardId);
+				if (material == null) {
+					// FIXME cyril do better handling.
+					log.error("card id={} not found in card theme, rule is ignored", cardId);
+					return;
+				}
+				materials.add(material);
+			}
+			
+			// create a rule.
+			targetCard.setSynthesisFormula(rule.getBuildTime(), materials.toArray(new Card[0]));
+			
+			
+		}
+		
 	}
 
 	private void processCards() {
 		
-		for (CardInfo cardInfo : parsedCardInfos.values()) {
-			
-			
-			
-		}
+//		for (CardInfo cardInfo : parsedCardInfos.values()) {
+//			
+//		}
 		
 	}
 

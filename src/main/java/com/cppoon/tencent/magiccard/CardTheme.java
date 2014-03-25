@@ -112,4 +112,12 @@ public interface CardTheme {
 	 */
 	List<Card> getChildrenCards();
 
+	/**
+	 * Find card in this theme.
+	 * 
+	 * @param cardId
+	 * @return
+	 */
+	Card getCardById(int cardId);
+
 }
