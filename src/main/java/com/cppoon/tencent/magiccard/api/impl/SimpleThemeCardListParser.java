@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.script.ScriptEngine;
@@ -222,14 +223,23 @@ public class SimpleThemeCardListParser implements ThemeCardListParser {
 			Double enabled = (Double) arr.get(5, null);
 			r.setEnabled(enabled == 0 ? false : true);
 
-			// column 7: prize
-			int prize = (int) Math.round((Double) arr.get(6, null));
+			// column 7: coins (prize)
+			double prize = (Double) arr.get(6, null);
 			r.setCoins(prize);
 
-			// column 8: score
+			// column 8: experience (score)
 			int score = (int) Math.round((Double) arr.get(7, null));
-			r.setScore(score);
+			r.setExperience(score);
 
+			// column 9: color
+			// TODO cyril 2014-03-25 implement this
+			
+			// column 10: gift IDs
+			r.setGiftIds(parseGiftIds(arr.get(9, null)));
+			
+			// column 11: text
+			r.setText((String)arr.get(10, null));
+			
 			// column 12: card IDs
 			NativeArray rawCardIds = (NativeArray) arr.get(11, null);
 			if (rawCardIds.getLength() > 0) {
@@ -266,6 +276,28 @@ public class SimpleThemeCardListParser implements ThemeCardListParser {
 			return null;
 		}
 
+	}
+
+	private int[] parseGiftIds(Object raw) {
+		
+		if (raw instanceof String) {
+			
+			String s = (String)raw;
+			String[] sid = s.split("\\|");
+			ArrayList<Integer> ids = new ArrayList<Integer>();
+			for (String id : sid) {
+				ids.add(Integer.parseInt(id));
+			}
+
+			int[] r = new int[ids.size()];
+			for (int i = 0; i < ids.size(); i++) {
+				r[i] = ids.get(i);
+			}
+			return r;
+			
+		}
+		
+		return null;
 	}
 
 	protected Date parseDate(long l) {

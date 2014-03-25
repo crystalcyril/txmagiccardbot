@@ -12,6 +12,7 @@ import com.cppoon.tencent.magiccard.api.CardTheme;
  * 
  * 
  * @author Cyril
+ * @since 0.1.0
  */
 public class CardThemeVo implements CardTheme {
 
@@ -31,6 +32,10 @@ public class CardThemeVo implements CardTheme {
 
 	int experience;
 
+	int[] giftIds;
+
+	String text;
+	
 	int[] cardIds;
 
 	int type;
@@ -179,19 +184,45 @@ public class CardThemeVo implements CardTheme {
 	}
 
 	/**
-	 * @param score
+	 * @param experience
 	 *            the score to set
 	 */
-	public void setScore(int score) {
-		this.experience = score;
+	public void setExperience(int experience) {
+		this.experience = experience;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.cppoon.tencent.magiccard.api.impl.CardTheme#getCardIds()
+	/**
+	 * @return the giftIds
 	 */
+	public int[] getGiftIds() {
+		return giftIds;
+	}
 
+	/**
+	 * @param giftIds
+	 *            the giftIds to set
+	 */
+	public void setGiftIds(int[] giftIds) {
+		this.giftIds = giftIds;
+	}
+
+	/**
+	 * @return the text
+	 */
+	public String getText() {
+		return text;
+	}
+
+	/**
+	 * @param text the text to set
+	 */
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	/**
+	 * 
+	 */
 	public int[] getCardIds() {
 		return cardIds;
 	}
@@ -284,9 +315,10 @@ public class CardThemeVo implements CardTheme {
 		return "id=" + id + ", name=" + name + ", difficulty=" + difficulty
 				+ ", publishTime=" + publishTime + ", pickRate=" + pickRate
 				+ ", enabled=" + enabled + ", coins=" + coins + ", experience="
-				+ experience + ", cardIds=" + Arrays.toString(cardIds)
+				+ experience + ", giftIds=" + Arrays.toString(giftIds)
+				+ ", text=" + text + ", cardIds=" + Arrays.toString(cardIds)
 				+ ", type=" + type + ", version=" + version + ", time=" + time
 				+ ", expiryTime=" + expiryTime;
 	}
-	
+
 }

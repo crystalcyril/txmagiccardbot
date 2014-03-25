@@ -46,6 +46,19 @@ public interface CardTheme {
 	int getExperience();
 
 	/**
+	 * 
+	 * @return
+	 */
+	int[] getGiftIds();
+	
+	/**
+	 * 
+	 * 
+	 * @return
+	 */
+	String getText();
+	
+	/**
 	 * @return the cardIds
 	 */
 	int[] getCardIds();
