@@ -4,6 +4,7 @@
 package com.cppoon.tencent.magiccard.api;
 
 import java.io.InputStream;
+import java.io.Reader;
 
 /**
  * 
@@ -25,5 +26,12 @@ public interface CardInfoParser {
 	 * @param is
 	 */
 	void parse(InputStream is);
+	
+	/**
+	 * 
+	 * 
+	 * @param reader
+	 */
+	void parse(Reader reader);
 
 }

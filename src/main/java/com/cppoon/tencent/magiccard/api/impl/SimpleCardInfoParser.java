@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -59,6 +60,28 @@ public class SimpleCardInfoParser implements CardInfoParser {
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cppoon.tencent.magiccard.api.CardInfoParser#parse(java.io.Reader)
+	 */
+	@Override
+	public void parse(Reader reader) {
+
+		try {
+			if (reader instanceof BufferedReader) {
+				handleCards((BufferedReader) reader);
+			} else {
+				handleCards(new BufferedReader(reader));
+			}
+		} catch (IOException e) {
+			// FIXME should not do this.
 			e.printStackTrace();
 		}
 

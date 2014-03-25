@@ -4,6 +4,7 @@
 package com.cppoon.tencent.magiccard.api;
 
 import java.io.InputStream;
+import java.io.Reader;
 
 /**
  * 
@@ -20,5 +21,7 @@ public interface ThemeCardListParser {
 	void setListener(ThemeCardListParserListener listener);
 
 	void parse(InputStream is);
+
+	void parse(Reader reader);
 
 }

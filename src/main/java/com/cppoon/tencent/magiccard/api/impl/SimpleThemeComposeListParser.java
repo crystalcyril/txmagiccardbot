@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -82,8 +83,26 @@ public class SimpleThemeComposeListParser implements ThemeComposeListParser {
 
 	}
 
+	@Override
+	public void parse(Reader reader) {
+
+		try {
+
+			if (reader instanceof BufferedReader) {
+				handleRecords((BufferedReader) reader);
+			} else {
+				handleRecords(new BufferedReader(reader));
+			}
+
+		} catch (IOException e) {
+			// FIXME cyril should not do this.
+			e.printStackTrace();
+		}
+
+	}
+
 	/**
-	 * @throws IOException 
+	 * @throws IOException
 	 * 
 	 */
 	protected void handleRecords(BufferedReader reader) throws IOException {
