@@ -162,6 +162,8 @@ public class SimpleThemeCardListParser implements ThemeCardListParser {
 			if (s.endsWith("],")) {
 				s = s.substring(0, s.length() - 1);
 			}
+			
+			if (s.startsWith("//")) continue;
 
 			// do nothing for empty line.
 			if (s.length() == 0)
