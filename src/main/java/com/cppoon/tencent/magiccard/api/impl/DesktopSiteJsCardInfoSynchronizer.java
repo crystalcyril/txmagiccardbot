@@ -16,7 +16,6 @@ import com.cppoon.tencent.magiccard.CardThemeManager;
 import com.cppoon.tencent.magiccard.api.CardInfo;
 import com.cppoon.tencent.magiccard.api.CardInfoParserListener;
 import com.cppoon.tencent.magiccard.api.CardTheme;
-import com.cppoon.tencent.magiccard.api.ThemeCardListParser;
 import com.cppoon.tencent.magiccard.api.ThemeCardListParserListener;
 import com.cppoon.tencent.magiccard.api.ThemeComposeListParserListener;
 import com.cppoon.tencent.magiccard.api.ThemeComposeRule;
@@ -138,21 +137,29 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 	
 
 	protected void doParseData(InputStream is) {
+		
+		JsV3CardInfoParser parser = new JsV3CardInfoParser();
+		
+		parser.setListener((ThemeCardListParserListener) this);
+		parser.setListener((CardInfoParserListener) this);
+		parser.setListener((ThemeComposeListParserListener) this);
+		
+		parser.parse(is);
 
-		ThemeCardListParser themeCardListParser = new SimpleThemeCardListParser();
-		themeCardListParser.setListener(this);
-		
-		SimpleCardInfoParser cardInfoParser = new SimpleCardInfoParser();
-		cardInfoParser.setListener(this);
-		
-		SimpleThemeComposeListParser themeComposeListParser = new SimpleThemeComposeListParser();
-		themeComposeListParser.setListener(this);
-
-		// star parsing
-		
-		themeComposeListParser.parse(is);
-		themeCardListParser.parse(is);
-		cardInfoParser.parse(is);
+//		ThemeCardListParser themeCardListParser = new SimpleThemeCardListParser();
+//		themeCardListParser.setListener(this);
+//		
+//		SimpleCardInfoParser cardInfoParser = new SimpleCardInfoParser();
+//		cardInfoParser.setListener(this);
+//		
+//		SimpleThemeComposeListParser themeComposeListParser = new SimpleThemeComposeListParser();
+//		themeComposeListParser.setListener(this);
+//
+//		// star parsing
+//		
+//		themeComposeListParser.parse(is);
+//		themeCardListParser.parse(is);
+//		cardInfoParser.parse(is);
 
 	}
 

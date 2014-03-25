@@ -113,7 +113,7 @@ public class CardInfoSynchronizerTest {
 		List<Card> topCards = theme.getChildrenCards();
 		Card topCard = null;
 		
-		assertEquals("number of top cards", 1, topCards);
+		assertEquals("number of top cards", 1, topCards.size());
 		
 		topCard = topCards.get(0);
 		

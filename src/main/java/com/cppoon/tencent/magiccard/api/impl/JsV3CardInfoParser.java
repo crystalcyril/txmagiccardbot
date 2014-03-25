@@ -9,11 +9,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import com.cppoon.tencent.magiccard.api.CardInfoParser;
+import com.cppoon.tencent.magiccard.api.CardInfoParserListener;
 import com.cppoon.tencent.magiccard.api.ThemeCardListParser;
+import com.cppoon.tencent.magiccard.api.ThemeCardListParserListener;
 import com.cppoon.tencent.magiccard.api.ThemeComposeListParser;
-import com.cppoon.tencent.magiccard.api.test.TestCardInfoParserListener;
-import com.cppoon.tencent.magiccard.api.test.TestThemeCardListParserListener;
-import com.cppoon.tencent.magiccard.api.test.TestThemeComposeListParserListener;
+import com.cppoon.tencent.magiccard.api.ThemeComposeListParserListener;
 
 /**
  * 
@@ -23,11 +23,11 @@ import com.cppoon.tencent.magiccard.api.test.TestThemeComposeListParserListener;
  */
 public class JsV3CardInfoParser {
 	
-	TestThemeComposeListParserListener themeComposeListener;
+	ThemeComposeListParserListener themeComposeListener;
 
-	TestCardInfoParserListener cardInfoListener;
+	CardInfoParserListener cardInfoListener;
 	
-	TestThemeCardListParserListener themeCardListener;
+	ThemeCardListParserListener themeCardListener;
 	
 	public void parse(InputStream is) {
 
@@ -84,15 +84,15 @@ public class JsV3CardInfoParser {
 	}
 
 	public void setListener(
-			TestThemeComposeListParserListener themeComposeListener) {
+			ThemeComposeListParserListener themeComposeListener) {
 		this.themeComposeListener = themeComposeListener;
 	}
 
-	public void setListener(TestCardInfoParserListener cardInfoListener) {
+	public void setListener(CardInfoParserListener cardInfoListener) {
 		this.cardInfoListener = cardInfoListener;
 	}
 
-	public void setListener(TestThemeCardListParserListener themeCardListener) {
+	public void setListener(ThemeCardListParserListener themeCardListener) {
 		this.themeCardListener = themeCardListener;
 	}
 	
