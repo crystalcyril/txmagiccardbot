@@ -51,6 +51,7 @@ public class SimpleCardInfoParser implements CardInfoParser {
 				if (s.contains("var card_list")) {
 
 					handleCards(reader);
+					break;
 
 				}
 

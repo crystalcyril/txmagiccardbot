@@ -69,6 +69,7 @@ public class SimpleThemeComposeListParser implements ThemeComposeListParser {
 				if (s.contains("var theme_compose_list")) {
 
 					handleRecords(reader);
+					break;
 
 				}
 

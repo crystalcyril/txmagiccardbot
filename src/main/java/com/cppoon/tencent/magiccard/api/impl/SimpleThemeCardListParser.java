@@ -101,6 +101,7 @@ public class SimpleThemeCardListParser implements ThemeCardListParser {
 				if (s.contains("var theme_card_list")) {
 
 					handleThemes(reader);
+					break;
 
 				}
 
