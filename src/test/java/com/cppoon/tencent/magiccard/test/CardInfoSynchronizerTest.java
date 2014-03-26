@@ -203,9 +203,7 @@ public class CardInfoSynchronizerTest {
 			Card tier3Card;
 			CardSynthesisFormula formula = tier2Card_1.getSynthesisFormula();
 			
-			
 			assertNotNull("synthesis formula", formula);
-			
 			assertEquals("synthesis time", 3600, formula.getTime());
 			assertTrue("formula's target card has same reference", formula.getTarget() == tier2Card_1);
 			assertEquals("number of material cards", 3, formula.getMaterials().size());

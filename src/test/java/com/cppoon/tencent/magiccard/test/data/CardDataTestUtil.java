@@ -72,8 +72,7 @@ public final class CardDataTestUtil {
 			boolean expectedEnabled, double expectedCoins, 
 			int expectedExperience, String expectedText,
 			int expectedType, int expectedVersion,
-			Date expectedTime, Date expectedExpiryTime
-			) {
+			Date expectedTime, Date expectedExpiryTime) {
 		
 		//theme_id, theme_name,theme_Difficulty,theme_PublishTime,theme_PickRate, theme_Enable, theme_Prize,theme_Score,theme_color, gift, text,
 		//card1_id,..,cardn_id,theme_type,version,time,offtime,flash_src_tid
