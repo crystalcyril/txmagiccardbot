@@ -100,7 +100,6 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 			// create a rule.
 			targetCard.setSynthesisFormula(rule.getBuildTime(), materials.toArray(new Card[0]));
 			
-			
 		}
 		
 	}
@@ -118,7 +117,11 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 		for (CardThemeInfo parsedCardTheme : parsedCardThemes.values()) {
 			
 			com.cppoon.tencent.magiccard.CardTheme cardTheme = cardThemeManager.findThemeById(parsedCardTheme.getId());
+			
 			if (cardTheme == null) {
+				
+				log.trace("new theme ({}, ID={}) encountered", parsedCardTheme.getName(), parsedCardTheme.getId());
+				
 				// it is a new card theme
 				cardTheme = cardThemeManager.createBuilder()
 					.difficulty(parsedCardTheme.getDifficulty())
@@ -140,6 +143,10 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 				buildNewTheme(cardTheme);
 				
 				cardThemeManager.registerTheme(cardTheme);
+				
+			} else {
+				
+				log.trace("existing theme ({}, ID={}) is found", parsedCardTheme.getName(), parsedCardTheme.getId());
 				
 			}
 			

@@ -472,6 +472,8 @@ public class CardInfoSynchronizerTest {
 		
 		assertThemeID_40(theme);
 		
+		CardTheme originalTheme = theme;
+		
 		
 		//
 		// WHEN
@@ -499,7 +501,13 @@ public class CardInfoSynchronizerTest {
 			theme = cardThemeIter.next();
 			
 			if (theme.getId() == 40) {
+				
 				assertThemeID_40(theme);
+				
+				// also make sure the new "ID = 40" theme is the same as the old one.
+				
+				assertTrue("theme ID=40 should be the same intance", originalTheme == theme);
+				
 			} else if (theme.getId() == 45) {
 				assertThemeID_45(theme);
 			} else {
