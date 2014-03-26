@@ -187,25 +187,25 @@ public class CardInfoSynchronizerTest {
 		assertEquals("synthesis time", 14400, topCardSynthesisFormula.getTime());
 		// check the children
 		List<Card> tier2Cards = topCardSynthesisFormula.getMaterials();
-		Card tier2Card;
 		// the children cards should be: ID = 37,35,29
 		Iterator<Card> tier2CardsIter = tier2Cards.iterator();
+		
 		//
 		// check 1st card in tier 2 cards: ID = 37
 		//
-		Card tier2Card_1 = tier2CardsIter.next();
+		Card tier2Card = tier2CardsIter.next();
 		// [37,40,'套白马甲',40,1,0,1,3,0,1027639,[0]],
-		CardDataTestUtil.assertCard(tier2Card_1,
+		CardDataTestUtil.assertCard(tier2Card,
 				37, theme, "套白马甲", 40.00, 1, 0, true, 3, null, 1027639);
 		{
 			// check the material cards of this card
 			
 			Card tier3Card;
-			CardSynthesisFormula formula = tier2Card_1.getSynthesisFormula();
+			CardSynthesisFormula formula = tier2Card.getSynthesisFormula();
 			
 			assertNotNull("synthesis formula", formula);
 			assertEquals("synthesis time", 3600, formula.getTime());
-			assertTrue("formula's target card has same reference", formula.getTarget() == tier2Card_1);
+			assertTrue("formula's target card has same reference", formula.getTarget() == tier2Card);
 			assertEquals("number of material cards", 3, formula.getMaterials().size());
 			
 			// the material cards are: ID = 39,36,32
@@ -230,18 +230,83 @@ public class CardInfoSynchronizerTest {
 		//
 		// check 2nd card
 		//
-		Card tier2Card_2 = tier2CardsIter.next();
+		tier2Card = tier2CardsIter.next();
 		// [35,40,'酷帅打扮',40,1,0,1,1,0,0,[0]],
-		CardDataTestUtil.assertCard(tier2Card_2,
+		CardDataTestUtil.assertCard(tier2Card,
 				35, theme, "酷帅打扮", 40.00, 1, 0, true, 1, null, 0);
+		{
+			// check the material cards of this card
+			
+			Card tier3Card;
+			CardSynthesisFormula formula = tier2Card.getSynthesisFormula();
+			
+			assertNotNull("synthesis formula", formula);
+			assertEquals("synthesis time", 3600, formula.getTime());
+			assertTrue("formula's target card has same reference", formula.getTarget() == tier2Card);
+			assertEquals("number of material cards", 3, formula.getMaterials().size());
+			
+			// the material cards are: ID = 31,30,33
+
+			// check 1st card: card ID = 31
+			// [31,40,'韩版长发',10,0,0,1,1,0,1025921,[0]],
+			tier3Card = formula.getMaterials().get(0);
+			CardDataTestUtil.assertCard(tier3Card, 
+					31, theme, "韩版长发", 10.00, 0, 0, true, 1, null, 1025921);
+			
+			// check 2nd card: card ID = 30
+			// [30,40,'搞怪笑脸',10,0,0,1,1,0,1011379,[0]],
+			tier3Card = formula.getMaterials().get(1);
+			CardDataTestUtil.assertCard(tier3Card, 
+					30, theme, "搞怪笑脸", 10.00, 0, 0, true, 1, null, 1011379);
+			
+			// check 2nd card: card ID = 33
+			// [33,40,'黑框大镜',10,0,0,1,1,0,1009328,[0]],
+			tier3Card = formula.getMaterials().get(2);
+			CardDataTestUtil.assertCard(tier3Card, 
+					33, theme, "黑框大镜", 10.00, 0, 0, true, 1, null, 1009328);
+			
+		}
+		
 		
 		//
 		// check 3rd card.
 		//
-		Card tier2Card_3 = tier2CardsIter.next();
+		tier2Card = tier2CardsIter.next();
 		// [29,40,'城市街道',40,1,0,1,1,0,1027529,[0]],
-		CardDataTestUtil.assertCard(tier2Card_3,
+		CardDataTestUtil.assertCard(tier2Card,
 				29, theme, "城市街道", 40.00, 1, 0, true, 1, null, 1027529);
+		{
+			// check the material cards of this card
+			
+			Card tier3Card;
+			CardSynthesisFormula formula = tier2Card.getSynthesisFormula();
+			
+			assertNotNull("synthesis formula", formula);
+			assertEquals("synthesis time", 3600, formula.getTime());
+			assertTrue("formula's target card has same reference", formula.getTarget() == tier2Card);
+			assertEquals("number of material cards", 3, formula.getMaterials().size());
+			
+			// the material cards are: ID = 65,64,66
+
+			// check 1st card: card ID = 65
+			// [65,40,'黄色TAXI',10,0,0,1,1,0,0,[0]],
+			tier3Card = formula.getMaterials().get(0);
+			CardDataTestUtil.assertCard(tier3Card, 
+					65, theme, "黄色TAXI", 10.00, 0, 0, true, 1, null, 0);
+			
+			// check 2nd card: card ID = 64
+			// [64,40,'黑色提包',10,0,0,1,3,0,1016676,[0]],
+			tier3Card = formula.getMaterials().get(1);
+			CardDataTestUtil.assertCard(tier3Card, 
+					64, theme, "黑色提包", 10.00, 0, 0, true, 3, null, 1016676);
+			
+			// check 2nd card: card ID = 66
+			// [66,40,'银珠裤链',10,0,0,1,3,0,1009418,[0]],
+			tier3Card = formula.getMaterials().get(2);
+			CardDataTestUtil.assertCard(tier3Card, 
+					66, theme, "银珠裤链", 10.00, 0, 0, true, 3, null, 1009418);
+			
+		}
 		
 	}
 	
