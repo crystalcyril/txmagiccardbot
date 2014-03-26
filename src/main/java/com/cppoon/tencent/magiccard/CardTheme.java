@@ -120,4 +120,11 @@ public interface CardTheme {
 	 */
 	Card getCardById(int cardId);
 
+	/**
+	 * The text associated with this theme.
+	 * 
+	 * @return
+	 */
+	String getText();
+
 }

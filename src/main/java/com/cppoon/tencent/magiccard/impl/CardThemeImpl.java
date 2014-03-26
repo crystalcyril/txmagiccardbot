@@ -33,7 +33,9 @@ public class CardThemeImpl implements CardTheme {
 
 	private Date publishTime;
 
-	private int score;
+	private int experience;
+
+	private String text;
 
 	private Date time;
 
@@ -145,18 +147,19 @@ public class CardThemeImpl implements CardTheme {
 	}
 
 	/**
-	 * @return the score
+	 * @return the bonus experience given when the theme is completely
+	 *         synthesized.
 	 */
 	public int getExperience() {
-		return score;
+		return experience;
 	}
 
 	/**
-	 * @param score
+	 * @param experience
 	 *            the score to set
 	 */
-	public void setScore(int score) {
-		this.score = score;
+	public void setExperience(int experience) {
+		this.experience = experience;
 	}
 
 	/**
@@ -172,6 +175,21 @@ public class CardThemeImpl implements CardTheme {
 	 */
 	public void setTime(Date time) {
 		this.time = time;
+	}
+
+	/**
+	 * @return the text
+	 */
+	public String getText() {
+		return text;
+	}
+
+	/**
+	 * @param text
+	 *            the text to set
+	 */
+	public void setText(String text) {
+		this.text = text;
 	}
 
 	/**
@@ -241,7 +259,7 @@ public class CardThemeImpl implements CardTheme {
 	 */
 	@Override
 	public List<Card> getChildrenCards() {
-		
+
 		// find all cards which are NOT required by other cards.
 		// iterate all synthesis formulas.
 		//
@@ -249,28 +267,27 @@ public class CardThemeImpl implements CardTheme {
 		// synthesis.
 		//
 		// so, this finally breaks down to:
-		// - any card which are NOT a synthesis material of any card are 
-		//   considered as top cards.
-		
+		// - any card which are NOT a synthesis material of any card are
+		// considered as top cards.
 
 		// Step 1: Find all card IDs which ARE NOT top cards.
 		Set<Integer> extractIds = new HashSet<Integer>();
 		for (Card card : cards) {
-			
+
 			CardSynthesisFormula formula = card.getSynthesisFormula();
-			
+
 			// this card requires no synthesis. MAYBE a top card.
 			if (formula == null) {
 				continue;
 			}
-			
-			// otherwise, any material cards in the formula ARE NOT 
+
+			// otherwise, any material cards in the formula ARE NOT
 			// top cards.
 			for (Card material : formula.getMaterials()) {
 				extractIds.add(material.getId());
 			}
 		}
-		
+
 		// Step 2: Find out the top cards
 		ArrayList<Card> ret = new ArrayList<Card>();
 		for (Card card : cards) {
@@ -278,37 +295,42 @@ public class CardThemeImpl implements CardTheme {
 				ret.add(card);
 			}
 		}
-		
+
 		return ret;
 	}
 
 	public void addCard(CardImpl card) {
-		
+
 		this.cards.add(card);
-		
+
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cppoon.tencent.magiccard.CardTheme#getCardById(int)
 	 */
 	@Override
 	public Card getCardById(int cardId) {
-		
+
 		for (Card card : cards) {
-			if (card.getId() == cardId) return card;
+			if (card.getId() == cardId)
+				return card;
 		}
-		
-		return null;	// not found
+
+		return null; // not found
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return "id=" + id + ", name=" + name + ", difficulty=" + difficulty
 				+ ", pickRate=" + pickRate + ", coins=" + coins
-				+ ", publishTime=" + publishTime + ", score=" + score
+				+ ", publishTime=" + publishTime + ", score=" + experience
 				+ ", time=" + time + ", expiryTime=" + expiryTime + ", type="
 				+ type + ", version=" + version + ", enabled=" + enabled;
 	}

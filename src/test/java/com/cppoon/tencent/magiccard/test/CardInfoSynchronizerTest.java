@@ -25,6 +25,7 @@ import com.cppoon.tencent.magiccard.CardThemeManager;
 import com.cppoon.tencent.magiccard.api.impl.DesktopSiteJsCardInfoSynchronizer;
 import com.cppoon.tencent.magiccard.impl.SimpleCardManager;
 import com.cppoon.tencent.magiccard.impl.SimpleCardThemeManager;
+import com.cppoon.tencent.magiccard.test.data.CardDataTestUtil;
 import com.google.common.io.Resources;
 
 /**
@@ -151,24 +152,19 @@ public class CardInfoSynchronizerTest {
 
 	
 	/**
+	 * Check the complete theme suite for theme ID = 40, a 1-star theme.
+	 * <p>
 	 * 
+	 * Theme Name: <strong>时尚男套装</strong>
 	 * 
 	 * @param theme
 	 */
 	protected void assertThemeID_40(CardTheme theme) {
 		
-		assertEquals("difficulty", 1, theme.getDifficulty());
-		assertNull("expiry time", theme.getExpiryTime());
-		assertEquals(40, 1, theme.getId());
-		assertEquals("name", "时尚男套装", theme.getName());
-		assertEquals("pick rate", 0, theme.getPickRate());
-		assertEquals("prize", 100, theme.getCoins(), 0.0);
-		assertEquals("publish time", new Date(1251970023000L), theme.getPublishTime());
-		assertEquals("bonus experience", 200, theme.getExperience());
-		assertEquals("time", new Date(1309831119000L), theme.getTime());
-		assertEquals("type", 0, theme.getType());
-		assertEquals("version", 4, theme.getVersion());
-		assertTrue("enabled", theme.isEnabled());
+		// [40,'时尚男套装',1,1251970023,0,1,100,200,0xffffff,'24','',[66,65,64,39,38,37,36,35,33,32,31,30,29],0,4,1309831119,0,0,1],
+		CardDataTestUtil.assertCardTheme(theme, 40, "时尚男套装", 
+				1, new Date(1251970023000L), 0, true, 100.00, 200, "", 0, 4, 
+				new Date(1309831119000L), null);
 		
 		//
 		// check top card
@@ -177,18 +173,9 @@ public class CardInfoSynchronizerTest {
 		
 		assertEquals("number of top cards", 1, topCards.size());
 		
-		topCard = topCards.get(0);
-		
 		// check card details
-		assertEquals("ID", 38, topCard.getId());
-		assertEquals("item number", 0, topCard.getItemNo());
-		assertEquals("name", "整套搭配", topCard.getName());
-		assertEquals("pick rate", 0, topCard.getPickRate());
-		assertEquals("price", 150.0, topCard.getPrice(), 0);
-		assertEquals("theme", theme, topCard.getTheme());
-		assertNull("time", topCard.getTime());
-		assertEquals("type", 1, topCard.getType());
-		assertEquals("version", 1, topCard.getVersion());
+		topCard = topCards.get(0);
+		CardDataTestUtil.assertCard(topCard, 38, theme, "整套搭配", 150.0, 1, 0, true, 1, null, 0);
 
 		//
 		// check the children cards of the top cards, which should be three
@@ -204,66 +191,76 @@ public class CardInfoSynchronizerTest {
 		// the children cards should be: ID = 37,35,29
 		Iterator<Card> tier2CardsIter = tier2Cards.iterator();
 		//
-		// check 1st card in tier 2 cards
+		// check 1st card in tier 2 cards: ID = 37
 		//
-		tier2Card = tier2CardsIter.next();
-		assertEquals("ID", 37, tier2Card.getId());
-		assertEquals("item number", 1027639, tier2Card.getItemNo());
-		assertEquals("ID", "套白马甲", tier2Card.getName());
-		assertEquals("pick rate", 0, tier2Card.getPickRate());
-		assertEquals("price", 40.0, tier2Card.getPrice(), 0.00);
-		assertEquals("theme", theme, tier2Card.getTheme());
-		assertNull("time", tier2Card.getTime());
-		assertEquals("type", 1, tier2Card.getType());
-		assertEquals("version", 3, tier2Card.getVersion());
+		Card tier2Card_1 = tier2CardsIter.next();
+		// [37,40,'套白马甲',40,1,0,1,3,0,1027639,[0]],
+		CardDataTestUtil.assertCard(tier2Card_1,
+				37, theme, "套白马甲", 40.00, 1, 0, true, 3, null, 1027639);
+		{
+			// check the material cards of this card
+			
+			Card tier3Card;
+			CardSynthesisFormula formula = tier2Card_1.getSynthesisFormula();
+			
+			
+			assertNotNull("synthesis formula", formula);
+			
+			assertEquals("synthesis time", 3600, formula.getTime());
+			assertTrue("formula's target card has same reference", formula.getTarget() == tier2Card_1);
+			assertEquals("number of material cards", 3, formula.getMaterials().size());
+			
+			// the material cards are: ID = 39,36,32
+
+			// check 1st card: card ID = 39
+			tier3Card = formula.getMaterials().get(0);
+			CardDataTestUtil.assertCard(tier3Card, 
+					39, theme, "鸭舌帽子", 10.00, 0, 0, true, 3, null, 1022513);
+			
+			// check 2nd card: card ID = 36
+			tier3Card = formula.getMaterials().get(1);
+			CardDataTestUtil.assertCard(tier3Card, 
+					36, theme, "魅力黑裤", 10.00, 0, 0, true, 3, null, 1026801);
+			
+			// check 2nd card: card ID = 32
+			// [32,40,'黑白布鞋',10,0,0,1,1,0,0,[0]],
+			tier3Card = formula.getMaterials().get(2);
+			CardDataTestUtil.assertCard(tier3Card,
+					32, theme, "黑白布鞋", 10.00, 0, 0, true, 1, null, 0);
+			
+		}
 		//
 		// check 2nd card
 		//
-		tier2Card = tier2CardsIter.next();
-		assertEquals("ID", 35, tier2Card.getId());
-		assertEquals("item number", 0, tier2Card.getItemNo());
-		assertEquals("ID", "酷帅打扮", tier2Card.getName());
-		assertEquals("pick rate", 0, tier2Card.getPickRate());
-		assertEquals("price", 40.0, tier2Card.getPrice(), 0.00);
-		assertEquals("theme", theme, tier2Card.getTheme());
-		assertNull("time", tier2Card.getTime());
-		assertEquals("type", 1, tier2Card.getType());
-		assertEquals("version", 1, tier2Card.getVersion());
+		Card tier2Card_2 = tier2CardsIter.next();
+		// [35,40,'酷帅打扮',40,1,0,1,1,0,0,[0]],
+		CardDataTestUtil.assertCard(tier2Card_2,
+				35, theme, "酷帅打扮", 40.00, 1, 0, true, 1, null, 0);
+		
 		//
 		// check 3rd card.
 		//
-		tier2Card = tier2CardsIter.next();
-		assertEquals("ID", 29, tier2Card.getId());
-		assertEquals("item number", 1027529, tier2Card.getItemNo());
-		assertEquals("ID", "城市街道", tier2Card.getName());
-		assertEquals("pick rate", 0, tier2Card.getPickRate());
-		assertEquals("price", 40.0, tier2Card.getPrice(), 0.00);
-		assertEquals("theme", theme, tier2Card.getTheme());
-		assertNull("time", tier2Card.getTime());
-		assertEquals("type", 1, tier2Card.getType());
-		assertEquals("version", 1, tier2Card.getVersion());
+		Card tier2Card_3 = tier2CardsIter.next();
+		// [29,40,'城市街道',40,1,0,1,1,0,1027529,[0]],
+		CardDataTestUtil.assertCard(tier2Card_3,
+				29, theme, "城市街道", 40.00, 1, 0, true, 1, null, 1027529);
 		
 	}
 	
 	/**
+	 * Check the complete theme suite for theme ID = 45, a 1-star theme.
+	 * <p>
 	 * 
+	 * Theme Name: <strong>时尚女套装</strong>
 	 * 
 	 * @param theme
 	 */
 	protected void assertThemeID_45(CardTheme theme) {
-		
-		assertEquals("difficulty", 1, theme.getDifficulty());
-		assertNull("expiry time", theme.getExpiryTime());
-		assertEquals("id", 45, 1, theme.getId());
-		assertEquals("name", "时尚女套装", theme.getName());
-		assertEquals("pick rate", 0, theme.getPickRate());
-		assertEquals("coins", 100, theme.getCoins(), 0.0);
-		assertEquals("publish time", new Date(1251970023000L), theme.getPublishTime());
-		assertEquals("bonus experience", 200, theme.getExperience());
-		assertEquals("time", new Date(1309831120000L), theme.getTime());
-		assertEquals("type", 0, theme.getType());
-		assertEquals("version", 4, theme.getVersion());
-		assertTrue("enabled", theme.isEnabled());
+
+		// [45,'时尚女套装',1,1251970023,0,1,100,200,0x000000,'26','',[69,68,67,49,48,47,46,45,44,43,42,41,40],0,4,1309831120,0,0,1],
+		CardDataTestUtil.assertCardTheme(theme, 45, "时尚女套装", 
+				1, new Date(1251970023000L), 0, true, 100.00, 200, "", 0, 4, 
+				new Date(1309831120000L), null);
 		
 		//
 		// check top card
@@ -302,41 +299,21 @@ public class CardInfoSynchronizerTest {
 		// check 1st card in tier 2 cards: ID = 41
 		//
 		tier2Card = tier2CardsIter.next();
-		assertEquals("ID", 41, tier2Card.getId());
-		assertEquals("item number", 0, tier2Card.getItemNo());
-		assertEquals("name", "潮流打扮", tier2Card.getName());
-		assertEquals("pick rate", 0, tier2Card.getPickRate());
-		assertEquals("price", 40.0, tier2Card.getPrice(), 0.00);
-		assertEquals("theme", theme, tier2Card.getTheme());
-		assertNull("time", tier2Card.getTime());
-		assertEquals("type", 1, tier2Card.getType());
-		assertEquals("version", 1, tier2Card.getVersion());
+		CardDataTestUtil.assertCard(tier2Card, 41, theme, "潮流打扮", 40.0, 1, 0, true, 1, null, 0);
+
 		//
 		// check 2nd card ID = 40
 		//
+		// [40,45,'彩虹短袖',40,1,0,1,3,0,1019458,[0]],
 		tier2Card = tier2CardsIter.next();
-		assertEquals("ID", 40, tier2Card.getId());
-		assertEquals("item number", 1019458, tier2Card.getItemNo());
-		assertEquals("ID", "彩虹短袖", tier2Card.getName());
-		assertEquals("pick rate", 0, tier2Card.getPickRate());
-		assertEquals("price", 40.0, tier2Card.getPrice(), 0.00);
-		assertEquals("theme", theme, tier2Card.getTheme());
-		assertNull("time", tier2Card.getTime());
-		assertEquals("type", 1, tier2Card.getType());
-		assertEquals("version", 3, tier2Card.getVersion());
+		CardDataTestUtil.assertCard(tier2Card, 40, theme, "彩虹短袖", 40.0, 1, 0, true, 3, null, 1019458);
+		
 		//
 		// check 3rd card: ID = 43
 		//
+		// [43,45,'别墅背景',40,1,0,1,1,0,1007188,[0]],
 		tier2Card = tier2CardsIter.next();
-		assertEquals("ID", 43, tier2Card.getId());
-		assertEquals("item number", 1007188, tier2Card.getItemNo());
-		assertEquals("name", "别墅背景", tier2Card.getName());
-		assertEquals("pick rate", 0, tier2Card.getPickRate());
-		assertEquals("price", 40.0, tier2Card.getPrice(), 0.00);
-		assertEquals("theme", theme, tier2Card.getTheme());
-		assertNull("time", tier2Card.getTime());
-		assertEquals("type", 1, tier2Card.getType());
-		assertEquals("version", 1, tier2Card.getVersion());
+		CardDataTestUtil.assertCard(tier2Card, 43, theme, "别墅背景", 40.0, 1, 0, true, 1, null, 1007188);
 		
 	}
 	

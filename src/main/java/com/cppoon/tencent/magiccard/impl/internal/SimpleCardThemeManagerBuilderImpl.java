@@ -27,10 +27,16 @@ public class SimpleCardThemeManagerBuilderImpl implements
 
 	private double coins;
 	
+	private boolean enabled;
+	
+	private int pickRate;
+	
 	private int experience;
 
 	private Date publishTime;
 
+	private String text;
+	
 	private int type;
 
 	private int color;
@@ -100,6 +106,15 @@ public class SimpleCardThemeManagerBuilderImpl implements
 		this.publishTime = when;
 		return this;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.cppoon.tencent.magiccard.CardThemeManager.Builder#text(java.lang.String)
+	 */
+	@Override
+	public Builder text(String text) {
+		this.text = text;
+		return this;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -147,8 +162,24 @@ public class SimpleCardThemeManagerBuilderImpl implements
 		return this;
 	}
 
-	
-	
+	/* (non-Javadoc)
+	 * @see com.cppoon.tencent.magiccard.CardThemeManager.Builder#enabled(boolean)
+	 */
+	@Override
+	public Builder enabled(boolean enabled) {
+		this.enabled = enabled;
+		return this;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.cppoon.tencent.magiccard.CardThemeManager.Builder#pickRate(int)
+	 */
+	@Override
+	public Builder pickRate(int pickRate) {
+		this.pickRate = pickRate;
+		return this;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -182,14 +213,15 @@ public class SimpleCardThemeManagerBuilderImpl implements
 		CardThemeImpl ret = new CardThemeImpl();
 
 		ret.setDifficulty(this.difficulty);
-		ret.setEnabled(true); // TODO implement this
+		ret.setEnabled(this.enabled);
 		ret.setExpiryTime(this.expiryTime);
 		ret.setId(this.id);
 		ret.setName(this.name);
-		ret.setPickRate(0); // TODO implement this
+		ret.setPickRate(this.pickRate);
 		ret.setCoins(this.coins);
 		ret.setPublishTime(this.publishTime);
-		ret.setScore(this.experience); // TODO implement this
+		ret.setExperience(this.experience);
+		ret.setText(this.text);
 		ret.setTime(this.time);
 		ret.setType(this.type);
 		ret.setVersion(this.version);

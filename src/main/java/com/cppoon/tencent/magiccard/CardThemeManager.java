@@ -6,6 +6,8 @@ package com.cppoon.tencent.magiccard;
 import java.util.Date;
 import java.util.Set;
 
+import com.cppoon.tencent.magiccard.CardManager.Builder;
+
 /**
  * 
  * 
@@ -35,12 +37,18 @@ public interface CardThemeManager {
 		Builder version(int version);
 
 		Builder color(int color);
-
+		
+		Builder text(String text);
+		
 		Builder time(Date when);
 
 		Builder expiryTime(Date when);
 		
 		Builder experience(int experience);
+		
+		Builder enabled(boolean enabled);
+
+		Builder pickRate(int pickRate);
 
 		/**
 		 * Build the theme.

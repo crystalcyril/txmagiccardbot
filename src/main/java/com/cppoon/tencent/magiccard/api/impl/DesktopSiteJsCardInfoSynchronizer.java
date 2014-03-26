@@ -124,10 +124,13 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 					.difficulty(parsedCardTheme.getDifficulty())
 					.experience(parsedCardTheme.getExperience())
 					.expiryTime(parsedCardTheme.getExpiryTime())
+					.enabled(parsedCardTheme.isEnabled())
 					.id(parsedCardTheme.getId())
 					.name(parsedCardTheme.getName())
 					.coins(parsedCardTheme.getCoins())
+					.pickRate(parsedCardTheme.getPickRate())
 					.publishTime(parsedCardTheme.getPublishTime())
+					.text(parsedCardTheme.getText())
 					.time(parsedCardTheme.getTime())
 					.type(parsedCardTheme.getType())
 					.version(parsedCardTheme.getVersion()).build();
