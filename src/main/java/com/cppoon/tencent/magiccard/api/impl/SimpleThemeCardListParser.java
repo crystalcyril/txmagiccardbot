@@ -285,6 +285,14 @@ public class SimpleThemeCardListParser implements ThemeCardListParser {
 		if (raw instanceof String) {
 			
 			String s = (String)raw;
+			
+			// the theme "海宝游中美" (ID = 69) has the following value:
+			//   102|103|104|105#1_608
+			// we need to trim off the parts after the "#" sign
+			if (s.contains("#")) {
+				s = s.split("#")[0];
+			}
+			
 			String[] sid = s.split("\\|");
 			ArrayList<Integer> ids = new ArrayList<Integer>();
 			for (String id : sid) {

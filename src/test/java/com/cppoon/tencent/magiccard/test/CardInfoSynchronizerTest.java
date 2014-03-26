@@ -3,7 +3,11 @@
  */
 package com.cppoon.tencent.magiccard.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.InputStream;
 import java.util.Date;
@@ -380,5 +384,50 @@ public class CardInfoSynchronizerTest {
 		
 	}
 	
+
+	/**
+	 * This theme has <strong>two</strong> top level cards instead of the 
+	 * usual one.
+	 * <p>
+	 * 
+	 * <ul>
+	 * <li>Card Theme: <strong>斩仙</strong></li>
+	 * <li>Theme ID: <strong>322</strong></li>
+	 * </ul>
+	 */
+	@Test
+	public void testSync_OK_TwoChildren2StarTheme() throws Exception {
+		
+		// read the card info with only one theme.
+		InputStream is = Resources
+				.getResource("com/cppoon/tencent/magiccard/api/test/card_info_v3.js")
+				.openStream();
+		
+		//
+		// WHEN
+		//
+		synchronizer.synchronize(is);
+		
+	}
+	
+	/**
+	 * Just parse the whole javascript file.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testSync_OK_CompleteCardInfoJs() throws Exception {
+
+		// read the card info with only one theme.
+		InputStream is = Resources
+				.getResource("com/cppoon/tencent/magiccard/api/test/card_info_v3.js")
+				.openStream();
+		
+		//
+		// WHEN
+		//
+		synchronizer.synchronize(is);
+		
+	}
 	
 }

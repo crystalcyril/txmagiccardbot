@@ -24,29 +24,71 @@ import com.google.common.io.Resources;
  * 
  * 
  * @author Cyril
+ * @since 0.1.0
  */
 public class ThemeCardListParserTest {
 
 	@Test
-	public void test() {
+	public void testParse_OK_GiftIDHasSharp() throws IOException {
+		
+		ThemeCardListParser parser = new SimpleThemeCardListParser();
+		// configure listener
+		TestThemeCardListParserListener listener = new TestThemeCardListParserListener();
+		parser.setListener(listener);
+		
+		
+		// parse
+		InputStream is = Resources.getResource(
+					"com/cppoon/tencent/magiccard/api/test/fake/card_info_v3-theme_card_list_only-gift_id_has_sharp.js")
+					.openStream();
+		parser.parse(is);
+		IOUtil.close(is);
+		
+		//
+		// THEN
+		//
+		
+		// check number of parsed cards.
+		assertEquals("number of parsed themes", 1, listener.getThemeCount());
+
+		// check the only theme
+		// theme_id, theme_name,theme_Difficulty,theme_PublishTime,theme_PickRate, theme_Enable, theme_Prize,theme_Score,theme_color, gift, text,
+		// card1_id,..,cardn_id,theme_type,version,time,offtime,flash_src_tid
+		// [69,'海宝游中美',2,1264728250,0,1,200,850,0xa20703,'102|103|104|105#1_608','',[406,405,404,403,402,401,400,399,398,397,396,395,394,393,392,391,390,389,388,387,386,385,384],1,6,1309831123,1267687521,0,81]
+		CardThemeInfo cardTheme = listener.getThemeById(69);
+		assertEquals("theme ID", 69, cardTheme.getId());
+		assertEquals("name", "海宝游中美", cardTheme.getName());
+		assertEquals("difficulty", 2, cardTheme.getDifficulty());
+		assertEquals("publish time", new Date(1264728250000L), cardTheme.getPublishTime());
+		assertEquals("pick rate", 0, cardTheme.getPickRate());
+		assertTrue("enabled", cardTheme.isEnabled());
+		assertEquals("prize", 200.00, cardTheme.getCoins(), 0.0);
+		assertEquals("score", 850, cardTheme.getExperience());
+		assertTrue("gift IDs", Arrays.equals(new int[] { 102,103,104,105 }, 
+				cardTheme.getGiftIds()));
+		assertTrue("card IDs", Arrays.equals(new int[] { 406,405,404,403,402,401,400,399,398,397,396,395,394,393,392,391,390,389,388,387,386,385,384 }, 
+				cardTheme.getCardIds()));
+		assertEquals("theme type", 1, cardTheme.getType());
+		assertEquals("version", 6, cardTheme.getVersion());
+		assertEquals("time", new Date(1309831123000L), cardTheme.getTime());
+		assertEquals("expiry time", new Date(1267687521000L), cardTheme.getExpiryTime());
+		
+	}
+	
+	@Test
+	public void test() throws IOException {
 
 		ThemeCardListParser parser = new SimpleThemeCardListParser();
-
 		// configure listener
 		TestThemeCardListParserListener listener = new TestThemeCardListParserListener();
 		parser.setListener(listener);
 
 		// parse
-		InputStream is = null;
-		try {
-			is = Resources.getResource(
+		InputStream is = Resources.getResource(
 					"com/cppoon/tencent/magiccard/api/test/card_info_v3.js")
 					.openStream();
-			parser.parse(is);
-		} catch (IOException e) {
-		} finally {
-			IOUtil.close(is);
-		}
+		parser.parse(is);
+		IOUtil.close(is);
 
 		//
 		// assertion
@@ -88,7 +130,6 @@ public class ThemeCardListParserTest {
 		assertEquals("version", 1, cardTheme.getVersion());
 		assertEquals("time", new Date(1388493668000L), cardTheme.getTime());
 		assertEquals("expiry time", new Date(1392652800000L), cardTheme.getExpiryTime());
-
 		
 	}
 
