@@ -428,6 +428,9 @@ public class CardInfoSynchronizerTest {
 		//
 		synchronizer.synchronize(is);
 		
+		//
+		// THEN
+		//
 		assertEquals("number of themes in theme manager", 254, cardThemeManager.getAllThemes().size());
 		
 	}
