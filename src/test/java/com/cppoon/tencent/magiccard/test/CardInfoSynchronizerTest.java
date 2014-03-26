@@ -9,6 +9,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.HashSet;
@@ -30,6 +31,7 @@ import com.cppoon.tencent.magiccard.api.impl.DesktopSiteJsCardInfoSynchronizer;
 import com.cppoon.tencent.magiccard.impl.SimpleCardManager;
 import com.cppoon.tencent.magiccard.impl.SimpleCardThemeManager;
 import com.cppoon.tencent.magiccard.test.data.CardDataTestUtil;
+import com.cppoon.tencent.magiccard.util.IOUtil;
 import com.google.common.io.Resources;
 
 /**
@@ -434,5 +436,80 @@ public class CardInfoSynchronizerTest {
 		assertEquals("number of themes in theme manager", 254, cardThemeManager.getAllThemes().size());
 		
 	}
+	
+
+	/**
+	 * Test the scenario which a new theme is added.
+	 */
+	@Test
+	public void testSync_OK_OneNewThemeIsAdded() throws IOException {
+		
+		CardTheme theme = null;
+		Set<CardTheme> themes;
+		InputStream is = null;
+		
+		// read the card info with only one theme.
+		is = Resources
+				.getResource("com/cppoon/tencent/magiccard/api/test/card_info_v3-one_card_set-1_star.js")
+				.openStream();
+		
+		//
+		// WHEN
+		//
+		synchronizer.synchronize(is);
+		IOUtil.close(is);
+		
+		
+		//
+		// THEN
+		//
+		
+		// check theme
+		themes = cardThemeManager.getAllThemes();
+		assertEquals("numbers of themes", 1, themes.size());
+		
+		theme = themes.iterator().next();
+		
+		assertThemeID_40(theme);
+		
+		
+		//
+		// WHEN
+		//
+		// read the card info with two themes.
+		is = Resources
+				.getResource("com/cppoon/tencent/magiccard/api/test/card_info_v3-two_card_set-1_star.js")
+				.openStream();
+		
+		//
+		// THEN
+		//
+		
+		synchronizer.synchronize(is);
+		IOUtil.close(is);
+		
+		// check theme
+		themes = cardThemeManager.getAllThemes();
+		assertEquals("numbers of themes", 2, themes.size());
+		
+		Iterator<CardTheme> cardThemeIter = themes.iterator();
+		Set<Integer> checkedThemeIds = new HashSet<Integer>();
+		for (int i = 0; i < 2; i++) {
+
+			theme = cardThemeIter.next();
+			
+			if (theme.getId() == 40) {
+				assertThemeID_40(theme);
+			} else if (theme.getId() == 45) {
+				assertThemeID_45(theme);
+			} else {
+				fail("unknown theme ID " + theme.getId());
+			}
+			
+			checkedThemeIds.add(theme.getId());
+			
+		}		
+	}
+	
 	
 }
