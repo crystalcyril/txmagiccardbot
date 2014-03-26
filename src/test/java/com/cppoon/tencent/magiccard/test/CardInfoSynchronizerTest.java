@@ -3,11 +3,7 @@
  */
 package com.cppoon.tencent.magiccard.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +27,7 @@ import com.cppoon.tencent.magiccard.api.impl.DesktopSiteJsCardInfoSynchronizer;
 import com.cppoon.tencent.magiccard.impl.SimpleCardManager;
 import com.cppoon.tencent.magiccard.impl.SimpleCardThemeManager;
 import com.cppoon.tencent.magiccard.test.data.CardDataTestUtil;
+import com.cppoon.tencent.magiccard.test.data.TestDataCard;
 import com.cppoon.tencent.magiccard.util.IOUtil;
 import com.google.common.io.Resources;
 
@@ -570,5 +567,73 @@ public class CardInfoSynchronizerTest {
 		assertEquals("new expiry date", new Date(1312449875000L), theme45_1.getExpiryTime());
 		
 	}
+	
+	
+	/**
+	 * Test the scenario which a card has changed.
+	 */
+	@Test
+	public void testSync_OK_CardIsChanged() throws IOException {
+		
+		Set<CardTheme> themes;
+		InputStream is = null;
+		
+		//
+		// WHEN
+		//
+		
+		// the first two-card set is given.
+		is = Resources
+				.getResource("com/cppoon/tencent/magiccard/api/test/card_info_v3-one_card_set-1_star.js")
+				.openStream();
+		synchronizer.synchronize(is);
+		IOUtil.close(is);
+		
+		// remember the reference of the theme ID=45.
+		CardTheme theme40_1 = cardThemeManager.findThemeById(40);
+		
+		assertThemeID_40(theme40_1);
+		
+		// make sure the card has old values.
+		Card card38 = theme40_1.getCardById(38);
+		
+		TestDataCard.assertCard38_1_Star(card38, theme40_1);
+		
+		
+		// and...
+		// a change is made.
+		is = Resources
+				.getResource("com/cppoon/tencent/magiccard/api/test/card_info_v3-one_card_set-1_star-card_changed.js")
+				.openStream();
+		synchronizer.synchronize(is);
+		IOUtil.close(is);
+		
+
+		//
+		// THEN
+		//
+		
+		// make sure there are 2 themes only.
+		themes = cardThemeManager.getAllThemes();
+		assertEquals("numbers of themes", 1, themes.size());
+		
+		
+		// make sure the changed Theme (ID=45) has the same reference.
+		assertTrue("theme 40 should be the same instance", theme40_1 == cardThemeManager.findThemeById(40));
+		
+		
+		// and... the version field of card (id=38) is changed from 1 to 4.
+		assertEquals("card id=38 id", 38, card38.getId());
+		assertEquals("card id=38 name", "整套搭配!", card38.getName());
+		assertEquals("card id=38 price", 168.915, card38.getPrice(), 0.00D);
+		assertEquals("card id=38 type", 9, card38.getType());
+		assertEquals("card id=38 pick rate", 77, card38.getPickRate());
+		assertFalse("card id=38 enabled", card38.isEnabled());
+		assertEquals("card id=38 version", 4, card38.getVersion());
+		assertEquals("card id=38 time", new Date(1312449875000L), card38.getTime());
+		assertEquals("card id=38 item number", 2009418, card38.getItemNo());
+		
+	}
+	
 	
 }

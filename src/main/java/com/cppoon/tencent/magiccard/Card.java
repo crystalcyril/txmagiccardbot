@@ -84,4 +84,20 @@ public interface Card {
 	 */
 	void setSynthesisFormula(long synthesisTime, Card[] cards);
 
+	void setItemNo(int itemNo);
+
+	void setName(String name);
+
+	void setPickRate(int pickRate);
+
+	void setPrice(double price);
+
+	void setTime(Date time);
+
+	void setVersion(int version);
+
+	void setType(int type);
+
+	void setEnabled(boolean enabled);
+
 }

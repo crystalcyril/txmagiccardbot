@@ -251,6 +251,8 @@ public class CardImpl implements Card {
 		return formula;
 	}
 
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -266,4 +268,17 @@ public class CardImpl implements Card {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "id=" + id + ", theme=" + (theme != null ? "(id=" + theme.getId() + ")" : "null")
+				+ ", name=" + name
+				+ ", pickRate=" + pickRate + ", price=" + price + ", time="
+				+ time + ", type=" + type + ", version=" + version
+				+ ", itemNo=" + itemNo + ", enabled=" + enabled + ", formula="
+				+ (formula != null ? "(present)" : "null");
+	}
+	
 }

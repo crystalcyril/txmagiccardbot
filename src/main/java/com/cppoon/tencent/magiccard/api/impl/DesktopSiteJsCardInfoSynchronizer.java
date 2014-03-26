@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.cppoon.tencent.magiccard.Card;
 import com.cppoon.tencent.magiccard.CardInfoSynchronizer;
 import com.cppoon.tencent.magiccard.CardManager;
+import com.cppoon.tencent.magiccard.CardTheme;
 import com.cppoon.tencent.magiccard.CardThemeManager;
 import com.cppoon.tencent.magiccard.api.CardInfo;
 import com.cppoon.tencent.magiccard.api.CardInfoParserListener;
@@ -161,12 +162,48 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 				cardTheme.setVersion(parsedCardTheme.getVersion());
 				
 				cardTheme.setEnabled(parsedCardTheme.isEnabled());
+				
+				
+				handleThemeCardChange(cardTheme);
+				
 			}
 			
 		}
 		
 	}
 	
+	private void handleThemeCardChange(CardTheme cardTheme) {
+		
+		// iterate all cards under this theme, and make any changes.
+		for (CardInfo parsedCardInfo : parsedCardInfos.values()) {
+			
+			// only process cards with matching theme ID.
+			if (parsedCardInfo.getThemeId() != cardTheme.getId()) {
+				continue;
+			}			
+			
+			
+			Card card = cardTheme.getCardById(parsedCardInfo.getId());
+			
+			// FIXME handle the case if the card is not found.
+
+			card.setItemNo(parsedCardInfo.getItemNo());
+			card.setName(parsedCardInfo.getName());
+			card.setPickRate(parsedCardInfo.getPickRate());
+			card.setPrice(parsedCardInfo.getPrice());
+			
+			// FIXME cyril handles possible theme changes
+			card.setTime(parsedCardInfo.getTime());
+			card.setType(parsedCardInfo.getType());
+			card.setVersion(parsedCardInfo.getVersion());
+			
+			// enable/disable it.
+			card.setEnabled(parsedCardInfo.isEnabled());
+			
+		}
+		
+	}
+
 	protected void buildNewTheme(com.cppoon.tencent.magiccard.CardTheme cardTheme) {
 		
 		for (CardInfo parsedCardInfo : parsedCardInfos.values()) {
