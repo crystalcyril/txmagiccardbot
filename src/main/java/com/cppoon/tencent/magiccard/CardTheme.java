@@ -127,4 +127,28 @@ public interface CardTheme {
 	 */
 	String getText();
 
+	void setDifficulty(int difficulty);
+
+	void setExperience(int experience);
+
+	void setExpiryTime(Date expiryTime);
+
+	void setName(String name);
+
+	void setCoins(double coins);
+
+	void setPickRate(int pickRate);
+
+	void setPublishTime(Date publishTime);
+
+	void setText(String text);
+
+	void setTime(Date time);
+
+	void setType(int type);
+
+	void setVersion(int version);
+
+	void setEnabled(boolean enabled);
+
 }

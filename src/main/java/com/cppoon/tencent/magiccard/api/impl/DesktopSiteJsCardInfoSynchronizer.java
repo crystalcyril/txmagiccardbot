@@ -148,6 +148,21 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 				
 				log.trace("existing theme ({}, ID={}) is found", parsedCardTheme.getName(), parsedCardTheme.getId());
 				
+//				cardTheme.
+				
+				cardTheme.setDifficulty(parsedCardTheme.getDifficulty());
+				cardTheme.setExperience(parsedCardTheme.getExperience());
+				cardTheme.setExpiryTime(parsedCardTheme.getExpiryTime());
+				cardTheme.setName(parsedCardTheme.getName());
+				cardTheme.setCoins(parsedCardTheme.getCoins());
+				cardTheme.setPickRate(parsedCardTheme.getPickRate());
+				cardTheme.setPublishTime(parsedCardTheme.getPublishTime());
+				cardTheme.setText(parsedCardTheme.getText());
+				cardTheme.setTime(parsedCardTheme.getTime());
+				cardTheme.setType(parsedCardTheme.getType());
+				cardTheme.setVersion(parsedCardTheme.getVersion());
+				
+				cardTheme.setEnabled(parsedCardTheme.isEnabled());
 			}
 			
 		}
