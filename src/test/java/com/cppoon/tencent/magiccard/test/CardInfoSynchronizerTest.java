@@ -178,7 +178,8 @@ public class CardInfoSynchronizerTest {
 		
 		// check card details
 		topCard = topCards.get(0);
-		CardDataTestUtil.assertCard(topCard, 38, theme, "整套搭配", 150.0, 1, 0, true, 1, null, 0);
+		TestDataCard.assertCard38_1_Star(topCard, theme);
+		
 
 		//
 		// check the children cards of the top cards, which should be three
