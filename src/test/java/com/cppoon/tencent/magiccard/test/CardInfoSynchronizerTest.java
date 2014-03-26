@@ -519,5 +519,57 @@ public class CardInfoSynchronizerTest {
 		}		
 	}
 	
+	/**
+	 * Test the scenario which a new theme is added.
+	 */
+	@Test
+	public void testSync_OK_ThemeIsChanged() throws IOException {
+		
+		CardTheme theme = null;
+		Set<CardTheme> themes;
+		InputStream is = null;
+		
+		
+		//
+		// WHEN
+		//
+		
+		// the first two-card set is given.
+		is = Resources
+				.getResource("com/cppoon/tencent/magiccard/api/test/card_info_v3-two_card_set-1_star.js")
+				.openStream();
+		synchronizer.synchronize(is);
+		IOUtil.close(is);
+		
+		// remember the reference of the theme ID=45.
+		CardTheme theme45_1 = cardThemeManager.findThemeById(45);
+		
+		
+		// and...
+		// a change is made.
+		is = Resources
+				.getResource("com/cppoon/tencent/magiccard/api/test/card_info_v3-two_card_set-1_star-theme_45_changed.js")
+				.openStream();
+		synchronizer.synchronize(is);
+		IOUtil.close(is);
+		
+
+		//
+		// THEN
+		//
+		
+		// make sure there are 2 themes only.
+		themes = cardThemeManager.getAllThemes();
+		assertEquals("numbers of themes", 2, themes.size());
+		
+		
+		// make sure the changed Theme (ID=45) has the same reference.
+		assertTrue("theme 45 should be the same instance", theme45_1 == cardThemeManager.findThemeById(45));
+		
+		
+		// the theme has a new expiry date.
+		assertEquals("new expiry date", new Date(1312449875000L), theme45_1.getExpiryTime());
+		
+	}
 	
 }
