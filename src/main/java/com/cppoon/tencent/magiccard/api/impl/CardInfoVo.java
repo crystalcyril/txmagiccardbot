@@ -8,8 +8,10 @@ import java.util.Date;
 import com.cppoon.tencent.magiccard.api.CardInfo;
 
 /**
- * @author Cyril
  * 
+ * 
+ * @author Cyril
+ * @since 0.1.0
  */
 public class CardInfoVo implements CardInfo {
 

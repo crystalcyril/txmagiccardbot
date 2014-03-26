@@ -21,7 +21,7 @@ public final class ThemeCardListParserTestUtil {
 
 	
 	public static final void assertThemeIsCorrect(
-			com.cppoon.tencent.magiccard.api.CardTheme actualTheme, int themeId) {		
+			com.cppoon.tencent.magiccard.api.CardThemeInfo actualTheme, int themeId) {		
 		
 		if (themeId == 40)  {
 			

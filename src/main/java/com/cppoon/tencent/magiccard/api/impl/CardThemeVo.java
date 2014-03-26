@@ -6,7 +6,7 @@ package com.cppoon.tencent.magiccard.api.impl;
 import java.util.Arrays;
 import java.util.Date;
 
-import com.cppoon.tencent.magiccard.api.CardTheme;
+import com.cppoon.tencent.magiccard.api.CardThemeInfo;
 
 /**
  * 
@@ -14,7 +14,7 @@ import com.cppoon.tencent.magiccard.api.CardTheme;
  * @author Cyril
  * @since 0.1.0
  */
-public class CardThemeVo implements CardTheme {
+public class CardThemeVo implements CardThemeInfo {
 
 	int id;
 

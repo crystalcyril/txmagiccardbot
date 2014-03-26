@@ -6,7 +6,7 @@ package com.cppoon.tencent.magiccard.api.test;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.cppoon.tencent.magiccard.api.CardTheme;
+import com.cppoon.tencent.magiccard.api.CardThemeInfo;
 import com.cppoon.tencent.magiccard.api.ThemeCardListParserListener;
 
 /**
@@ -16,7 +16,7 @@ import com.cppoon.tencent.magiccard.api.ThemeCardListParserListener;
 public class TestThemeCardListParserListener implements
 		ThemeCardListParserListener {
 
-	Map<Integer/* theme ID */, CardTheme> themes = new HashMap<Integer, CardTheme>();
+	Map<Integer/* theme ID */, CardThemeInfo> themes = new HashMap<Integer, CardThemeInfo>();
 
 	/**
 	 * 
@@ -28,7 +28,7 @@ public class TestThemeCardListParserListener implements
 		return themes.size();
 	}
 
-	public CardTheme getThemeById(int themeId) {
+	public CardThemeInfo getThemeById(int themeId) {
 		return themes.get(themeId);
 	}
 
@@ -40,7 +40,7 @@ public class TestThemeCardListParserListener implements
 	 * (com.cppoon.tencent.magiccard.CardTheme)
 	 */
 	@Override
-	public void cardThemeParsed(CardTheme ct) {
+	public void cardThemeParsed(CardThemeInfo ct) {
 
 		themes.put(ct.getId(), ct);
 

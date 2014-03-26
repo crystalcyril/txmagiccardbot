@@ -2,7 +2,7 @@ package com.cppoon.tencent.magiccard.api;
 
 import java.util.Date;
 
-public interface CardTheme {
+public interface CardThemeInfo {
 
 	/**
 	 * @return the id

@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import sun.org.mozilla.javascript.internal.NativeArray;
 
-import com.cppoon.tencent.magiccard.api.CardTheme;
+import com.cppoon.tencent.magiccard.api.CardThemeInfo;
 import com.cppoon.tencent.magiccard.api.ThemeCardListParser;
 import com.cppoon.tencent.magiccard.api.ThemeCardListParserListener;
 
@@ -169,7 +169,7 @@ public class SimpleThemeCardListParser implements ThemeCardListParser {
 			if (s.length() == 0)
 				continue;
 
-			CardTheme ct = parseThemeInfo(s);
+			CardThemeInfo ct = parseThemeInfo(s);
 
 			// an record is parsed, notify the listener if any.
 			if (ct != null) {
@@ -180,7 +180,7 @@ public class SimpleThemeCardListParser implements ThemeCardListParser {
 
 	}
 
-	protected void fireCardThemeParsed(CardTheme ct) {
+	protected void fireCardThemeParsed(CardThemeInfo ct) {
 
 		if (listener == null)
 			return;
@@ -189,7 +189,7 @@ public class SimpleThemeCardListParser implements ThemeCardListParser {
 
 	}
 
-	protected CardTheme parseThemeInfo(String s) {
+	protected CardThemeInfo parseThemeInfo(String s) {
 
 		try {
 

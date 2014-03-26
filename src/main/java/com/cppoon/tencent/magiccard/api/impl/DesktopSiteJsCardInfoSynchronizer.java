@@ -18,7 +18,7 @@ import com.cppoon.tencent.magiccard.CardManager;
 import com.cppoon.tencent.magiccard.CardThemeManager;
 import com.cppoon.tencent.magiccard.api.CardInfo;
 import com.cppoon.tencent.magiccard.api.CardInfoParserListener;
-import com.cppoon.tencent.magiccard.api.CardTheme;
+import com.cppoon.tencent.magiccard.api.CardThemeInfo;
 import com.cppoon.tencent.magiccard.api.ThemeCardListParserListener;
 import com.cppoon.tencent.magiccard.api.ThemeComposeListParserListener;
 import com.cppoon.tencent.magiccard.api.ThemeComposeRule;
@@ -41,7 +41,7 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 
 	Map<Integer /* card ID */, CardInfo> parsedCardInfos;
 
-	Map<Integer /* theme ID */, CardTheme> parsedCardThemes;
+	Map<Integer /* theme ID */, CardThemeInfo> parsedCardThemes;
 
 	List<ThemeComposeRule> parsedThemComposeRules;
 
@@ -115,7 +115,7 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 
 	protected void processThemes() {
 		
-		for (CardTheme parsedCardTheme : parsedCardThemes.values()) {
+		for (CardThemeInfo parsedCardTheme : parsedCardThemes.values()) {
 			
 			com.cppoon.tencent.magiccard.CardTheme cardTheme = cardThemeManager.findThemeById(parsedCardTheme.getId());
 			if (cardTheme == null) {
@@ -198,7 +198,7 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 	protected void reset() {
 
 		parsedCardInfos = new Hashtable<Integer, CardInfo>();
-		parsedCardThemes = new Hashtable<Integer, CardTheme>();
+		parsedCardThemes = new Hashtable<Integer, CardThemeInfo>();
 		parsedThemComposeRules = new ArrayList<ThemeComposeRule>();
 
 	}
@@ -234,7 +234,7 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 	 * (com.cppoon.tencent.magiccard.api.CardTheme)
 	 */
 	@Override
-	public void cardThemeParsed(CardTheme ct) {
+	public void cardThemeParsed(CardThemeInfo ct) {
 		parsedCardThemes.put(ct.getId(), ct);
 	}
 

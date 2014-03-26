@@ -12,6 +12,6 @@ package com.cppoon.tencent.magiccard.api;
  */
 public interface ThemeCardListParserListener {
 
-	void cardThemeParsed(CardTheme ct);
+	void cardThemeParsed(CardThemeInfo ct);
 
 }

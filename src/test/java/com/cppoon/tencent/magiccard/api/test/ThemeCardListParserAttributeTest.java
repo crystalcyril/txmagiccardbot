@@ -13,7 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.cppoon.tencent.magiccard.api.CardTheme;
+import com.cppoon.tencent.magiccard.api.CardThemeInfo;
 import com.cppoon.tencent.magiccard.api.ThemeCardListParser;
 import com.cppoon.tencent.magiccard.api.impl.SimpleThemeCardListParser;
 import com.cppoon.tencent.magiccard.util.IOUtil;
@@ -66,7 +66,7 @@ public class ThemeCardListParserAttributeTest {
 	@Test
 	public void testParse_ID() {
 		
-		CardTheme actualTheme;
+		CardThemeInfo actualTheme;
 
 		actualTheme = listener.getThemeById(1001);
 		assertEquals("theme ID", 1001, actualTheme.getId());
@@ -79,7 +79,7 @@ public class ThemeCardListParserAttributeTest {
 	@Test
 	public void testParse_Name() {
 		
-		CardTheme actualTheme;
+		CardThemeInfo actualTheme;
 
 		actualTheme = listener.getThemeById(1002);
 		assertEquals("name", "Theme 2", actualTheme.getName());
@@ -92,7 +92,7 @@ public class ThemeCardListParserAttributeTest {
 	@Test
 	public void testParse_Difficulty() {
 		
-		CardTheme actualTheme;
+		CardThemeInfo actualTheme;
 
 		actualTheme = listener.getThemeById(1003);
 		assertEquals("difficulty", 5, actualTheme.getDifficulty());
@@ -105,7 +105,7 @@ public class ThemeCardListParserAttributeTest {
 	@Test
 	public void testParse_PublishTime() {
 		
-		CardTheme actualTheme;
+		CardThemeInfo actualTheme;
 
 		actualTheme = listener.getThemeById(1004);
 		assertEquals("publish time", new Date(1395244800L * 1000), actualTheme.getPublishTime());
@@ -118,7 +118,7 @@ public class ThemeCardListParserAttributeTest {
 	@Test
 	public void testParse_PickRate() {
 		
-		CardTheme actualTheme;
+		CardThemeInfo actualTheme;
 
 		actualTheme = listener.getThemeById(1005);
 		assertEquals("pick rate", 88, actualTheme.getPickRate());
@@ -131,7 +131,7 @@ public class ThemeCardListParserAttributeTest {
 	@Test
 	public void testParse_Enable() {
 		
-		CardTheme actualTheme;
+		CardThemeInfo actualTheme;
 
 		actualTheme = listener.getThemeById(1006);
 		assertFalse("enable", actualTheme.isEnabled());
@@ -144,7 +144,7 @@ public class ThemeCardListParserAttributeTest {
 	@Test
 	public void testParse_Coins() {
 		
-		CardTheme actualTheme;
+		CardThemeInfo actualTheme;
 
 		actualTheme = listener.getThemeById(1007);
 		assertEquals("coins", 7777.789D, actualTheme.getCoins(), 0.00D);
@@ -157,7 +157,7 @@ public class ThemeCardListParserAttributeTest {
 	@Test
 	public void testParse_Experience() {
 		
-		CardTheme actualTheme;
+		CardThemeInfo actualTheme;
 
 		actualTheme = listener.getThemeById(1008);
 		assertEquals("experience", 8888, actualTheme.getExperience());
@@ -183,7 +183,7 @@ public class ThemeCardListParserAttributeTest {
 	@Test
 	public void testParse_GiftIDs() {
 		
-		CardTheme actualTheme;
+		CardThemeInfo actualTheme;
 
 		actualTheme = listener.getThemeById(1010);
 		assertTrue("gift IDs (actual: " + actualTheme.getGiftIds() + ")", Arrays.equals(new int[] { 101 }, actualTheme.getGiftIds()));
@@ -196,7 +196,7 @@ public class ThemeCardListParserAttributeTest {
 	@Test
 	public void testParse_Text() {
 		
-		CardTheme actualTheme;
+		CardThemeInfo actualTheme;
 
 		actualTheme = listener.getThemeById(1011);
 		assertEquals("text", "Theme 11 text", actualTheme.getText());
@@ -209,7 +209,7 @@ public class ThemeCardListParserAttributeTest {
 	@Test
 	public void testParse_CardIDs() {
 		
-		CardTheme actualTheme;
+		CardThemeInfo actualTheme;
 
 		actualTheme = listener.getThemeById(1012);
 		assertTrue("gift IDs (actual: " + actualTheme.getGiftIds() + ")", Arrays.equals(new int[] { 819,808,804,875,891,875 }, actualTheme.getCardIds()));
@@ -222,7 +222,7 @@ public class ThemeCardListParserAttributeTest {
 	@Test
 	public void testParse_Type() {
 		
-		CardTheme actualTheme;
+		CardThemeInfo actualTheme;
 
 		actualTheme = listener.getThemeById(1013);
 		assertEquals("type", 9, actualTheme.getType());
@@ -235,7 +235,7 @@ public class ThemeCardListParserAttributeTest {
 	@Test
 	public void testParse_Version() {
 		
-		CardTheme actualTheme;
+		CardThemeInfo actualTheme;
 
 		actualTheme = listener.getThemeById(1014);
 		assertEquals("version", 301, actualTheme.getVersion());
@@ -248,7 +248,7 @@ public class ThemeCardListParserAttributeTest {
 	@Test
 	public void testParse_Time() {
 		
-		CardTheme actualTheme;
+		CardThemeInfo actualTheme;
 
 		actualTheme = listener.getThemeById(1015);
 		assertEquals("time", new Date(1395743966L * 1000), actualTheme.getTime());
@@ -264,7 +264,7 @@ public class ThemeCardListParserAttributeTest {
 	@Test
 	public void testParse_OffTime() {
 		
-		CardTheme actualTheme;
+		CardThemeInfo actualTheme;
 
 		actualTheme = listener.getThemeById(1016);
 		assertEquals("time", new Date(1309909684L * 1000), actualTheme.getExpiryTime());
