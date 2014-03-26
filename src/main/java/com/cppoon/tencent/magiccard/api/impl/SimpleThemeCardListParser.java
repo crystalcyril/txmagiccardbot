@@ -15,6 +15,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -284,7 +285,10 @@ public class SimpleThemeCardListParser implements ThemeCardListParser {
 		
 		if (raw instanceof String) {
 			
-			String s = (String)raw;
+			String s = StringUtils.trim((String)raw);
+			if (StringUtils.isEmpty(s)) {
+				return null;
+			}
 			
 			// the theme "海宝游中美" (ID = 69) has the following value:
 			//   102|103|104|105#1_608
@@ -296,9 +300,15 @@ public class SimpleThemeCardListParser implements ThemeCardListParser {
 			String[] sid = s.split("\\|");
 			ArrayList<Integer> ids = new ArrayList<Integer>();
 			for (String id : sid) {
+				id = StringUtils.trim(id);
+				if (StringUtils.isEmpty(id)) continue;
+				
 				ids.add(Integer.parseInt(id));
 			}
 
+			// return null if NO IDs are found.
+			if (ids.isEmpty()) return null;
+			
 			int[] r = new int[ids.size()];
 			for (int i = 0; i < ids.size(); i++) {
 				r[i] = ids.get(i);

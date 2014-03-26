@@ -28,6 +28,11 @@ import com.google.common.io.Resources;
  */
 public class ThemeCardListParserTest {
 
+	/**
+	 * Test the case which the gift ID has 
+	 * 
+	 * @throws IOException
+	 */
 	@Test
 	public void testParse_OK_GiftIDHasSharp() throws IOException {
 		
@@ -39,7 +44,7 @@ public class ThemeCardListParserTest {
 		
 		// parse
 		InputStream is = Resources.getResource(
-					"com/cppoon/tencent/magiccard/api/test/fake/card_info_v3-theme_card_list_only-gift_id_has_sharp.js")
+					"com/cppoon/tencent/magiccard/api/test/card_info_v3-theme_card_list_only-gift_id_has_sharp.js")
 					.openStream();
 		parser.parse(is);
 		IOUtil.close(is);
@@ -72,6 +77,57 @@ public class ThemeCardListParserTest {
 		assertEquals("version", 6, cardTheme.getVersion());
 		assertEquals("time", new Date(1309831123000L), cardTheme.getTime());
 		assertEquals("expiry time", new Date(1267687521000L), cardTheme.getExpiryTime());
+		
+	}
+	
+	/**
+	 * The theme "道具卡" (ID = 111) has no gift IDs at all.
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void testParse_OK_GiftIDIsEmpty() throws IOException {
+		
+		ThemeCardListParser parser = new SimpleThemeCardListParser();
+		// configure listener
+		TestThemeCardListParserListener listener = new TestThemeCardListParserListener();
+		parser.setListener(listener);
+		
+		
+		// parse
+		InputStream is = Resources.getResource(
+					"com/cppoon/tencent/magiccard/api/test/card_info_v3-theme_card_list_only-gift_id_is_empty.js")
+					.openStream();
+		parser.parse(is);
+		IOUtil.close(is);
+		
+		//
+		// THEN
+		//
+		
+		// check number of parsed cards.
+		assertEquals("number of parsed themes", 1, listener.getThemeCount());
+
+		// check the only theme
+		// theme_id, theme_name,theme_Difficulty,theme_PublishTime,theme_PickRate, theme_Enable, theme_Prize,theme_Score,theme_color, gift, text,
+		// card1_id,..,cardn_id,theme_type,version,time,offtime,flash_src_tid
+		// [111,'道具卡',1,1290772354,0,1,0,0,0xffffff,'','',[1162],5,1,1291617551,0,0,0],
+		CardThemeInfo cardTheme = listener.getThemeById(111);
+		assertEquals("theme ID", 111, cardTheme.getId());
+		assertEquals("name", "道具卡", cardTheme.getName());
+		assertEquals("difficulty", 1, cardTheme.getDifficulty());
+		assertEquals("publish time", new Date(1290772354000L), cardTheme.getPublishTime());
+		assertEquals("pick rate", 0, cardTheme.getPickRate());
+		assertTrue("enabled", cardTheme.isEnabled());
+		assertEquals("prize", 0, cardTheme.getCoins(), 0.0);
+		assertEquals("score", 0, cardTheme.getExperience());
+		assertEquals("gift IDs", null, cardTheme.getGiftIds());
+		assertTrue("card IDs", Arrays.equals(new int[] { 1162 }, 
+				cardTheme.getCardIds()));
+		assertEquals("theme type", 5, cardTheme.getType());
+		assertEquals("version", 1, cardTheme.getVersion());
+		assertEquals("time", new Date(1291617551000L), cardTheme.getTime());
+		assertEquals("expiry time", null, cardTheme.getExpiryTime());
 		
 	}
 	
