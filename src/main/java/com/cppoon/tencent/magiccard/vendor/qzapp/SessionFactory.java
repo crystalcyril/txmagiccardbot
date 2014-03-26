@@ -14,10 +14,10 @@ public interface SessionFactory {
 	/**
 	 * 
 	 * 
-	 * @param string
-	 * @param string2
+	 * @param username
+	 * @param password
 	 * @return
 	 */
-	Session createSession(String string, String string2);
+	Session createSession(String username, String password);
 
 }
