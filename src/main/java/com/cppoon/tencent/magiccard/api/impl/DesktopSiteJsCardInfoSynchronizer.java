@@ -148,8 +148,6 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 				
 				log.trace("existing theme ({}, ID={}) is found", parsedCardTheme.getName(), parsedCardTheme.getId());
 				
-//				cardTheme.
-				
 				cardTheme.setDifficulty(parsedCardTheme.getDifficulty());
 				cardTheme.setExperience(parsedCardTheme.getExperience());
 				cardTheme.setExpiryTime(parsedCardTheme.getExpiryTime());

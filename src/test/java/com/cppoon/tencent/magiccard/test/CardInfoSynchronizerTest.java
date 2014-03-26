@@ -525,7 +525,6 @@ public class CardInfoSynchronizerTest {
 	@Test
 	public void testSync_OK_ThemeIsChanged() throws IOException {
 		
-		CardTheme theme = null;
 		Set<CardTheme> themes;
 		InputStream is = null;
 		

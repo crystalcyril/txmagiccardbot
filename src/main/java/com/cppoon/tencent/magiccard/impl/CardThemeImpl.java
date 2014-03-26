@@ -321,11 +321,6 @@ public class CardThemeImpl implements CardTheme {
 		return null; // not found
 	}
 	
-	
-	
-	
-	
-	
 
 	/*
 	 * (non-Javadoc)
