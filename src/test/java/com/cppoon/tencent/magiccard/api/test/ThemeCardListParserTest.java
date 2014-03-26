@@ -151,7 +151,7 @@ public class ThemeCardListParserTest {
 		//
 
 		// check number of parsed cards.
-		assertEquals("number of parsed themes", 245, listener.getThemeCount());
+		assertEquals("number of parsed themes", 254, listener.getThemeCount());
 
 		// check the first theme.
 		CardThemeInfo cardTheme = listener.getThemeById(40);

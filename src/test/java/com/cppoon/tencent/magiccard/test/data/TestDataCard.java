@@ -8,7 +8,7 @@ import com.cppoon.tencent.magiccard.CardTheme;
 
 
 /**
- * Contains convenient method to check common data.
+ * Contains convenient methods to check common test data.
  * 
  * @author Cyril
  * @since 0.1.0

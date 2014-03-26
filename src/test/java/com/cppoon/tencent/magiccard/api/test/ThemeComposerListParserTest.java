@@ -49,7 +49,7 @@ public class ThemeComposerListParserTest {
 		//
 
 		// check number of parsed cards.
-		assertEquals("number of compose rules", 2987, listener.getCount());
+		assertEquals("number of compose rules", 3053, listener.getCount());
 
 		// check the first record
 		ThemeComposerListParserTestUtil.assertThemeComposeRuleOfCardIdIsCorrect(listener.getByCardId(42), 42);

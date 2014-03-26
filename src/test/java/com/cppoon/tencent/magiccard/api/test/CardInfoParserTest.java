@@ -29,6 +29,8 @@ public class CardInfoParserTest {
 	public void test() {
 
 		CardInfoParser parser = new SimpleCardInfoParser();
+		
+		String file = "com/cppoon/tencent/magiccard/api/test/card_info_v3.js";
 
 		// configure listener
 		TestCardInfoParserListener listener = new TestCardInfoParserListener();
@@ -37,9 +39,7 @@ public class CardInfoParserTest {
 		// parse
 		InputStream is = null;
 		try {
-			is = Resources.getResource(
-					"com/cppoon/tencent/magiccard/api/test/card_info_v3.js")
-					.openStream();
+			is = Resources.getResource(file).openStream();
 			parser.parse(is);
 		} catch (IOException e) {
 		} finally {
@@ -51,7 +51,7 @@ public class CardInfoParserTest {
 		//
 
 		// check number of parsed cards.
-		assertEquals("number of parsed cards", 4653, listener.getCardCount());
+		assertEquals("number of parsed cards in file " + file, 4776, listener.getCardCount());
 
 		// check the first card.
 		CardInfo cardInfo = listener.getCardById(29);
