@@ -155,7 +155,10 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 			
 			Card card = cardManager.createBuilder()
 				.id(parsedCardInfo.getId())
+				.enabled(parsedCardInfo.isEnabled())
+				.itemNumber(parsedCardInfo.getItemNo())
 				.name(parsedCardInfo.getName())
+				.pickRate(parsedCardInfo.getPickRate())
 				.price(parsedCardInfo.getPrice())
 				.theme(cardTheme)
 				.time(parsedCardInfo.getTime())

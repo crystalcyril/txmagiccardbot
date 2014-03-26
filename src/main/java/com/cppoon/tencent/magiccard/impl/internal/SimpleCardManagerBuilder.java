@@ -22,9 +22,15 @@ public class SimpleCardManagerBuilder implements CardManager.Builder {
 	
 	private int id;
 	
+	private boolean enabled;
+	
+	private int itemNumber;
+	
 	private CardTheme theme;
 	
 	private String name;
+	
+	private int pickRate;
 	
 	private double price;
 	
@@ -45,6 +51,24 @@ public class SimpleCardManagerBuilder implements CardManager.Builder {
 	}
 
 	/* (non-Javadoc)
+	 * @see com.cppoon.tencent.magiccard.CardManager.Builder#itemNumber(int)
+	 */
+	@Override
+	public Builder itemNumber(int itemNumber) {
+		this.itemNumber = itemNumber;
+		return this;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.cppoon.tencent.magiccard.CardManager.Builder#enabled(boolean)
+	 */
+	@Override
+	public Builder enabled(boolean enabled) {
+		this.enabled = enabled;
+		return this;
+	}
+
+	/* (non-Javadoc)
 	 * @see com.cppoon.tencent.magiccard.CardManager.Builder#theme(com.cppoon.tencent.magiccard.CardTheme)
 	 */
 	@Override
@@ -59,6 +83,15 @@ public class SimpleCardManagerBuilder implements CardManager.Builder {
 	@Override
 	public Builder name(String name) {
 		this.name = name;
+		return this;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.cppoon.tencent.magiccard.CardManager.Builder#pickRate(int)
+	 */
+	@Override
+	public Builder pickRate(int pickRate) {
+		this.pickRate = pickRate;
 		return this;
 	}
 
@@ -106,13 +139,13 @@ public class SimpleCardManagerBuilder implements CardManager.Builder {
 		
 		CardImpl ret = new CardImpl();
 		
-		ret.setEnabled(true);	// TODO implements me
+		ret.setEnabled(this.enabled);
 		ret.setId(this.id);
-//		ret.setItemNo(this.);	// TODO implements me
+		ret.setItemNo(this.itemNumber);
 		ret.setName(this.name);
-//		ret.setPickRate(this.pic);	// TODO implements me
+		ret.setPickRate(this.pickRate);
 		ret.setPrice(this.price);
-		ret.setTheme(theme);	// TODO more complex implementation
+		ret.setTheme(theme);
 		ret.setTime(this.time);
 		ret.setType(this.type);
 		ret.setVersion(this.version);

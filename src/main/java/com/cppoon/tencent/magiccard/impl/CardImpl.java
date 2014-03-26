@@ -138,7 +138,7 @@ public class CardImpl implements Card {
 	 */
 	@Override
 	public int getItemNo() {
-		return 0;
+		return itemNo;
 	}
 
 	/**
