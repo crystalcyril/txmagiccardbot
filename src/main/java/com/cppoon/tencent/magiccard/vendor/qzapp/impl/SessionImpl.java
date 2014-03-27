@@ -359,7 +359,7 @@ public class SessionImpl implements Session {
 	 * @see com.cppoon.tencent.magiccard.vendor.qzapp.Session#getSafeBoxCards()
 	 */
 	@Override
-	public List<ExchangeBoxSlot> getSafeBoxCards() {
+	public List<ExchangeBoxSlot> getSafeBoxSlots() {
 
 		// trigger authenticate if not.
 		if (authStatus != SessionAuthStatus.AUTHENTICATED) {
@@ -369,6 +369,8 @@ public class SessionImpl implements Session {
 		ArrayList<ExchangeBoxSlot> ret = new ArrayList<ExchangeBoxSlot>();
 		
 		for (int page = 0; ; page++) {
+			
+			log.trace("retriving page {} of safe box", page);
 			
 			HttpGet request = new HttpGet(UrlUtil.buildSafeBoxUrl(getSid(), page));
 			this.sanitizeUriRequest(request);
@@ -388,12 +390,13 @@ public class SessionImpl implements Session {
 				List<ExchangeBoxSlot> slots = safeBoxInfo.getSlots();
 				
 				// merge the slots to avoid duplicate
-				mergeSlotsWithoutDuplicateId(slots, ret);
+				mergeSlotsWithoutDuplicateSlotId(slots, ret);
 				
 				
 				// look for stopping condition.
 				if (safeBoxInfo.getPageLinks().size() == 1 
 						|| safeBoxInfo.getPageLinks().get(safeBoxInfo.getPageLinks().size()-1).isCurrent()) {
+					log.trace("no more safe box page found, iteration done");
 					// there is only one page, or the last page is encountered,
 					// then we stop iterating.
 					break;
@@ -413,13 +416,74 @@ public class SessionImpl implements Session {
 		
 	}
 	
-	protected void mergeSlotsWithoutDuplicateId(List<ExchangeBoxSlot> source,
+	/* (non-Javadoc)
+	 * @see com.cppoon.tencent.magiccard.vendor.qzapp.Session#getExchangeBoxSlots()
+	 */
+	@Override
+	public List<ExchangeBoxSlot> getExchangeBoxSlots() {
+		
+		// trigger authenticate if not.
+		if (authStatus != SessionAuthStatus.AUTHENTICATED) {
+			triggerAuthentication();
+		}
+		
+		ArrayList<ExchangeBoxSlot> ret = new ArrayList<ExchangeBoxSlot>();
+		
+		for (int page = 0; ; page++) {
+			
+			log.trace("retriving page {} of safe box", page);
+			
+			HttpGet request = new HttpGet(UrlUtil.buildSafeBoxUrl(getSid(), page));
+			this.sanitizeUriRequest(request);
+			
+			// send it
+			HttpClient httpClient = getHttpClient();
+			HttpContext httpContext = getHttpContext();
+			try {
+				
+				HttpResponse response = httpClient.execute(request, httpContext);
+
+				String html = EntityUtils.toString(response.getEntity());
+				
+				SafeBoxParser20140320 parser = new SafeBoxParser20140320();
+				CardBoxInfo safeBoxInfo = parser.parse(html);
+				
+				List<ExchangeBoxSlot> slots = safeBoxInfo.getSlots();
+				
+				// merge the slots to avoid duplicate
+				mergeSlotsWithoutDuplicateSlotId(slots, ret);
+				
+				
+				// look for stopping condition.
+				if (safeBoxInfo.getPageLinks().size() == 1 
+						|| safeBoxInfo.getPageLinks().get(safeBoxInfo.getPageLinks().size()-1).isCurrent()) {
+					log.trace("no more safe box page found, iteration done");
+					// there is only one page, or the last page is encountered,
+					// then we stop iterating.
+					break;
+				}
+				
+			} catch (ClientProtocolException e) {
+				log.warn("error when reading safebox page", e);
+				throw new TxMagicCardException(e);
+			} catch (IOException e) {
+				log.warn("error when reading safebox page", e);
+				throw new TxMagicCardException(e);
+			}
+			
+		}
+		
+		return ret;
+		
+	}
+
+	protected void mergeSlotsWithoutDuplicateSlotId(List<ExchangeBoxSlot> source,
 			List<ExchangeBoxSlot> target) {
 		
 		// first, collect all card Ids in the target list.
-		Set<Integer> existingCardIds = new HashSet<Integer>();
+		Set<Integer> existingSlotIds = new HashSet<Integer>();
 		for (ExchangeBoxSlot existingSlot : target) {
-			existingCardIds.add(existingSlot.getCardId());
+			existingSlotIds.add(existingSlot.getSlotId());
 		}
 		
 		// then, add the source slots to the target list, if duplicated 
@@ -427,7 +491,7 @@ public class SessionImpl implements Session {
 		for (ExchangeBoxSlot srcSlot : source) {
 			
 			// discard duplicate
-			if (existingCardIds.contains(srcSlot.getCardId())) {
+			if (existingSlotIds.contains(srcSlot.getSlotId())) {
 				continue;
 			}
 			

@@ -21,12 +21,12 @@ import com.cppoon.tencent.magiccard.vendor.qzapp.impl.DefaultSessionFactory;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.ExchangeBoxSlot;
 
 /**
- * Test the exchange box.
+ * Test the safe box.
  * 
  * @author Cyril
  * @since 0.1.0
  */
-public class SessionExchangeBoxTest {
+public class SessionSafeBoxTest {
 
 	Logger log = LoggerFactory.getLogger(getClass());
 
@@ -48,7 +48,7 @@ public class SessionExchangeBoxTest {
 	 * 
 	 */
 	@Test
-	public void testGetExchangeBoxSlots_OK() {
+	public void testGetSafeBox_OK_NotEmpty_OnePage() {
 
 		String username = TestAccount.getUsername();
 		String password = TestAccount.getPassword();
@@ -59,19 +59,19 @@ public class SessionExchangeBoxTest {
 		//
 		// WHEN
 		//
-		List<ExchangeBoxSlot> slots = session.getExchangeBoxSlots();
+		List<ExchangeBoxSlot> cards = session.getSafeBoxSlots();
 
 		//
 		// THEN
 		//
-		assertNotNull("exchange box slots", slots);
+		assertNotNull("safe box cards", cards);
 
-		assertEquals("exchange box slots count", 3, slots.size());
+		assertEquals("safe box cards count", 3, cards.size());
 
 		// check each card
 		ExchangeBoxSlot card;
 
-		Iterator<ExchangeBoxSlot> iter = slots.iterator();
+		Iterator<ExchangeBoxSlot> iter = cards.iterator();
 
 		// card
 		card = iter.next();
@@ -100,7 +100,7 @@ public class SessionExchangeBoxTest {
 	}
 
 	@Test
-	public void testGetExchangeBoxSlots_OK_MultiPage() {
+	public void testGetSafeBox_OK_NotEmpty_MultiPage() {
 
 		String username = "2517429151";
 		String password = "731521_rpbkdg";
@@ -111,7 +111,7 @@ public class SessionExchangeBoxTest {
 		//
 		// WHEN
 		//
-		List<ExchangeBoxSlot> cards = session.getExchangeBoxSlots();
+		List<ExchangeBoxSlot> cards = session.getSafeBoxSlots();
 
 		int i = 1;
 		for (ExchangeBoxSlot slot : cards) {

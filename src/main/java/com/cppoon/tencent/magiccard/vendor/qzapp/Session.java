@@ -18,22 +18,31 @@ public interface Session {
 	/**
 	 * Obtains account overview.
 	 * 
-	 * @return
+	 * @return the account status, this will never return <code>null</code>.
 	 */
 	AccountOverview getAccountOverview();
 
 	/**
 	 * Returns the authentication status.
 	 * 
-	 * @return
+	 * @return the authentication status.
 	 */
 	SessionAuthStatus getAuthStatus();
 
 	/**
-	 * Obtains a list of cards in the safe box.
+	 * Obtains a list of slots in the safe box.
 	 * 
-	 * @return
+	 * @return a list of slots in the safe box. This will never return
+	 *         <code>null</code>.
 	 */
-	List<ExchangeBoxSlot> getSafeBoxCards();
+	List<ExchangeBoxSlot> getSafeBoxSlots();
+
+	/**
+	 * Obtains a list of slots in the exchange box.
+	 * 
+	 * @return a list of slots in the exchange box. This will never return
+	 *         <code>null</code>.
+	 */
+	List<ExchangeBoxSlot> getExchangeBoxSlots();
 
 }
