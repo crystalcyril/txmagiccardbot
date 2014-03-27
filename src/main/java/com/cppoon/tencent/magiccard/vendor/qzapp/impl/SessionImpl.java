@@ -46,6 +46,7 @@ import com.cppoon.tencent.magiccard.vendor.qzapp.parser.ExchangeBoxSlot;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.LoginForm;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.LoginPageParser;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.AccountHomePageParser20140318;
+import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.ExchangeCardBoxParser20140320;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.LoginPageParser20140319;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.SafeBoxParser20140320;
 
@@ -429,50 +430,37 @@ public class SessionImpl implements Session {
 		
 		ArrayList<ExchangeBoxSlot> ret = new ArrayList<ExchangeBoxSlot>();
 		
-		for (int page = 0; ; page++) {
-			
-			log.trace("retriving page {} of safe box", page);
-			
-			HttpGet request = new HttpGet(UrlUtil.buildSafeBoxUrl(getSid(), page));
-			this.sanitizeUriRequest(request);
-			
-			// send it
-			HttpClient httpClient = getHttpClient();
-			HttpContext httpContext = getHttpContext();
-			try {
-				
-				HttpResponse response = httpClient.execute(request, httpContext);
-
-				String html = EntityUtils.toString(response.getEntity());
-				
-				SafeBoxParser20140320 parser = new SafeBoxParser20140320();
-				CardBoxInfo safeBoxInfo = parser.parse(html);
-				
-				List<ExchangeBoxSlot> slots = safeBoxInfo.getSlots();
-				
-				// merge the slots to avoid duplicate
-				mergeSlotsWithoutDuplicateSlotId(slots, ret);
-				
-				
-				// look for stopping condition.
-				if (safeBoxInfo.getPageLinks().size() == 1 
-						|| safeBoxInfo.getPageLinks().get(safeBoxInfo.getPageLinks().size()-1).isCurrent()) {
-					log.trace("no more safe box page found, iteration done");
-					// there is only one page, or the last page is encountered,
-					// then we stop iterating.
-					break;
-				}
-				
-			} catch (ClientProtocolException e) {
-				log.warn("error when reading safebox page", e);
-				throw new TxMagicCardException(e);
-			} catch (IOException e) {
-				log.warn("error when reading safebox page", e);
-				throw new TxMagicCardException(e);
-			}
-			
-		}
+		log.trace("retriving exchange box page");
 		
+		HttpGet request = new HttpGet(UrlUtil.buildExchangeBoxUrl(getSid()));
+		this.sanitizeUriRequest(request);
+		
+		
+		// send it
+		HttpClient httpClient = getHttpClient();
+		HttpContext httpContext = getHttpContext();
+		try {
+			
+			HttpResponse response = httpClient.execute(request, httpContext);
+
+			String html = EntityUtils.toString(response.getEntity());
+			
+			ExchangeCardBoxParser20140320 parser = new ExchangeCardBoxParser20140320();
+			CardBoxInfo exchangeBoxParser = parser.parse(html);
+			
+			List<ExchangeBoxSlot> slots = exchangeBoxParser.getSlots();
+			
+			// merge the slots to avoid duplicate
+			mergeSlotsWithoutDuplicateSlotId(slots, ret);
+			
+		} catch (ClientProtocolException e) {
+			log.warn("error when reading safebox page", e);
+			throw new TxMagicCardException(e);
+		} catch (IOException e) {
+			log.warn("error when reading safebox page", e);
+			throw new TxMagicCardException(e);
+		}
+			
 		return ret;
 		
 	}
