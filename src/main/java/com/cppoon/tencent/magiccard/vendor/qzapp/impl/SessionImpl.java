@@ -35,6 +35,7 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cppoon.tencent.magiccard.StealStoveResult;
 import com.cppoon.tencent.magiccard.TxMagicCardException;
 import com.cppoon.tencent.magiccard.http.client.HttpClientFactory;
 import com.cppoon.tencent.magiccard.vendor.qzapp.AccountOverview;
@@ -98,7 +99,7 @@ public class SessionImpl implements Session {
 	 * @param password
 	 */
 	public SessionImpl(final HttpClientFactory httpClientFactory,
-			String username, String password) {
+			final String username, final String password) {
 
 		this.httpClientFactory = httpClientFactory;
 
@@ -118,7 +119,6 @@ public class SessionImpl implements Session {
 	protected void reset() {
 
 		this.authStatus = SessionAuthStatus.UNAUTHENTICATED;
-
 		cookieStore = new BasicCookieStore();
 
 	}
@@ -463,6 +463,36 @@ public class SessionImpl implements Session {
 			
 		return ret;
 		
+	}
+	
+	
+	@Override
+	public StealStoveResult stealStove(int targetUin, int targetCardId) {
+		
+		// look up the card theme ID of the target card ID.
+		int themeId = lookupThemeIdForCardId(targetCardId);
+		
+		// FIXME cyril: handle the case if theme ID is not found.
+		
+		// build the URL
+//		String url = UrlUtil.buildStealStoveUrl(targetUin, themeId, targetCardId);
+		
+		
+		// send the HTTP request
+		
+		// parse the HTTP response
+		
+		
+		// determine the result.
+		
+		
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private int lookupThemeIdForCardId(int targetCardId) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	protected void mergeSlotsWithoutDuplicateSlotId(List<ExchangeBoxSlot> source,
