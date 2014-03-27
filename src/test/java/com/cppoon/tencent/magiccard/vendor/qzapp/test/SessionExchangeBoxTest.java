@@ -3,10 +3,6 @@
  */
 package com.cppoon.tencent.magiccard.vendor.qzapp.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.util.Iterator;
 import java.util.List;
 
 import org.junit.After;
@@ -60,6 +56,7 @@ public class SessionExchangeBoxTest {
 		// WHEN
 		//
 		List<ExchangeBoxSlot> slots = session.getExchangeBoxSlots();
+		printSlots(slots);
 
 		//
 		// THEN
@@ -82,17 +79,24 @@ public class SessionExchangeBoxTest {
 		//
 		// WHEN
 		//
-		List<ExchangeBoxSlot> cards = session.getExchangeBoxSlots();
+		List<ExchangeBoxSlot> slots = session.getExchangeBoxSlots();
 
+		printSlots(slots);
+		
+	}
+
+	
+	protected void printSlots(List<ExchangeBoxSlot> slots) {
+		
 		int i = 1;
-		for (ExchangeBoxSlot slot : cards) {
+		for (ExchangeBoxSlot slot : slots) {
 
 			log.info("slot " + i + ": " + slot);
 
 			i++;
 
 		}
-
+		
 	}
-
+	
 }
