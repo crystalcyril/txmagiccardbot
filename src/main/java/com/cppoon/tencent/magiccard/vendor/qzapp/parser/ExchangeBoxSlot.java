@@ -153,16 +153,16 @@ public class ExchangeBoxSlot implements Serializable {
 		this.putToExchangeBoxUrl = putToExchangeBoxUrl;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return "cardThemeName=" + cardThemeName + ", cardName=" + cardName
 				+ ", cardPrice=" + cardPrice + ", cardId=" + cardId
-				+ ", slotId=" + slotId;
+				+ ", slotId=" + slotId + ", sellUrl=" + sellUrl
+				+ ", putToSafeBoxUrl=" + putToSafeBoxUrl
+				+ ", putToExchangeBoxUrl=" + putToExchangeBoxUrl;
 	}
-
+	
 }
