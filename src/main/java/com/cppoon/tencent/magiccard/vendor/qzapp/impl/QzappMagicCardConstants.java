@@ -36,4 +36,9 @@ public abstract class QzappMagicCardConstants {
 	 */
 	public static final String APP_URL_MAIN_PAGE = APP_BASE_URL + "/wl_card_mainpage";
 	
+	/**
+	 * The base URL for safe box.
+	 */
+	public static final String SAFE_BOX_URL = APP_BASE_URL + "/wl_card_box";
+	
 }

@@ -8,8 +8,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -33,16 +35,19 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cppoon.tencent.magiccard.TxMagicCardException;
 import com.cppoon.tencent.magiccard.http.client.HttpClientFactory;
 import com.cppoon.tencent.magiccard.vendor.qzapp.AccountOverview;
 import com.cppoon.tencent.magiccard.vendor.qzapp.Session;
 import com.cppoon.tencent.magiccard.vendor.qzapp.SessionAuthStatus;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.AccountHomePageParser;
+import com.cppoon.tencent.magiccard.vendor.qzapp.parser.CardBoxInfo;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.ExchangeBoxSlot;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.LoginForm;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.LoginPageParser;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.AccountHomePageParser20140318;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.LoginPageParser20140319;
+import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.SafeBoxParser20140320;
 
 /**
  * 
@@ -355,7 +360,80 @@ public class SessionImpl implements Session {
 	 */
 	@Override
 	public List<ExchangeBoxSlot> getSafeBoxCards() {
-		throw new UnsupportedOperationException("implements me");
+
+		// trigger authenticate if not.
+		if (authStatus != SessionAuthStatus.AUTHENTICATED) {
+			triggerAuthentication();
+		}
+		
+		ArrayList<ExchangeBoxSlot> ret = new ArrayList<ExchangeBoxSlot>();
+		
+		for (int page = 0; ; page++) {
+			
+			HttpGet request = new HttpGet(UrlUtil.buildSafeBoxUrl(getSid(), page));
+			this.sanitizeUriRequest(request);
+			
+			// send it
+			HttpClient httpClient = getHttpClient();
+			HttpContext httpContext = getHttpContext();
+			try {
+				
+				HttpResponse response = httpClient.execute(request, httpContext);
+
+				String html = EntityUtils.toString(response.getEntity());
+				
+				SafeBoxParser20140320 parser = new SafeBoxParser20140320();
+				CardBoxInfo safeBoxInfo = parser.parse(html);
+				
+				List<ExchangeBoxSlot> slots = safeBoxInfo.getSlots();
+				
+				// merge the slots to avoid duplicate
+				mergeSlotsWithoutDuplicateId(slots, ret);
+				
+				
+				// look for stopping condition.
+				if (safeBoxInfo.getPageLinks().size() == 1 
+						|| safeBoxInfo.getPageLinks().get(safeBoxInfo.getPageLinks().size()-1).isCurrent()) {
+					// there is only one page, or the last page is encountered,
+					// then we stop iterating.
+					break;
+				}
+				
+			} catch (ClientProtocolException e) {
+				log.warn("error when reading safebox page", e);
+				throw new TxMagicCardException(e);
+			} catch (IOException e) {
+				log.warn("error when reading safebox page", e);
+				throw new TxMagicCardException(e);
+			}
+			
+		}
+		
+		return ret;
+		
+	}
+	
+	protected void mergeSlotsWithoutDuplicateId(List<ExchangeBoxSlot> source,
+			List<ExchangeBoxSlot> target) {
+		
+		// first, collect all card Ids in the target list.
+		Set<Integer> existingCardIds = new HashSet<Integer>();
+		for (ExchangeBoxSlot existingSlot : target) {
+			existingCardIds.add(existingSlot.getCardId());
+		}
+		
+		// then, add the source slots to the target list, if duplicated 
+		// card ID is found, discard them.
+		for (ExchangeBoxSlot srcSlot : source) {
+			
+			// discard duplicate
+			if (existingCardIds.contains(srcSlot.getCardId())) {
+				continue;
+			}
+			
+			target.add(srcSlot);
+		}
+		
 	}
 
 	/**
@@ -388,6 +466,10 @@ public class SessionImpl implements Session {
 		httpContext.setAttribute(HttpClientContext.COOKIE_STORE,
 				this.cookieStore);
 		return httpContext;
+	}
+	
+	protected String getSid() {
+		return sid;
 	}
 
 }
