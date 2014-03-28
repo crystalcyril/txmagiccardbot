@@ -141,11 +141,13 @@ public abstract class AbstractSessionImpl implements Session {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	protected HttpResponse executeRequest(HttpRequestBase request)
+	protected HttpResponse executeRequest(HttpRequestBase request, boolean sanitize)
 			throws ClientProtocolException, IOException {
 
 		// make sure the request conforms to this client's requirement.
-		sanitizeUriRequest(request);
+		if (sanitize) {
+			sanitizeUriRequest(request);
+		}
 
 		HttpClient httpClient = getHttpClient();
 		HttpContext httpContext = getHttpContext();
@@ -155,6 +157,22 @@ public abstract class AbstractSessionImpl implements Session {
 
 		return response;
 
+	}
+	
+	/**
+	 * Execute the HTTP request and return the response.
+	 * <p>
+	 *
+	 * This is equivalent to call <code>executeRequest(request, true)</code>
+	 * 
+	 * @param request
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	protected HttpResponse executeRequest(HttpRequestBase request)
+			throws ClientProtocolException, IOException {
+		return executeRequest(request, true);
 	}
 
 	/**

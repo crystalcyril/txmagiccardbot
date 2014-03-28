@@ -70,7 +70,7 @@ public class SessionOverviewTest {
 		assertNotNull("account overview", acOverview);
 		
 		
-		assertEquals("player level", 1, acOverview.getPlayerLevel());
+		assertEquals("player level", 3, acOverview.getPlayerLevel());
 		assertEquals("coin", 16400, acOverview.getCoins(), 0);
 		assertEquals("cards in deck", 16, acOverview.getCardsInDeck());
 		assertEquals("available slots in exchange card box", 0, acOverview.getCardsInCardExchangeBox());

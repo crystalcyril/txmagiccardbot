@@ -21,7 +21,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -161,15 +160,23 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 			HttpResponse response = executeRequest(request);
 
 			String html = EntityUtils.toString(response.getEntity());
-			return accountHomePageParser.parse(html);
+			AccountOverview ret = accountHomePageParser.parse(html);
+			
+			if (ret == null) {
+				log.error("error reading account overview page of username {}, content=[[{}]]",
+						username, html);
+			}
+			
+			return ret;
 
 		} catch (ClientProtocolException e) {
 			log.warn("error when reading game main page", e);
+			throw new TxMagicCardException("error when reading game main page", e);
 		} catch (IOException e) {
 			log.warn("error when reading game main page", e);
+			throw new TxMagicCardException("error when reading game main page", e);
 		}
 
-		return null;
 	}
 
 	protected void triggerAuthentication() {
@@ -187,7 +194,7 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 			// do login
 			HttpPost loginRequest = buildLoginRequest(username, password);
 
-			HttpResponse response = executeRequest(loginRequest);
+			HttpResponse response = executeRequest(loginRequest, false);
 
 			// check the redirected location header.
 			if (response.getStatusLine().getStatusCode() == 301
@@ -242,6 +249,8 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 			// if not, update the authenticate status as "Unauthenticated".
 			if (this.authStatus != SessionAuthStatus.AUTHENTICATED) {
 				authStatus = SessionAuthStatus.UNAUTHENTICATED;
+				
+				log.error("unable to authenticate user {}", username);
 			}
 
 		}
@@ -374,8 +383,10 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 
 			log.trace("retriving page {} of safe box", page);
 
+			// build the request for reading safe box
 			HttpGet request = new HttpGet(UrlUtil.buildSafeBoxUrl(getSid(),
 					page));
+			request.setHeader(HttpHeaders.REFERER, UrlUtil.buildExchangeBoxUrl(getSid()));
 
 			// send it
 			try {
