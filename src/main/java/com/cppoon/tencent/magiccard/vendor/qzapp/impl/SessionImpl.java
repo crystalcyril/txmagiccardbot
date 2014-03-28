@@ -14,12 +14,14 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -148,8 +150,11 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 			log.error(
 					"unexpected error when building magic card main page URL",
 					e);
+			throw new TxMagicCardException("error building account overview URL", e);
 		}
 		HttpGet request = new HttpGet(uri);
+		request.setHeader(HttpHeaders.REFERER, uri.toString());
+		
 
 		// send it
 		try {
