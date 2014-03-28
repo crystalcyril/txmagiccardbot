@@ -221,6 +221,15 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 
 				log.warn("301/302 redirection is expected after login, however it is not (status code is "
 						+ response.getStatusLine().getStatusCode() + ")");
+				
+				// peek into the response
+				try {
+					log.trace("peeking the unexpected response...");
+					String unexpectedResponse = EntityUtils.toString(response.getEntity());
+					log.warn("unexpected response entity: [[{}]]", unexpectedResponse);
+				} catch (Throwable t) {
+					
+				}
 
 				return;
 			}
@@ -445,6 +454,7 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 		log.trace("retriving exchange box page");
 
 		HttpGet request = new HttpGet(UrlUtil.buildExchangeBoxUrl(getSid()));
+		request.setHeader(HttpHeaders.REFERER, UrlUtil.buildMainPageUrl(getSid()));
 
 		// send it
 		try {

@@ -26,6 +26,28 @@ public final class UrlUtil {
 			throw new IllegalArgumentException("sid should not be null");
 		}
 	}
+	
+	/**
+	 * Construct the URL for main page / account overview.
+	 * 
+	 * @param sid
+	 * @return
+	 */
+	public static final String buildMainPageUrl(String sid) {
+		
+		assertSid(sid);
+		
+		try {
+			String s = QzappMagicCardConstants.APP_URL_MAIN_PAGE + "?"
+					+ QzappMagicCardConstants.SESSION_ID_NAME + "="
+					+ URLEncoder.encode(sid, "UTF-8");
+			
+			return s;
+		} catch (UnsupportedEncodingException e) {
+			throw new TxMagicCardException("error building account overview URL", e);
+		}
+		
+	}
 
 	/**
 	 * Utility method to construct the URL for safe box accessing.

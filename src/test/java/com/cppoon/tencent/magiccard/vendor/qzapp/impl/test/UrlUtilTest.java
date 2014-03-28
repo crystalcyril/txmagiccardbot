@@ -33,6 +33,27 @@ public class UrlUtilTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	
+	@Test
+	public void testBuildMainpageUrl_OK() {
+
+		String actual = UrlUtil.buildMainPageUrl("aBcDeFgH123");
+		
+		assertEquals("http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_mainpage?sid=aBcDeFgH123", actual);
+		
+	}
+	
+	@Test
+	public void testBuildMainpageUrl_Fail_MissingSid() {
+
+		try {
+			UrlUtil.buildMainPageUrl(null);
+			
+			fail("should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
+	}
 
 	/**
 	 * Test method for {@link com.cppoon.tencent.magiccard.vendor.qzapp.impl.UrlUtil#buildSafeBoxUrl(java.lang.String, int)}.
