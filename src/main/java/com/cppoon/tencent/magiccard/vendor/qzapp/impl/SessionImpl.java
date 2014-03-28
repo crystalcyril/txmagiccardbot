@@ -65,24 +65,25 @@ import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.SafeBoxParser201403
  */
 public class SessionImpl implements Session {
 
-	private static final Logger log = LoggerFactory.getLogger(SessionImpl.class);
-	
+	private static final Logger log = LoggerFactory
+			.getLogger(SessionImpl.class);
+
 	/**
 	 * Default user agent string.
 	 */
 	private static final String DEFAULT_USER_AGENT = "Mozilla/5.0 (Linux; U; Android 4.0.3; de-de; Galaxy S II Build/GRJ22) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
-	
+
 	private final HttpClientFactory httpClientFactory;
-	
+
 	private CardThemeManager cardThemeManager;
-	
+
 	private CardManager cardManager;
 
 	/**
 	 * Cookie store for this session. This represents a single user identity.
 	 */
 	private CookieStore cookieStore;
-	
+
 	/**
 	 * The session ID returned from the web server.
 	 */
@@ -93,7 +94,7 @@ public class SessionImpl implements Session {
 	private LoginPageParser loginPageParser;
 
 	private AccountHomePageParser accountHomePageParser;
-	
+
 	private CardRefineParser cardRefineParser;
 
 	// credential begins
@@ -140,64 +141,78 @@ public class SessionImpl implements Session {
 	public AccountOverview getAccountOverview() {
 
 		ensureAuthentication();
-		
+
 		// send a request to retrieve the account overview.
 		return doGetAccountOverview();
-		
+
 	}
 
-	
 	private void ensureAuthentication() {
-		
+
 		// trigger authenticate if not.
 		if (authStatus != SessionAuthStatus.AUTHENTICATED) {
 			triggerAuthentication();
 		}
-		
+
 	}
 
 	private AccountOverview doGetAccountOverview() {
-		
+
 		// build a get request
 		URI uri = null;
 		try {
 			uri = new URIBuilder(QzappMagicCardConstants.APP_URL_MAIN_PAGE)
-				.addParameter(QzappMagicCardConstants.SESSION_ID_NAME, sid).build();
+					.addParameter(QzappMagicCardConstants.SESSION_ID_NAME, sid)
+					.build();
 		} catch (URISyntaxException e) {
-			log.error("unexpected error when building magic card main page URL", e);
+			log.error(
+					"unexpected error when building magic card main page URL",
+					e);
 		}
 		HttpGet request = new HttpGet(uri);
-		
+
 		// send it
 		try {
 			HttpResponse response = executeRequest(request);
-			
+
 			String html = EntityUtils.toString(response.getEntity());
 			return accountHomePageParser.parse(html);
-			
+
 		} catch (ClientProtocolException e) {
 			log.warn("error when reading game main page", e);
 		} catch (IOException e) {
 			log.warn("error when reading game main page", e);
 		}
-		
+
 		return null;
 	}
-	
-	
+
+	/**
+	 * Execute the HTTP request and return the response.
+	 * <p>
+	 * 
+	 * This method will properly configure the request to ensure it looks as if
+	 * it is sending from a mobile device.
+	 * 
+	 * @param request
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
 	protected HttpResponse executeRequest(HttpRequestBase request)
 			throws ClientProtocolException, IOException {
-		
+
 		// make sure the request conforms to this client's requirement.
 		sanitizeUriRequest(request);
-		
-		// execute the request.
+
 		HttpClient httpClient = getHttpClient();
 		HttpContext httpContext = getHttpContext();
+
+		// execute the request.
 		HttpResponse response = httpClient.execute(request, httpContext);
 
 		return response;
-		
+
 	}
 
 	protected void triggerAuthentication() {
@@ -206,17 +221,15 @@ public class SessionImpl implements Session {
 		if (authStatus == SessionAuthStatus.AUTHENTICATED)
 			return;
 
-		// 
+		//
 		String redirectedUrl = null;
-		
-		
+
 		this.authStatus = SessionAuthStatus.AUTHENTICATING;
 
-		
 		try {
 			// do login
 			HttpPost loginRequest = buildLoginRequest(username, password);
-			
+
 			HttpResponse response = executeRequest(loginRequest);
 
 			// check the redirected location header.
@@ -231,7 +244,8 @@ public class SessionImpl implements Session {
 				// remember the sid (session ID).
 				String sid = extractSidFromUrl(header.getValue());
 				if (sid == null) {
-					log.warn("failed to extract session ID from the responded URL after login " + header.getValue());
+					log.warn("failed to extract session ID from the responded URL after login "
+							+ header.getValue());
 					return;
 				} else {
 					// save the sid.
@@ -240,38 +254,39 @@ public class SessionImpl implements Session {
 				}
 
 			} else {
-				
+
 				log.warn("301/302 redirection is expected after login, however it is not (status code is "
 						+ response.getStatusLine().getStatusCode() + ")");
 
 				return;
 			}
-			
-			
+
 			// manually continue the redirection.
 			log.trace("continue redirected URL after login");
 			HttpGet getRequest = new HttpGet(redirectedUrl);
-			
+
 			response = executeRequest(getRequest);
-			
+
 			// done!
 			log.debug("user (qq={}) authenticated", username);
 			this.authStatus = SessionAuthStatus.AUTHENTICATED;
 
 		} catch (ClientProtocolException e) {
 			log.warn("an error has occurred when performing login", e);
-			throw new TxMagicCardException("error authenticating user " + username, e);
+			throw new TxMagicCardException("error authenticating user "
+					+ username, e);
 		} catch (IOException e) {
 			log.warn("an error has occurred when performing login", e);
-			throw new TxMagicCardException("error authenticating user " + username, e);
+			throw new TxMagicCardException("error authenticating user "
+					+ username, e);
 		} finally {
-			
-			// at this stage, we expect the session is authenticated, 
+
+			// at this stage, we expect the session is authenticated,
 			// if not, update the authenticate status as "Unauthenticated".
 			if (this.authStatus != SessionAuthStatus.AUTHENTICATED) {
 				authStatus = SessionAuthStatus.UNAUTHENTICATED;
 			}
-			
+
 		}
 
 	}
@@ -284,26 +299,31 @@ public class SessionImpl implements Session {
 	 * @return the SID.
 	 */
 	private String extractSidFromUrl(String url) {
-		
-		if (url == null) return null;
-		
+
+		if (url == null)
+			return null;
+
 		try {
-			
-			List<NameValuePair> nvps = URLEncodedUtils.parse(new URI(url), "UTF-8");
+
+			List<NameValuePair> nvps = URLEncodedUtils.parse(new URI(url),
+					"UTF-8");
 			// look for the "sid" parameter
 			if (nvps != null && !nvps.isEmpty()) {
 				for (NameValuePair nvp : nvps) {
-					if (QzappMagicCardConstants.SESSION_ID_NAME.equals(nvp.getName())) {
+					if (QzappMagicCardConstants.SESSION_ID_NAME.equals(nvp
+							.getName())) {
 						return nvp.getValue();
 					}
 				}
 			}
-			
+
 		} catch (URISyntaxException e) {
-			log.warn("failed to parse query string parameters from the URL to look up SID from URL " + url, e);
+			log.warn(
+					"failed to parse query string parameters from the URL to look up SID from URL "
+							+ url, e);
 			return null;
 		}
-		
+
 		// not found
 		return null;
 	}
@@ -330,8 +350,8 @@ public class SessionImpl implements Session {
 			nvps.add(new BasicNameValuePair(e.getKey(), e.getValue()));
 		}
 		// add our user name and password pair
-		nvps.add(new BasicNameValuePair("qq", username));	// user name
-		nvps.add(new BasicNameValuePair("pwd", password));	// password
+		nvps.add(new BasicNameValuePair("qq", username)); // user name
+		nvps.add(new BasicNameValuePair("pwd", password)); // password
 		request.setEntity(new UrlEncodedFormEntity(nvps, Charset
 				.forName("UTF-8")));
 
@@ -379,8 +399,10 @@ public class SessionImpl implements Session {
 	public SessionAuthStatus getAuthStatus() {
 		return authStatus;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cppoon.tencent.magiccard.vendor.qzapp.Session#getSafeBoxCards()
 	 */
 	@Override
@@ -388,40 +410,42 @@ public class SessionImpl implements Session {
 
 		// trigger authenticate if not.
 		ensureAuthentication();
-		
+
 		ArrayList<ExchangeBoxSlot> ret = new ArrayList<ExchangeBoxSlot>();
-		
-		for (int page = 0; ; page++) {
-			
+
+		for (int page = 0;; page++) {
+
 			log.trace("retriving page {} of safe box", page);
-			
-			HttpGet request = new HttpGet(UrlUtil.buildSafeBoxUrl(getSid(), page));
-			
+
+			HttpGet request = new HttpGet(UrlUtil.buildSafeBoxUrl(getSid(),
+					page));
+
 			// send it
 			try {
-				
+
 				HttpResponse response = executeRequest(request);
 
 				String html = EntityUtils.toString(response.getEntity());
-				
+
 				SafeBoxParser20140320 parser = new SafeBoxParser20140320();
 				CardBoxInfo safeBoxInfo = parser.parse(html);
-				
+
 				List<ExchangeBoxSlot> slots = safeBoxInfo.getSlots();
-				
+
 				// merge the slots to avoid duplicate
 				mergeSlotsWithoutDuplicateSlotId(slots, ret);
-				
-				
+
 				// look for stopping condition.
-				if (safeBoxInfo.getPageLinks().size() == 1 
-						|| safeBoxInfo.getPageLinks().get(safeBoxInfo.getPageLinks().size()-1).isCurrent()) {
+				if (safeBoxInfo.getPageLinks().size() == 1
+						|| safeBoxInfo.getPageLinks()
+								.get(safeBoxInfo.getPageLinks().size() - 1)
+								.isCurrent()) {
 					log.trace("no more safe box page found, iteration done");
 					// there is only one page, or the last page is encountered,
 					// then we stop iterating.
 					break;
 				}
-				
+
 			} catch (ClientProtocolException e) {
 				log.warn("error when reading safebox page", e);
 				throw new TxMagicCardException(e);
@@ -429,44 +453,46 @@ public class SessionImpl implements Session {
 				log.warn("error when reading safebox page", e);
 				throw new TxMagicCardException(e);
 			}
-			
+
 		}
-		
+
 		return ret;
-		
+
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.cppoon.tencent.magiccard.vendor.qzapp.Session#getExchangeBoxSlots()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cppoon.tencent.magiccard.vendor.qzapp.Session#getExchangeBoxSlots()
 	 */
 	@Override
 	public List<ExchangeBoxSlot> getExchangeBoxSlots() {
-		
+
 		// trigger authenticate if not.
 		ensureAuthentication();
-		
+
 		ArrayList<ExchangeBoxSlot> ret = new ArrayList<ExchangeBoxSlot>();
-		
+
 		log.trace("retriving exchange box page");
-		
+
 		HttpGet request = new HttpGet(UrlUtil.buildExchangeBoxUrl(getSid()));
-		
-		
+
 		// send it
 		try {
-			
+
 			HttpResponse response = executeRequest(request);
 
 			String html = EntityUtils.toString(response.getEntity());
-			
+
 			ExchangeCardBoxParser20140320 parser = new ExchangeCardBoxParser20140320();
 			CardBoxInfo exchangeBoxParser = parser.parse(html);
-			
+
 			List<ExchangeBoxSlot> slots = exchangeBoxParser.getSlots();
-			
+
 			// merge the slots to avoid duplicate
 			mergeSlotsWithoutDuplicateSlotId(slots, ret);
-			
+
 		} catch (ClientProtocolException e) {
 			log.warn("error when reading safebox page", e);
 			throw new TxMagicCardException(e);
@@ -474,141 +500,146 @@ public class SessionImpl implements Session {
 			log.warn("error when reading safebox page", e);
 			throw new TxMagicCardException(e);
 		}
-			
+
 		return ret;
-		
+
 	}
-	
-	
+
 	@Override
 	public StealStoveResult stealStove(int targetUin, int targetCardId) {
-		
+
 		ensureAuthentication();
-		
+
 		// look up the card theme ID of the target card ID.
 		int themeId = lookupThemeIdForCardId(targetCardId);
-		
+
 		// FIXME cyril: handle the case if theme ID is not found.
 		if (themeId == -1) {
 			return StealStoveResult.THEME_NOT_FOUND;
 		}
-		
+
 		// build the URL
-		SynthesizeCardInfo cardForStealing = getCardsForStealing(targetUin, themeId, targetCardId);
-		
+		SynthesizeCardInfo cardForStealing = getCardsForStealing(targetUin,
+				themeId, targetCardId);
+
 		if (cardForStealing == null) {
-			throw new TxMagicCardException("cannot handle the case card to steal is not available");
+			throw new TxMagicCardException(
+					"cannot handle the case card to steal is not available");
 		}
-		
+
 		// send the HTTP request
 		return doStealCard(cardForStealing);
-		
+
 	}
-	
+
 	private StealStoveResult doStealCard(SynthesizeCardInfo cardForStealing) {
-		
+
 		HttpGet request = new HttpGet(cardForStealing.getSynthesizeUrl());
-		
+
 		try {
-			
+
 			HttpResponse response = executeRequest(request);
-			
+
 			String html = EntityUtils.toString(response.getEntity());
-			
+
 			// handle response.
 			if (html.contains("您成功的将卡片放入好友的炼卡炉")) {
 				return StealStoveResult.OK;
 			} else if (html.contains("用户偷炉达到限制的次数")) {
 				return StealStoveResult.LIMIT_REACHED;
 			}
-			
+
 			// XXX can check the stolen stoves.
-			
+
 			log.trace("unknown steal stove response: {}", html);
 			return StealStoveResult.UNKNOWN_RESPONSE;
-			
+
 		} catch (ClientProtocolException e) {
-			throw new TxMagicCardException("error reading steal stove result page", e);
+			throw new TxMagicCardException(
+					"error reading steal stove result page", e);
 		} catch (IOException e) {
-			throw new TxMagicCardException("error reading steal stove result page", e);
+			throw new TxMagicCardException(
+					"error reading steal stove result page", e);
 		}
-		
-		
+
 	}
 
-	protected SynthesizeCardInfo getCardsForStealing(int targetUin, int themeId, int cardId) {
-		
+	protected SynthesizeCardInfo getCardsForStealing(int targetUin,
+			int themeId, int cardId) {
+
 		ensureAuthentication();
-		
-		String url = UrlUtil.buildViewSynthsizableCardsForStoveStealing(getSid(), targetUin, themeId);
-		
+
+		String url = UrlUtil.buildViewSynthsizableCardsForStoveStealing(
+				getSid(), targetUin, themeId);
+
 		HttpGet request = new HttpGet(url);
-		
+
 		// send it
 		try {
-			
+
 			HttpResponse response = executeRequest(request);
-			
-			List<SynthesizeCardInfo> cardsForStealing = cardRefineParser.parse(response.getEntity().getContent());
-			
+
+			List<SynthesizeCardInfo> cardsForStealing = cardRefineParser
+					.parse(response.getEntity().getContent());
+
 			for (SynthesizeCardInfo info : cardsForStealing) {
 				if (info.getCardId() == cardId) {
 					return info;
 				}
 			}
-			
+
 			// not found.
 			return null;
-			
+
 		} catch (ClientProtocolException e) {
 			log.warn("error when reading game main page", e);
 		} catch (IOException e) {
 			log.warn("error when reading game main page", e);
 		}
-		
+
 		// not found.
 		return null;
-		
+
 	}
-	
 
 	private int lookupThemeIdForCardId(int targetCardId) {
-		
+
 		if (cardManager == null) {
 			log.debug("no card manager assigned");
 			return -1;
 		}
-		
+
 		Card card = cardManager.findCardById(targetCardId);
 		if (card == null) {
-			log.debug("unable to find card (id={}) in card manager", targetCardId);
+			log.debug("unable to find card (id={}) in card manager",
+					targetCardId);
 			return -1;
 		}
-		
+
 		return card.getTheme().getId();
 	}
 
-	protected void mergeSlotsWithoutDuplicateSlotId(List<ExchangeBoxSlot> source,
-			List<ExchangeBoxSlot> target) {
-		
+	protected void mergeSlotsWithoutDuplicateSlotId(
+			List<ExchangeBoxSlot> source, List<ExchangeBoxSlot> target) {
+
 		// first, collect all card Ids in the target list.
 		Set<Integer> existingSlotIds = new HashSet<Integer>();
 		for (ExchangeBoxSlot existingSlot : target) {
 			existingSlotIds.add(existingSlot.getSlotId());
 		}
-		
-		// then, add the source slots to the target list, if duplicated 
+
+		// then, add the source slots to the target list, if duplicated
 		// card ID is found, discard them.
 		for (ExchangeBoxSlot srcSlot : source) {
-			
+
 			// discard duplicate
 			if (existingSlotIds.contains(srcSlot.getSlotId())) {
 				continue;
 			}
-			
+
 			target.add(srcSlot);
 		}
-		
+
 	}
 
 	/**
@@ -636,13 +667,21 @@ public class SessionImpl implements Session {
 
 	}
 
+	/**
+	 * Obtains a <code>HttpContext</code> for sending HTTP requests.
+	 * <p>
+	 * 
+	 * Current implementation will return the cookie store.
+	 * 
+	 * @return
+	 */
 	protected HttpContext getHttpContext() {
 		HttpContext httpContext = new BasicHttpContext();
 		httpContext.setAttribute(HttpClientContext.COOKIE_STORE,
 				this.cookieStore);
 		return httpContext;
 	}
-	
+
 	protected String getSid() {
 		return sid;
 	}
@@ -655,7 +694,8 @@ public class SessionImpl implements Session {
 	}
 
 	/**
-	 * @param cardThemeManager the cardThemeManager to set
+	 * @param cardThemeManager
+	 *            the cardThemeManager to set
 	 */
 	public void setCardThemeManager(CardThemeManager cardThemeManager) {
 		this.cardThemeManager = cardThemeManager;
@@ -669,10 +709,11 @@ public class SessionImpl implements Session {
 	}
 
 	/**
-	 * @param cardManager the cardManager to set
+	 * @param cardManager
+	 *            the cardManager to set
 	 */
 	public void setCardManager(CardManager cardManager) {
 		this.cardManager = cardManager;
 	}
-	
+
 }
