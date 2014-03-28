@@ -17,20 +17,14 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,33 +57,19 @@ import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.SafeBoxParser201403
  * @author Cyril
  * @since 0.1.0
  */
-public class SessionImpl implements Session {
+public class SessionImpl extends AbstractSessionImpl implements Session {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(SessionImpl.class);
-
-	/**
-	 * Default user agent string.
-	 */
-	private static final String DEFAULT_USER_AGENT = "Mozilla/5.0 (Linux; U; Android 4.0.3; de-de; Galaxy S II Build/GRJ22) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
-
-	private final HttpClientFactory httpClientFactory;
 
 	private CardThemeManager cardThemeManager;
 
 	private CardManager cardManager;
 
 	/**
-	 * Cookie store for this session. This represents a single user identity.
-	 */
-	private CookieStore cookieStore;
-
-	/**
 	 * The session ID returned from the web server.
 	 */
 	private String sid;
-
-	private SessionAuthStatus authStatus;
 
 	private LoginPageParser loginPageParser;
 
@@ -114,7 +94,7 @@ public class SessionImpl implements Session {
 	public SessionImpl(final HttpClientFactory httpClientFactory,
 			final String username, final String password) {
 
-		this.httpClientFactory = httpClientFactory;
+		super(httpClientFactory);
 
 		// save the credential.
 		this.username = username;
@@ -185,34 +165,6 @@ public class SessionImpl implements Session {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Execute the HTTP request and return the response.
-	 * <p>
-	 * 
-	 * This method will properly configure the request to ensure it looks as if
-	 * it is sending from a mobile device.
-	 * 
-	 * @param request
-	 * @return
-	 * @throws ClientProtocolException
-	 * @throws IOException
-	 */
-	protected HttpResponse executeRequest(HttpRequestBase request)
-			throws ClientProtocolException, IOException {
-
-		// make sure the request conforms to this client's requirement.
-		sanitizeUriRequest(request);
-
-		HttpClient httpClient = getHttpClient();
-		HttpContext httpContext = getHttpContext();
-
-		// execute the request.
-		HttpResponse response = httpClient.execute(request, httpContext);
-
-		return response;
-
 	}
 
 	protected void triggerAuthentication() {
@@ -642,45 +594,6 @@ public class SessionImpl implements Session {
 
 	}
 
-	/**
-	 * Returns the user agent.
-	 * 
-	 * @return
-	 */
-	protected String getUserAgent() {
-		return DEFAULT_USER_AGENT;
-	}
-
-	protected void sanitizeUriRequest(HttpRequestBase request) {
-
-		request.setHeader("User-Agent", getUserAgent());
-
-		RequestConfig config = RequestConfig.custom().setRedirectsEnabled(true)
-				.build();
-		request.setConfig(config);
-
-	}
-
-	protected HttpClient getHttpClient() {
-
-		return httpClientFactory.getHttpClient();
-
-	}
-
-	/**
-	 * Obtains a <code>HttpContext</code> for sending HTTP requests.
-	 * <p>
-	 * 
-	 * Current implementation will return the cookie store.
-	 * 
-	 * @return
-	 */
-	protected HttpContext getHttpContext() {
-		HttpContext httpContext = new BasicHttpContext();
-		httpContext.setAttribute(HttpClientContext.COOKIE_STORE,
-				this.cookieStore);
-		return httpContext;
-	}
 
 	protected String getSid() {
 		return sid;
