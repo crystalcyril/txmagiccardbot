@@ -510,6 +510,13 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 
 	}
 
+	/**
+	 * Do the actual work of stealing stove.
+	 * 
+	 * @param cardForStealing
+	 * @param targetUin
+	 * @return
+	 */
 	private StealStoveResult doStealCard(SynthesizeCardInfo cardForStealing, int targetUin) {
 
 		// build request
