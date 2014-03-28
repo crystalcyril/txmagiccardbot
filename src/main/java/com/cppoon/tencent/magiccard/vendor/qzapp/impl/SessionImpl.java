@@ -506,18 +506,19 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 		}
 
 		// send the HTTP request
-		return doStealCard(cardForStealing);
+		return doStealCard(cardForStealing, targetUin);
 
 	}
 
-	private StealStoveResult doStealCard(SynthesizeCardInfo cardForStealing) {
+	private StealStoveResult doStealCard(SynthesizeCardInfo cardForStealing, int targetUin) {
 
+		// build request
 		HttpGet request = new HttpGet(cardForStealing.getSynthesizeUrl());
+		UrlUtil.buildViewSynthsizableCardsForStoveStealing(getSid(), targetUin, cardForStealing.getCardThemeId());
 
 		try {
 
 			HttpResponse response = executeRequest(request);
-
 			String html = EntityUtils.toString(response.getEntity());
 
 			// handle response.
