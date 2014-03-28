@@ -228,7 +228,7 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 					String unexpectedResponse = EntityUtils.toString(response.getEntity());
 					log.warn("unexpected response entity: [[{}]]", unexpectedResponse);
 				} catch (Throwable t) {
-					
+					// ignore errors.
 				}
 
 				return;
