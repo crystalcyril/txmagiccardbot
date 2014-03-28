@@ -102,8 +102,8 @@ public class SessionSafeBoxTest {
 	@Test
 	public void testGetSafeBox_OK_NotEmpty_MultiPage() {
 
-		String username = "2517429151";
-		String password = "731521_rpbkdg";
+		String username = TestAccount.getAccount("live").getUsername();
+		String password = TestAccount.getAccount("live").getPassword();
 
 		SessionFactory sm = new DefaultSessionFactory();
 		Session session = sm.createSession(username, password);

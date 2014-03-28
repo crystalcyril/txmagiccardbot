@@ -16,15 +16,16 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
 import com.cppoon.tencent.magiccard.http.client.HttpClientFactory;
+import com.cppoon.tencent.magiccard.vendor.qzapp.Session;
 import com.cppoon.tencent.magiccard.vendor.qzapp.SessionAuthStatus;
 
 /**
- * 
+ * Abstract implementation of <code>Session</code>.
  * 
  * @author Cyril
  * @since 0.1.0
  */
-public class AbstractSessionImpl {
+public abstract class AbstractSessionImpl implements Session {
 
 	/**
 	 * Default user agent string.
@@ -45,6 +46,7 @@ public class AbstractSessionImpl {
 
 	/**
 	 * 
+	 * @param httpClientFactory
 	 */
 	public AbstractSessionImpl(final HttpClientFactory httpClientFactory) {
 		super();

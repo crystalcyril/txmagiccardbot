@@ -78,12 +78,9 @@ public class SessionSynthesizeCardInStolenStoveTest {
 	@Test
 	public void testStealStove() {
 		
-		String username = TestAccount.getUsername();
-		String password = TestAccount.getPassword();
+		String username = TestAccount.getAccount("live").getUsername();
+		String password = TestAccount.getAccount("live").getPassword();
 		
-		username = "1598704660";
-		password = "731521_rpbkdg";
-
 		DefaultSessionFactory sm = new DefaultSessionFactory();
 		sm.setCardManager(cardManager);
 		Session session = sm.createSession(username, password);
