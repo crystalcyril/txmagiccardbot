@@ -6,8 +6,6 @@ package com.cppoon.tencent.magiccard;
 import java.util.Date;
 import java.util.Set;
 
-import com.cppoon.tencent.magiccard.CardManager.Builder;
-
 /**
  * 
  * 

@@ -41,4 +41,16 @@ public abstract class QzappMagicCardConstants {
 	 */
 	public static final String SAFE_BOX_URL = APP_BASE_URL + "/wl_card_box";
 	
+	/**
+	 * The URL of "wl_card_refine".
+	 * <p>
+	 * 
+	 * This URL is found used in:
+	 * 
+	 * <ul>
+	 * <li>Stove stealing for synthesizing new cards.</li>
+	 * </ul>
+	 */
+	public static final String CARD_REFINE_URL = APP_BASE_URL + "/wl_card_refine";
+	
 }

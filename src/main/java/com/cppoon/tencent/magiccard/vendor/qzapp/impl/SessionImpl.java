@@ -35,6 +35,9 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cppoon.tencent.magiccard.Card;
+import com.cppoon.tencent.magiccard.CardManager;
+import com.cppoon.tencent.magiccard.CardThemeManager;
 import com.cppoon.tencent.magiccard.StealStoveResult;
 import com.cppoon.tencent.magiccard.TxMagicCardException;
 import com.cppoon.tencent.magiccard.http.client.HttpClientFactory;
@@ -43,10 +46,13 @@ import com.cppoon.tencent.magiccard.vendor.qzapp.Session;
 import com.cppoon.tencent.magiccard.vendor.qzapp.SessionAuthStatus;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.AccountHomePageParser;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.CardBoxInfo;
+import com.cppoon.tencent.magiccard.vendor.qzapp.parser.CardRefineParser;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.ExchangeBoxSlot;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.LoginForm;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.LoginPageParser;
+import com.cppoon.tencent.magiccard.vendor.qzapp.parser.SynthesizeCardInfo;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.AccountHomePageParser20140318;
+import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.CardRefineParser20140328;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.ExchangeCardBoxParser20140320;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.LoginPageParser20140319;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.SafeBoxParser20140320;
@@ -67,6 +73,10 @@ public class SessionImpl implements Session {
 	private static final String DEFAULT_USER_AGENT = "Mozilla/5.0 (Linux; U; Android 4.0.3; de-de; Galaxy S II Build/GRJ22) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
 	
 	private final HttpClientFactory httpClientFactory;
+	
+	private CardThemeManager cardThemeManager;
+	
+	private CardManager cardManager;
 
 	/**
 	 * Cookie store for this session. This represents a single user identity.
@@ -83,6 +93,8 @@ public class SessionImpl implements Session {
 	private LoginPageParser loginPageParser;
 
 	private AccountHomePageParser accountHomePageParser;
+	
+	private CardRefineParser cardRefineParser;
 
 	// credential begins
 
@@ -109,6 +121,7 @@ public class SessionImpl implements Session {
 
 		loginPageParser = new LoginPageParser20140319();
 		accountHomePageParser = new AccountHomePageParser20140318();
+		cardRefineParser = new CardRefineParser20140328();
 
 		reset();
 	}
@@ -126,10 +139,7 @@ public class SessionImpl implements Session {
 	@Override
 	public AccountOverview getAccountOverview() {
 
-		// trigger authenticate if not.
-		if (authStatus != SessionAuthStatus.AUTHENTICATED) {
-			triggerAuthentication();
-		}
+		ensureAuthentication();
 		
 		// send a request to retrieve the account overview.
 		return doGetAccountOverview();
@@ -137,6 +147,15 @@ public class SessionImpl implements Session {
 	}
 
 	
+	private void ensureAuthentication() {
+		
+		// trigger authenticate if not.
+		if (authStatus != SessionAuthStatus.AUTHENTICATED) {
+			triggerAuthentication();
+		}
+		
+	}
+
 	private AccountOverview doGetAccountOverview() {
 		
 		// build a get request
@@ -148,16 +167,11 @@ public class SessionImpl implements Session {
 			log.error("unexpected error when building magic card main page URL", e);
 		}
 		HttpGet request = new HttpGet(uri);
-		this.sanitizeUriRequest(request);
-		
 		
 		// send it
-		HttpClient httpClient = getHttpClient();
-		HttpContext httpContext = getHttpContext();
 		try {
+			HttpResponse response = executeRequest(request);
 			
-			HttpResponse response = httpClient.execute(request, httpContext);
-
 			String html = EntityUtils.toString(response.getEntity());
 			return accountHomePageParser.parse(html);
 			
@@ -168,6 +182,22 @@ public class SessionImpl implements Session {
 		}
 		
 		return null;
+	}
+	
+	
+	protected HttpResponse executeRequest(HttpRequestBase request)
+			throws ClientProtocolException, IOException {
+		
+		// make sure the request conforms to this client's requirement.
+		sanitizeUriRequest(request);
+		
+		// execute the request.
+		HttpClient httpClient = getHttpClient();
+		HttpContext httpContext = getHttpContext();
+		HttpResponse response = httpClient.execute(request, httpContext);
+
+		return response;
+		
 	}
 
 	protected void triggerAuthentication() {
@@ -184,14 +214,10 @@ public class SessionImpl implements Session {
 
 		
 		try {
-			HttpClient httpClient = this.getHttpClient();
-
 			// do login
 			HttpPost loginRequest = buildLoginRequest(username, password);
-
-			HttpContext httpContext = getHttpContext();
-			HttpResponse response = httpClient.execute(loginRequest,
-					httpContext);
+			
+			HttpResponse response = executeRequest(loginRequest);
 
 			// check the redirected location header.
 			if (response.getStatusLine().getStatusCode() == 301
@@ -225,8 +251,8 @@ public class SessionImpl implements Session {
 			// manually continue the redirection.
 			log.trace("continue redirected URL after login");
 			HttpGet getRequest = new HttpGet(redirectedUrl);
-			sanitizeUriRequest(getRequest);
-			response = httpClient.execute(getRequest, httpContext);
+			
+			response = executeRequest(getRequest);
 			
 			// done!
 			log.debug("user (qq={}) authenticated", username);
@@ -234,8 +260,10 @@ public class SessionImpl implements Session {
 
 		} catch (ClientProtocolException e) {
 			log.warn("an error has occurred when performing login", e);
+			throw new TxMagicCardException("error authenticating user " + username, e);
 		} catch (IOException e) {
 			log.warn("an error has occurred when performing login", e);
+			throw new TxMagicCardException("error authenticating user " + username, e);
 		} finally {
 			
 			// at this stage, we expect the session is authenticated, 
@@ -324,12 +352,8 @@ public class SessionImpl implements Session {
 		//
 
 		HttpGet request = new HttpGet("http://qzone.z.qq.com");
-		sanitizeUriRequest(request);
 
-		HttpClient httpClient = getHttpClient();
-		HttpContext httpContext = getHttpContext();
-
-		HttpResponse response = httpClient.execute(request, httpContext);
+		HttpResponse response = executeRequest(request);
 
 		// return null if no proper response
 		if (response.getStatusLine().getStatusCode() != 200) {
@@ -363,9 +387,7 @@ public class SessionImpl implements Session {
 	public List<ExchangeBoxSlot> getSafeBoxSlots() {
 
 		// trigger authenticate if not.
-		if (authStatus != SessionAuthStatus.AUTHENTICATED) {
-			triggerAuthentication();
-		}
+		ensureAuthentication();
 		
 		ArrayList<ExchangeBoxSlot> ret = new ArrayList<ExchangeBoxSlot>();
 		
@@ -374,14 +396,11 @@ public class SessionImpl implements Session {
 			log.trace("retriving page {} of safe box", page);
 			
 			HttpGet request = new HttpGet(UrlUtil.buildSafeBoxUrl(getSid(), page));
-			this.sanitizeUriRequest(request);
 			
 			// send it
-			HttpClient httpClient = getHttpClient();
-			HttpContext httpContext = getHttpContext();
 			try {
 				
-				HttpResponse response = httpClient.execute(request, httpContext);
+				HttpResponse response = executeRequest(request);
 
 				String html = EntityUtils.toString(response.getEntity());
 				
@@ -424,24 +443,19 @@ public class SessionImpl implements Session {
 	public List<ExchangeBoxSlot> getExchangeBoxSlots() {
 		
 		// trigger authenticate if not.
-		if (authStatus != SessionAuthStatus.AUTHENTICATED) {
-			triggerAuthentication();
-		}
+		ensureAuthentication();
 		
 		ArrayList<ExchangeBoxSlot> ret = new ArrayList<ExchangeBoxSlot>();
 		
 		log.trace("retriving exchange box page");
 		
 		HttpGet request = new HttpGet(UrlUtil.buildExchangeBoxUrl(getSid()));
-		this.sanitizeUriRequest(request);
 		
 		
 		// send it
-		HttpClient httpClient = getHttpClient();
-		HttpContext httpContext = getHttpContext();
 		try {
 			
-			HttpResponse response = httpClient.execute(request, httpContext);
+			HttpResponse response = executeRequest(request);
 
 			String html = EntityUtils.toString(response.getEntity());
 			
@@ -469,30 +483,109 @@ public class SessionImpl implements Session {
 	@Override
 	public StealStoveResult stealStove(int targetUin, int targetCardId) {
 		
+		ensureAuthentication();
+		
 		// look up the card theme ID of the target card ID.
 		int themeId = lookupThemeIdForCardId(targetCardId);
 		
 		// FIXME cyril: handle the case if theme ID is not found.
+		if (themeId == -1) {
+			return StealStoveResult.THEME_NOT_FOUND;
+		}
 		
 		// build the URL
-//		String url = UrlUtil.buildStealStoveUrl(targetUin, themeId, targetCardId);
+		SynthesizeCardInfo cardForStealing = getCardsForStealing(targetUin, themeId, targetCardId);
 		
+		if (cardForStealing == null) {
+			throw new TxMagicCardException("cannot handle the case card to steal is not available");
+		}
 		
 		// send the HTTP request
+		return doStealCard(cardForStealing);
 		
-		// parse the HTTP response
+	}
+	
+	private StealStoveResult doStealCard(SynthesizeCardInfo cardForStealing) {
+		
+		HttpGet request = new HttpGet(cardForStealing.getSynthesizeUrl());
+		
+		try {
+			
+			HttpResponse response = executeRequest(request);
+			
+			String html = EntityUtils.toString(response.getEntity());
+			
+			// handle response.
+			if (html.contains("您成功的将卡片放入好友的炼卡炉")) {
+				return StealStoveResult.OK;
+			} else if (html.contains("用户偷炉达到限制的次数")) {
+				return StealStoveResult.LIMIT_REACHED;
+			}
+			
+			// XXX can check the stolen stoves.
+			
+			log.trace("unknown steal stove response: {}", html);
+			return StealStoveResult.UNKNOWN_RESPONSE;
+			
+		} catch (ClientProtocolException e) {
+			throw new TxMagicCardException("error reading steal stove result page", e);
+		} catch (IOException e) {
+			throw new TxMagicCardException("error reading steal stove result page", e);
+		}
 		
 		
-		// determine the result.
-		
-		
-		// TODO Auto-generated method stub
-		return null;
 	}
 
+	protected SynthesizeCardInfo getCardsForStealing(int targetUin, int themeId, int cardId) {
+		
+		ensureAuthentication();
+		
+		String url = UrlUtil.buildViewSynthsizableCardsForStoveStealing(getSid(), targetUin, themeId);
+		
+		HttpGet request = new HttpGet(url);
+		
+		// send it
+		try {
+			
+			HttpResponse response = executeRequest(request);
+			
+			List<SynthesizeCardInfo> cardsForStealing = cardRefineParser.parse(response.getEntity().getContent());
+			
+			for (SynthesizeCardInfo info : cardsForStealing) {
+				if (info.getCardId() == cardId) {
+					return info;
+				}
+			}
+			
+			// not found.
+			return null;
+			
+		} catch (ClientProtocolException e) {
+			log.warn("error when reading game main page", e);
+		} catch (IOException e) {
+			log.warn("error when reading game main page", e);
+		}
+		
+		// not found.
+		return null;
+		
+	}
+	
+
 	private int lookupThemeIdForCardId(int targetCardId) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		if (cardManager == null) {
+			log.debug("no card manager assigned");
+			return -1;
+		}
+		
+		Card card = cardManager.findCardById(targetCardId);
+		if (card == null) {
+			log.debug("unable to find card (id={}) in card manager", targetCardId);
+			return -1;
+		}
+		
+		return card.getTheme().getId();
 	}
 
 	protected void mergeSlotsWithoutDuplicateSlotId(List<ExchangeBoxSlot> source,
@@ -554,4 +647,32 @@ public class SessionImpl implements Session {
 		return sid;
 	}
 
+	/**
+	 * @return the cardThemeManager
+	 */
+	public CardThemeManager getCardThemeManager() {
+		return cardThemeManager;
+	}
+
+	/**
+	 * @param cardThemeManager the cardThemeManager to set
+	 */
+	public void setCardThemeManager(CardThemeManager cardThemeManager) {
+		this.cardThemeManager = cardThemeManager;
+	}
+
+	/**
+	 * @return the cardManager
+	 */
+	public CardManager getCardManager() {
+		return cardManager;
+	}
+
+	/**
+	 * @param cardManager the cardManager to set
+	 */
+	public void setCardManager(CardManager cardManager) {
+		this.cardManager = cardManager;
+	}
+	
 }

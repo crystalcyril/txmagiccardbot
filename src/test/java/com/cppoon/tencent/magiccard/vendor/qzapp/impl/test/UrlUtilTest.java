@@ -117,4 +117,29 @@ public class UrlUtilTest {
 		}
 		
 	}
+	
+	@Test
+	public void testBuildViewSynthsizableCardsForStoveStealing_OK() {
+		
+		String actual = UrlUtil.buildViewSynthsizableCardsForStoveStealing("aBcDeFgH123", 123456789, 714);
+		
+		assertEquals("http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_refine?sid=aBcDeFgH123&show=1&pageno=1&fuin=123456789&steal=1&tid=714", actual);
+		
+	}
+	
+	@Test
+	public void testBuildViewSynthsizableCardsForStoveStealing_Fail_MissingSid() {
+		
+		try {
+			
+			UrlUtil.buildViewSynthsizableCardsForStoveStealing(null, 123456789, 714);
+			
+			fail("should throw IllegalArgumentException");
+			
+		} catch (IllegalArgumentException e) {
+			// expected
+		}		
+		
+	}
+	
 }

@@ -93,4 +93,37 @@ public final class UrlUtil {
 
 	}
 
+	/**
+	 * Build the URL for stealing stoves.
+	 * <p>
+	 * 
+	 * http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_refine?sid=AfCUb-dPhj5zk6Er83pq6IKJ&show=1&pageno=1&fuin=383664208&steal=1&tid=323
+	 * 
+	 * @param sid
+	 * @param targetUin
+	 * @param themeId
+	 * @return
+	 */
+	public static String buildViewSynthsizableCardsForStoveStealing(String sid, int targetUin, int themeId) {
+		
+		assertSid(sid);
+		
+		try {
+			String s = QzappMagicCardConstants.CARD_REFINE_URL + "?"
+					+ QzappMagicCardConstants.SESSION_ID_NAME + "="
+					+ URLEncoder.encode(sid, "UTF-8") 
+					+ "&show=1"
+					+ "&pageno=1"
+					+ "&fuin=" + URLEncoder.encode(Integer.toString(targetUin), "UTF-8")
+					+ "&steal=1"
+					+ "&tid=" + URLEncoder.encode(Integer.toString(themeId), "UTF-8");
+
+			return s;
+
+		} catch (UnsupportedEncodingException e) {
+			throw new TxMagicCardException("failed to build safe box URL", e);
+		}
+
+	}
+
 }

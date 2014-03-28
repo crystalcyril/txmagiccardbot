@@ -5,8 +5,6 @@ package com.cppoon.tencent.magiccard;
 
 import java.util.Date;
 
-import com.cppoon.tencent.magiccard.CardThemeManager.Builder;
-
 /**
  * 
  * 
@@ -49,4 +47,18 @@ public interface CardManager {
 	 */
 	Builder createBuilder();
 
+	/**
+	 * 
+	 * 
+	 * @param cardId
+	 * @return
+	 */
+	Card findCardById(int cardId);
+	
+	/**
+	 * 
+	 * @param card
+	 */
+	void registerCard(Card card);
+	
 }

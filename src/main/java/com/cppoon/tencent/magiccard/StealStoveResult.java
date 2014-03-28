@@ -19,6 +19,21 @@ public enum StealStoveResult {
 	/**
 	 * The specified target UNI is not a friend of the player.
 	 */
-	NOT_FRIEND
+	NOT_FRIEND,
+	
+	/**
+	 * No theme is found for the specified card ID.
+	 */
+	THEME_NOT_FOUND,
+	
+	/**
+	 * The stealing limit has been reached.
+	 */
+	LIMIT_REACHED,
+	
+	/**
+	 * The response is not known.
+	 */
+	UNKNOWN_RESPONSE
 
 }

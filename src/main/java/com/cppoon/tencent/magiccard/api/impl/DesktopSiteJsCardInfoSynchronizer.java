@@ -226,6 +226,8 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 				.version(parsedCardInfo.getVersion())
 				.build();
 			
+			cardManager.registerCard(card);
+			
 		}
 		
 	}
@@ -240,21 +242,6 @@ public class DesktopSiteJsCardInfoSynchronizer implements CardInfoSynchronizer,
 		parser.setListener((ThemeComposeListParserListener) this);
 		
 		parser.parse(is);
-
-//		ThemeCardListParser themeCardListParser = new SimpleThemeCardListParser();
-//		themeCardListParser.setListener(this);
-//		
-//		SimpleCardInfoParser cardInfoParser = new SimpleCardInfoParser();
-//		cardInfoParser.setListener(this);
-//		
-//		SimpleThemeComposeListParser themeComposeListParser = new SimpleThemeComposeListParser();
-//		themeComposeListParser.setListener(this);
-//
-//		// star parsing
-//		
-//		themeComposeListParser.parse(is);
-//		themeCardListParser.parse(is);
-//		cardInfoParser.parse(is);
 
 	}
 
