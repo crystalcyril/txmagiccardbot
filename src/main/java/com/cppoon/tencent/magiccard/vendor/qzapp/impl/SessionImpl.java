@@ -514,7 +514,8 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 
 		// build request
 		HttpGet request = new HttpGet(cardForStealing.getSynthesizeUrl());
-		UrlUtil.buildViewSynthsizableCardsForStoveStealing(getSid(), targetUin, cardForStealing.getCardThemeId());
+		request.setHeader(HttpHeaders.REFERER, 
+				UrlUtil.buildViewSynthsizableCardsForStoveStealing(getSid(), targetUin, cardForStealing.getCardThemeId()));
 
 		try {
 
