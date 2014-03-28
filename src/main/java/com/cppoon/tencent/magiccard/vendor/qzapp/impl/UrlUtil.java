@@ -126,4 +126,34 @@ public final class UrlUtil {
 
 	}
 
+	/**
+	 * Build the URL for viewing synthesizable
+	 * 
+	 * @param sid
+	 * @param themeId
+	 * @return
+	 */
+	public static String buildViewSynthsizableCardsForOwnedStoves(
+			String sid, int themeId) {
+		
+		assertSid(sid);
+		
+		try {
+			String s = QzappMagicCardConstants.CARD_REFINE_URL + "?"
+					+ QzappMagicCardConstants.SESSION_ID_NAME + "="
+					+ URLEncoder.encode(sid, "UTF-8") 
+					+ "&show=1"
+					+ "&pageno=1"
+					+ "&fuin=0"
+					+ "&steal=0"
+					+ "&tid=" + URLEncoder.encode(Integer.toString(themeId), "UTF-8");
+
+			return s;
+
+		} catch (UnsupportedEncodingException e) {
+			throw new TxMagicCardException("failed to build safe box URL", e);
+		}
+		
+	}
+
 }
