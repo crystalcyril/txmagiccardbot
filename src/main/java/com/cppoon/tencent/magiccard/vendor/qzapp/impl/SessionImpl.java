@@ -590,6 +590,11 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 
 	}
 	
+	private boolean isCardExistsInManager(int targetCardId) {
+		Card card = cardManager.findCardById(targetCardId);
+		return card != null;
+	}
+	
 	private int lookupThemeIdForCardId(int targetCardId) {
 
 		if (cardManager == null) {
@@ -641,13 +646,24 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 		
 		ensureAuthentication();
 
-		// look up the card theme ID of the target card ID.
-		int themeId = lookupThemeIdForCardId(targetCardId);
-
-		// FIXME cyril: handle the case if theme ID is not found.
-		if (themeId == -1) {
+		// make sure the card exists
+		if (cardManager == null) {
 			return SynthesizeResult.THEME_NOT_FOUND;
 		}
+
+		Card card = cardManager.findCardById(targetCardId);
+		if (card == null) {
+			log.debug("unable to find card (id={}) in card manager",
+					targetCardId);
+			return SynthesizeResult.CARD_NOT_EXISTS;
+		}
+		
+		// look up the card theme ID of the target card ID.
+		if (card.getTheme() == null) {
+			return SynthesizeResult.THEME_NOT_FOUND;
+		}
+		
+		int themeId = card.getTheme().getId();
 
 		// build the URL
 		SynthesizeCardInfo cardsForSynthesizing = getCardsForSynthesizing(themeId, targetCardId);

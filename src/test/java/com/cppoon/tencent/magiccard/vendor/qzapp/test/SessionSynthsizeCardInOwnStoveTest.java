@@ -90,9 +90,30 @@ public class SessionSynthsizeCardInOwnStoveTest {
 		
 		SynthesizeResult result = session.synthesizeCard(targetCardId);
 
-		
 		assertEquals("synthesize card result", SynthesizeResult.STOVE_FULL, result);
 		
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void testSynthesizeCard_Failed_CardNotExists() {
+		
+		Account account = TestAccount.getAccount("live");
+		
+		String username = account.getUsername();
+		String password = account.getPassword();
+		
+		DefaultSessionFactory sm = new DefaultSessionFactory();
+		sm.setCardManager(cardManager);
+		Session session = sm.createSession(username, password);
+		
+		int targetCardId = 9715;
+		
+		SynthesizeResult result = session.synthesizeCard(targetCardId);
+
+		assertEquals("synthesize card result", SynthesizeResult.CARD_NOT_EXISTS, result);
 		
 	}
 

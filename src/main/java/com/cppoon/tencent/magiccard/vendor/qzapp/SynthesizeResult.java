@@ -17,6 +17,8 @@ public enum SynthesizeResult {
 	
 	STOVE_FULL,
 	
+	CARD_NOT_EXISTS,
+	
 	UNKNOWN_RESPONSE
 	
 }
