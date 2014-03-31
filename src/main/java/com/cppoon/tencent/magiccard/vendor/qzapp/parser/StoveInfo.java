@@ -162,5 +162,17 @@ public class StoveInfo {
 	public void setCancelSynthesisUrl(String cancelSynthesisUrl) {
 		this.cancelSynthesisUrl = cancelSynthesisUrl;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "cardThemeName=" + cardThemeName + ", cardName=" + cardName
+				+ ", cardId=" + cardId + ", cardPrice=" + cardPrice
+				+ ", status=" + status + ", slotId=" + slotId
+				+ ", synthesisRemainingTime=" + synthesisRemainingTime
+				+ ", cancelSynthesisUrl=" + cancelSynthesisUrl;
+	}
 	
 }

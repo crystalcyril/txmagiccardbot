@@ -200,7 +200,7 @@ public class StoveParser20140320 {
 			} else if ("合成中".equals(sStoveStatus)) {
 				status = StoveStatus.SYNTHESIZING;
 			} else {
-				throw new TxMagicCardException("Unknown stove status value '" + sStoveStatus + "'");
+				throw new TxMagicCardException("unknown stove status value '" + sStoveStatus + "'");
 			}
 			
 			Long remainingTime = ParseUtil.parseClockToSeconds(m, 1);
@@ -237,6 +237,8 @@ public class StoveParser20140320 {
 			return NextAction.CONTINUE;
 		}
 
+		log.trace("parsing following content for slot IDs and card IDs... [[{}]]", html);
+		
 		Elements links = doc.select("a");
 		for (Element link : links) {
 
@@ -268,6 +270,9 @@ public class StoveParser20140320 {
 						sTargetId = nvp.getValue();
 					}
 				}
+				
+				log.trace("sSlotId = {}", sSlotId);
+				log.trace("sTargetId = {}", sTargetId);
 				
 				// here, if slot ID is present, then target ID MUST BE the 
 				// card ID.

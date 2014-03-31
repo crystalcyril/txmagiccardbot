@@ -5,12 +5,15 @@ package com.cppoon.tencent.magiccard.vendor.qzapp.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cppoon.tencent.magiccard.CancelSynthesisResult;
 import com.cppoon.tencent.magiccard.CardInfoSynchronizer;
@@ -34,6 +37,8 @@ import com.google.common.io.Resources;
  * @since 0.1.0
  */
 public class SessionCancelCardSynthesisTest {
+	
+	Logger log = LoggerFactory.getLogger(getClass());
 
 	CardThemeManager cardThemeManager;
 	
@@ -143,6 +148,112 @@ public class SessionCancelCardSynthesisTest {
 				freeStoveCountBeforeSynthesis,
 				acOverview_3.getFreeStoveCount());
 
+	}
+	
+	@Test
+	public void testCancel_OK_TwoStove2() throws Exception {
+		
+		Account account = TestAccount.getAccount("live");
+		account = TestAccount.getDefaultAccount();
+		
+		String username = account.getUsername();
+		String password = account.getPassword();
+		
+		DefaultSessionFactory sm = new DefaultSessionFactory();
+		sm.setCardManager(cardManager);
+		Session session = sm.createSession(username, password);
+		
+		// card to synthesize.
+		int targetCard1Id = 40;
+		int targetCard2Id = 37;
+		
+		
+		//
+		// GIVEN
+		//
+		log.info("getting overview for first time");
+		AccountOverview acOverview_1 = session.getAccountOverview();
+		int freeStoveCountBeforeSynthesis = acOverview_1.getFreeStoveCount();
+		
+		log.info("synthesize card id={}", targetCard1Id);
+		SynthesizeResult result = session.synthesizeCard(targetCard1Id);
+		assertEquals("synthesis result", SynthesizeResult.OK, result);
+		log.info("synthesize card id={}", targetCard2Id);
+		result = session.synthesizeCard(targetCard2Id);
+		assertEquals("synthesis result", SynthesizeResult.OK, result);
+		
+		Thread.sleep(1000);
+		
+		// get the overview.
+		log.info("getting overview for second time");
+		AccountOverview acOverview_2 = session.getAccountOverview();
+		assertEquals("number of free stoves",
+				freeStoveCountBeforeSynthesis - 2,
+				acOverview_2.getFreeStoveCount());
+		
+		
+		int cardSlot1Id = -1;
+		int cardSlot2Id = -1;
+		for (StoveInfo si : acOverview_2.getStoves()) {
+			
+			log.info("stove info: {}", si);
+			
+			// only deal with matched card.
+			if (si.getCardId() != targetCard1Id && si.getCardId() != targetCard2Id) 
+				continue;
+
+			if (si.getCardId() == targetCard1Id) {
+				cardSlot1Id = si.getSlotId();
+			} else if (si.getCardId() == targetCard2Id) {
+				cardSlot2Id = si.getSlotId();
+			}
+			
+			if (cardSlot1Id == -1 && cardSlot2Id == -1) break;
+			
+		}
+
+		log.info("found slot ID for card ID {}: {}", targetCard1Id, cardSlot1Id);
+		log.info("found slot ID for card ID {}: {}", targetCard2Id, cardSlot2Id);
+		
+		// must make sure stove slot ID is found.
+		assertTrue("found stove slot ID", cardSlot1Id != -1 && cardSlot2Id != -1);
+		
+		//
+		// WHEN
+		//
+		CancelSynthesisResult cancelResult = session.cancelSynthesis(cardSlot2Id);
+		assertEquals("cancel synthesis result", CancelSynthesisResult.OK, cancelResult);
+		
+		//
+		// THEN
+		//
+
+		// get account overview.
+		log.info("getting overview for third time");
+		AccountOverview acOverview_3 = session.getAccountOverview();
+		
+		assertEquals("number of free stoves should be restored",
+				freeStoveCountBeforeSynthesis - 1,
+				acOverview_3.getFreeStoveCount());
+		
+		// check the remaining stove
+		boolean remainingStoveFound = false;
+		for (StoveInfo si : acOverview_2.getStoves()) {
+			
+			if (si.getCardId() == targetCard1Id) {
+				if (si.getSlotId() == cardSlot1Id) {
+					remainingStoveFound = true;
+					break;
+				}
+			}
+			
+		}
+		
+		assertTrue("remaining stove should have slot ID " + targetCard1Id, remainingStoveFound);
+
+		
+		session.cancelSynthesis(cardSlot1Id);
+		
 	}
 	
 }

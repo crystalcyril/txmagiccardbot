@@ -114,6 +114,77 @@ public class AccountHomePageParser20140319Test {
 	}
 
 	
+	@Test
+	public void testParse_OK_HasCancellableCards_2() throws Exception {
+		
+		String html = ParserTestUtil
+				.readResourceAsString("com/cppoon/tencent/magiccard/vendor/qzapp/parser/impl/test/mfkp_mainpage-has_cancellable_cards_2-20140319.htm");
+		
+		AccountOverview acOverview = parser.parse(html);
+		
+		//
+		// Assertion
+		//
+		assertNotNull("parsed page should not be null", acOverview);
+		
+		
+		assertEquals("player level", 4, acOverview.getPlayerLevel());
+		assertEquals("coin", 23390, acOverview.getCoins(), 0);
+		assertEquals("cards in deck", 12, acOverview.getCardsInDeck());
+		assertEquals("used slots in exchange card box", 8, acOverview.getCardsInCardExchangeBox());
+		assertEquals("total slots in exchange card box", 10, acOverview.getCardExchangeBoxSize());
+		
+		// stove related checking
+		assertEquals("stove count", 3, acOverview.getStoveCount());
+		assertEquals("free stove count", 1, acOverview.getFreeStoveCount());
+		// check the slots
+		assertStoveInfo(acOverview.getStoves().get(0), "套白马甲", "时尚男套装", 37, 40, 1, StoveStatus.PEND_FOR_SYNTHESIS, 3600, true, "http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_clear_card?sid=AWd1rAWG8lYzmvrR_Bz-U7Ry&target_id=37&slotid=1");
+		assertStoveInfo(acOverview.getStoves().get(1), "彩虹短袖", "时尚女套装", 40, 40, 0, StoveStatus.SYNTHESIZING, 3597, false, null);
+		assertStoveInfo(acOverview.getStoves().get(2), null, null, -1, 0, 2, StoveStatus.IDLE, 0, false, null);
+		
+		// stolen stove checking
+		assertEquals("free steal stove count", 1, acOverview.getStealStoveAvailableCount());
+		assertEquals("total steal stove count", 1, acOverview.getStealStoveSize());
+		// check the slot
+		
+	}
+	
+	
+	@Test
+	public void testParse_OK_OneCancellableCards() throws Exception {
+		
+		String html = ParserTestUtil
+				.readResourceAsString("com/cppoon/tencent/magiccard/vendor/qzapp/parser/impl/test/mfkp_mainpage-one_cancellable_card-20140319.htm");
+		
+		AccountOverview acOverview = parser.parse(html);
+		
+		//
+		// Assertion
+		//
+		assertNotNull("parsed page should not be null", acOverview);
+		
+		
+		assertEquals("player level", 4, acOverview.getPlayerLevel());
+		assertEquals("coin", 23330, acOverview.getCoins(), 0);
+		assertEquals("cards in deck", 12, acOverview.getCardsInDeck());
+		assertEquals("used slots in exchange card box", 8, acOverview.getCardsInCardExchangeBox());
+		assertEquals("total slots in exchange card box", 10, acOverview.getCardExchangeBoxSize());
+		
+		// stove related checking
+		assertEquals("stove count", 3, acOverview.getStoveCount());
+		assertEquals("free stove count", 2, acOverview.getFreeStoveCount());
+		// check the slots
+		assertStoveInfo(acOverview.getStoves().get(0), "彩虹短袖", "时尚女套装", 40, 40, 0, StoveStatus.SYNTHESIZING, 3570, true, "http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_clear_card?sid=AWd1rAWG8lYzmvrR_Bz-U7Ry&target_id=40&slotid=0");
+		assertStoveInfo(acOverview.getStoves().get(1), null, null, -1, 0, 1, StoveStatus.IDLE, 0, false, null);
+		assertStoveInfo(acOverview.getStoves().get(2), null, null, -1, 0, 2, StoveStatus.IDLE, 0, false, null);
+		
+		// stolen stove checking
+		assertEquals("free steal stove count", 1, acOverview.getStealStoveAvailableCount());
+		assertEquals("total steal stove count", 1, acOverview.getStealStoveSize());
+		// check the slot
+		
+	}
+
 	
 	protected void assertStoveInfo(StoveInfo stove, String expectedCardName,
 			String expectedThemeName, int expectedCardId,
