@@ -5,6 +5,7 @@ package com.cppoon.tencent.magiccard.vendor.qzapp;
 
 import java.util.List;
 
+import com.cppoon.tencent.magiccard.CancelSynthesisResult;
 import com.cppoon.tencent.magiccard.StealStoveResult;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.ExchangeBoxSlot;
 
@@ -65,5 +66,15 @@ public interface Session {
 	 * @return the result.
 	 */
 	SynthesizeResult synthesizeCard(int targetCardId);
+
+	/**
+	 * Cancel the card synthesis at the specified card slot ID.
+	 * 
+	 * @param slotId
+	 *            the card slot ID which the card being synthesized will be
+	 *            cancelled.
+	 * @return
+	 */
+	CancelSynthesisResult cancelSynthesis(int slotId);
 
 }

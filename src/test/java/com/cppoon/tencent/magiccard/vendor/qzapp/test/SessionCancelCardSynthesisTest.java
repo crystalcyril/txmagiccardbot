@@ -4,6 +4,7 @@
 package com.cppoon.tencent.magiccard.vendor.qzapp.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import java.io.InputStream;
 
@@ -11,10 +12,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.cppoon.tencent.magiccard.CancelSynthesisResult;
 import com.cppoon.tencent.magiccard.CardInfoSynchronizer;
 import com.cppoon.tencent.magiccard.CardManager;
 import com.cppoon.tencent.magiccard.CardThemeManager;
-import com.cppoon.tencent.magiccard.api.StoveStatus;
 import com.cppoon.tencent.magiccard.api.impl.DesktopSiteJsCardInfoSynchronizer;
 import com.cppoon.tencent.magiccard.impl.SimpleCardManager;
 import com.cppoon.tencent.magiccard.impl.SimpleCardThemeManager;
@@ -76,7 +77,7 @@ public class SessionCancelCardSynthesisTest {
 	
 	
 	@Test
-	public void testCancel_OK() throws Exception {
+	public void testCancel_OK_OneStove() throws Exception {
 		
 		
 		Account account = TestAccount.getAccount("live");
@@ -92,26 +93,56 @@ public class SessionCancelCardSynthesisTest {
 		// card to synthesize.
 		int targetCardId = 40;
 		
+		
+		//
+		// GIVEN
+		//
 		AccountOverview acOverview_1 = session.getAccountOverview();
+		int freeStoveCountBeforeSynthesis = acOverview_1.getFreeStoveCount();
 		
 		SynthesizeResult result = session.synthesizeCard(targetCardId);
+		assertEquals("synthesis result", SynthesizeResult.OK, result);
 		
 		AccountOverview acOverview_2 = session.getAccountOverview();
+		assertEquals("number of free stoves",
+				freeStoveCountBeforeSynthesis - 1,
+				acOverview_2.getFreeStoveCount());
+		
 		
 		int cardSlotId = -1;
 		for (StoveInfo si : acOverview_2.getStoves()) {
 			
 			// only deal with matched card.
 			if (si.getCardId() != targetCardId) continue;
+
+			// skip non-cancellable stoves.
+			if (!si.isCancellable()) continue;
 			
-			// only deal with synthesizing cards (which maybe cancellable)
-			if (si.getStatus() != StoveStatus.SYNTHESIZING) continue;
+			cardSlotId = si.getSlotId();
+			break;
 			
 		}
+		
+		// must make sure stove slot ID is found.
+		assertNotEquals("found stove slot ID", -1, cardSlotId);
+		
+		//
+		// WHEN
+		//
+		CancelSynthesisResult cancelResult = session.cancelSynthesis(cardSlotId);
+		assertEquals("cancel synthesis result", CancelSynthesisResult.OK, cancelResult);
+		
+		//
+		// THEN
+		//
 
-		assertEquals("synthesize card result", SynthesizeResult.OK, result);
+		// get account overview.
+		AccountOverview acOverview_3 = session.getAccountOverview();
 		
-		
+		assertEquals("number of free stoves should be restored",
+				freeStoveCountBeforeSynthesis,
+				acOverview_3.getFreeStoveCount());
+
 	}
 	
 }

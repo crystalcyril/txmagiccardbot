@@ -30,6 +30,7 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cppoon.tencent.magiccard.CancelSynthesisResult;
 import com.cppoon.tencent.magiccard.Card;
 import com.cppoon.tencent.magiccard.CardManager;
 import com.cppoon.tencent.magiccard.CardThemeManager;
@@ -46,6 +47,7 @@ import com.cppoon.tencent.magiccard.vendor.qzapp.parser.CardRefineParser;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.ExchangeBoxSlot;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.LoginForm;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.LoginPageParser;
+import com.cppoon.tencent.magiccard.vendor.qzapp.parser.StoveInfo;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.SynthesizeCardInfo;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.AccountHomePageParser20140318;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl.CardRefineParser20140328;
@@ -746,6 +748,76 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 		// not found.
 		return null;
 		
+	}
+	
+
+	/* (non-Javadoc)
+	 * @see com.cppoon.tencent.magiccard.vendor.qzapp.Session#cancelSynthesis(int)
+	 */
+	@Override
+	public CancelSynthesisResult cancelSynthesis(int cardSlotId) {
+		
+		AccountOverview acOverview = this.getAccountOverview();
+		
+		// locate the slot with matching slot ID
+		StoveInfo targetSlot = null;
+		for (StoveInfo stoveInfo : acOverview.getStoves()) {
+			if (stoveInfo.getSlotId() == cardSlotId) {
+				targetSlot = stoveInfo;
+				break;
+			}
+		}
+		// slot ID not found, report this error and die.
+		if (targetSlot == null) {
+			return CancelSynthesisResult.SLOT_NOT_FOUND;
+		}
+		
+		
+		// we need authentication.
+		ensureAuthentication();
+		
+		return doCancelSynthesis(targetSlot);
+		
+	}
+
+	/**
+	 * Do the actual work of canceling a card synthesis.
+	 * 
+	 * @param targetSlot
+	 * @return
+	 */
+	private CancelSynthesisResult doCancelSynthesis(StoveInfo targetSlot) {
+		
+		try {
+			
+			URIBuilder builder = new URIBuilder(targetSlot.getCancelSynthesisUrl());
+			
+			// ensure the 'enforce' parameter has a value of '1'. 
+			builder.setParameter("enforce", "1");
+			
+			URI url = builder.build();
+			
+			// build a http request
+			HttpGet request = new HttpGet(url);
+			HttpResponse response = this.executeRequest(request);
+			
+			// handle the response.
+			String html = EntityUtils.toString(response.getEntity());
+			if (html.contains("取消卡片成功")) {
+				return CancelSynthesisResult.OK;
+			} else if (html.contains("您的卡箱已满，请清理卡箱后再试")) {
+				return CancelSynthesisResult.ALREADY_CANCELLED;
+			}
+			
+		} catch (URISyntaxException e) {
+			throw new TxMagicCardException("error preparing url for canceling card synthesis", e);
+		} catch (ClientProtocolException e) {
+			throw new TxMagicCardException("error sending request to cancel card synthesis", e);
+		} catch (IOException e) {
+			throw new TxMagicCardException("error sending request to cancel card synthesis", e);
+		}
+		
+		return null;
 	}
 
 	protected String getSid() {
