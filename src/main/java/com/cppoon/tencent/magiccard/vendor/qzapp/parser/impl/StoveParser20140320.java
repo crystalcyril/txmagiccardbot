@@ -237,8 +237,6 @@ public class StoveParser20140320 {
 			return NextAction.CONTINUE;
 		}
 
-		log.trace("parsing following content for slot IDs and card IDs... [[{}]]", html);
-		
 		Elements links = doc.select("a");
 		for (Element link : links) {
 
