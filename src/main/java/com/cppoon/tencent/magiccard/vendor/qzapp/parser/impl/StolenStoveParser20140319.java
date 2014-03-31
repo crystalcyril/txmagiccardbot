@@ -61,7 +61,18 @@ public class StolenStoveParser20140319 {
 			
 			skipToNextSlot = false;
 			
-			while ((s = br.readLine()) != null) {
+			while (true) {
+				
+				s = br.readLine();
+				
+				// eof of file reached.
+				if (s == null) {
+					if (si != null) {
+						ret.add(si);
+						si = null;
+						break;
+					}
+				}
 				
 				Matcher mCardInfo = getCardInfoPattern().matcher(s);
 				Matcher mNewSlotLine = getNewSlotLinePattern().matcher(s);
@@ -95,7 +106,6 @@ public class StolenStoveParser20140319 {
 					cardThemeName = null;
 					cardName = null;
 					sCardPrice = null;
-					
 				}
 				
 				if (isNewSlot) {
