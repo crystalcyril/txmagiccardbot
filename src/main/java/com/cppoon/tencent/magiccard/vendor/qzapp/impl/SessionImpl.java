@@ -790,15 +790,16 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 		
 		try {
 			
-			URIBuilder builder = new URIBuilder(targetSlot.getCancelSynthesisUrl());
-			
 			// ensure the 'enforce' parameter has a value of '1'. 
+			URIBuilder builder = new URIBuilder(targetSlot.getCancelSynthesisUrl());
 			builder.setParameter("enforce", "1");
-			
 			URI url = builder.build();
 			
 			// build a http request
 			HttpGet request = new HttpGet(url);
+			request.setHeader(HttpHeaders.REFERER, targetSlot.getCancelSynthesisUrl());
+			
+			// execute request
 			HttpResponse response = this.executeRequest(request);
 			
 			// handle the response.
