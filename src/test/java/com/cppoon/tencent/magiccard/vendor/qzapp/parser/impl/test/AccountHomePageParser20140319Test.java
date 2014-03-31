@@ -64,9 +64,9 @@ public class AccountHomePageParser20140319Test {
 		assertEquals("stove count", 3, acOverview.getStoveCount());
 		assertEquals("free stove count", 1, acOverview.getFreeStoveCount());
 		// check the slots
-		assertStoveInfo(acOverview.getStoves().get(0), "长痣绿蜓", "蜻蜓款款飞", -1, 40, 1, StoveStatus.SYNTHESIZED, 0);
-		assertStoveInfo(acOverview.getStoves().get(1), "鼎脈蜻蜓", "蜻蜓款款飞", -1, 40, 0, StoveStatus.SYNTHESIZED, 0);
-		assertStoveInfo(acOverview.getStoves().get(2), null, null, -1, 0, 2, StoveStatus.IDLE, 0);
+		assertStoveInfo(acOverview.getStoves().get(0), "长痣绿蜓", "蜻蜓款款飞", -1, 40, 1, StoveStatus.SYNTHESIZED, 0, false, null);
+		assertStoveInfo(acOverview.getStoves().get(1), "鼎脈蜻蜓", "蜻蜓款款飞", -1, 40, 0, StoveStatus.SYNTHESIZED, 0, false, null);
+		assertStoveInfo(acOverview.getStoves().get(2), null, null, -1, 0, 2, StoveStatus.IDLE, 0, false, null);
 				
 		
 		// stolen stove checking
@@ -100,11 +100,11 @@ public class AccountHomePageParser20140319Test {
 		assertEquals("stove count", 5, acOverview.getStoveCount());
 		assertEquals("free stove count", 0, acOverview.getFreeStoveCount());
 		// check the slots
-		assertStoveInfo(acOverview.getStoves().get(0), "洛天", "斩仙", 4862, 540, 2, StoveStatus.SYNTHESIZING, 8445);
-		assertStoveInfo(acOverview.getStoves().get(1), "云华女侠", "斩仙", 4861, 150, 0, StoveStatus.SYNTHESIZING, 6168);
-		assertStoveInfo(acOverview.getStoves().get(2), "鼎脈蜻蜓", "蜻蜓款款飞", 2371, 40, 4, StoveStatus.PEND_FOR_SYNTHESIS, 3600);
-		assertStoveInfo(acOverview.getStoves().get(3), "碧伟蜓", "蜻蜓款款飞", -1, 40, 3, StoveStatus.SYNTHESIZED, 0);
-		assertStoveInfo(acOverview.getStoves().get(4), "长痣绿蜓", "蜻蜓款款飞", 2370, 40, 1, StoveStatus.SYNTHESIZING, 2726);
+		assertStoveInfo(acOverview.getStoves().get(0), "洛天", "斩仙", 4862, 540, 2, StoveStatus.SYNTHESIZING, 8445, false, null);
+		assertStoveInfo(acOverview.getStoves().get(1), "云华女侠", "斩仙", 4861, 150, 0, StoveStatus.SYNTHESIZING, 6168, false, null);
+		assertStoveInfo(acOverview.getStoves().get(2), "鼎脈蜻蜓", "蜻蜓款款飞", 2371, 40, 4, StoveStatus.PEND_FOR_SYNTHESIS, 3600, true, "http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_clear_card?sid=ARFXcUXg6rZgLE3MOtyBcgmn&target_id=2371&slotid=4");
+		assertStoveInfo(acOverview.getStoves().get(3), "碧伟蜓", "蜻蜓款款飞", -1, 40, 3, StoveStatus.SYNTHESIZED, 0, false, null);
+		assertStoveInfo(acOverview.getStoves().get(4), "长痣绿蜓", "蜻蜓款款飞", 2370, 40, 1, StoveStatus.SYNTHESIZING, 2726, false, null);
 		
 		// stolen stove checking
 		assertEquals("free steal stove count", 0, acOverview.getStealStoveAvailableCount());
@@ -119,7 +119,10 @@ public class AccountHomePageParser20140319Test {
 			String expectedThemeName, int expectedCardId,
 			double expectedCardPrice, 
 			int expectedSlotId, StoveStatus expectedStoveStatus,
-			long expectedSynthesisRemainingTime) {
+			long expectedSynthesisRemainingTime,
+			boolean expectedIsCancellable,
+			String expectedCancelSynthesisLink
+			) {
 		
 		assertEquals("card name", expectedCardName, stove.getCardName());
 		assertEquals("card theme", expectedThemeName, stove.getCardThemeName());
@@ -128,6 +131,8 @@ public class AccountHomePageParser20140319Test {
 		assertEquals("stove slot id", expectedSlotId, stove.getSlotId());
 		assertEquals("stove status", expectedStoveStatus, stove.getStatus());
 		assertEquals("remaining synthesis time", expectedSynthesisRemainingTime, stove.getSynthesisRemainingTime());
+		assertEquals("cancellable", expectedIsCancellable, stove.isCancellable());
+		assertEquals("cancel synthesis url", expectedCancelSynthesisLink, stove.getCancelSynthesisUrl());
 		
 	}
 

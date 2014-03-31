@@ -245,7 +245,14 @@ public class StoveParser20140320 {
 			// skip empty links
 			if (StringUtils.isEmpty(href))
 				continue;
+			
+			// check what kind of link is it.
+			if (href.contains("wl_card_clear_card") || (link.text() != null && "取消".equals(link.text()))) {
+				ret.setCancelSynthesisUrl(href);
+			}
+			
 
+			// find card IDs and slot IDs
 			try {
 				List<NameValuePair> nvps = URLEncodedUtils.parse(new URI(href),
 						"UTF-8");

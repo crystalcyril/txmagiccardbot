@@ -16,7 +16,7 @@ public class StoveInfo {
 	private String cardThemeName;
 
 	private String cardName;
-	
+
 	private int cardId;
 
 	private double cardPrice;
@@ -26,7 +26,9 @@ public class StoveInfo {
 	private int slotId;
 
 	private long synthesisRemainingTime;
-	
+
+	private String cancelSynthesisUrl;
+
 	/**
 	 * @return the cardThemeName
 	 */
@@ -65,7 +67,8 @@ public class StoveInfo {
 	}
 
 	/**
-	 * @param cardId the cardId to set
+	 * @param cardId
+	 *            the cardId to set
 	 */
 	public void setCardId(int cardId) {
 		this.cardId = cardId;
@@ -128,10 +131,36 @@ public class StoveInfo {
 	/**
 	 * Sets the number of seconds required to complete the synthesis.
 	 * 
-	 * @param synthesisRemainingTime the synthesisRemainingTime to set
+	 * @param synthesisRemainingTime
+	 *            the synthesisRemainingTime to set
 	 */
 	public void setSynthesisRemainingTime(long synthesisRemainingTime) {
 		this.synthesisRemainingTime = synthesisRemainingTime;
+	}
+
+	/**
+	 * Check whether the card synthesis can be cancelled in this stove.
+	 * 
+	 * @return
+	 */
+	public boolean isCancellable() {
+		return getCancelSynthesisUrl() != null;
+	}
+
+	/**
+	 * The URL which can be used to cancel the card synthesis.
+	 * 
+	 * @return
+	 */
+	public String getCancelSynthesisUrl() {
+		return cancelSynthesisUrl;
+	}
+
+	/**
+	 * @param cancelSynthesisUrl the cancelSynthesisUrl to set
+	 */
+	public void setCancelSynthesisUrl(String cancelSynthesisUrl) {
+		this.cancelSynthesisUrl = cancelSynthesisUrl;
 	}
 	
 }
