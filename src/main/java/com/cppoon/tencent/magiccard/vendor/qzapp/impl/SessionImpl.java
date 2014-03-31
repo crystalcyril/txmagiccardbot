@@ -689,19 +689,21 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 			// handle response.
 			if (html.contains("炼卡炉满了")) {
 				return SynthesizeResult.STOVE_FULL;
+			} else if (html.contains("合成失败，可能是您的卡片被其他魔法师换走了，请查看后再试")) {
+				return SynthesizeResult.CARD_NOT_EXISTS;
 			}
 			
-			// XXX can check the stolen stoves.
+			// XXX can check the stoves.
 
-			log.trace("unknown steal stove response: {}", html);
+			log.trace("unknown card synthesis response: {}", html);
 			return SynthesizeResult.UNKNOWN_RESPONSE;
 
 		} catch (ClientProtocolException e) {
 			throw new TxMagicCardException(
-					"error reading steal stove result page", e);
+					"error reading stove synthesis result page", e);
 		} catch (IOException e) {
 			throw new TxMagicCardException(
-					"error reading steal stove result page", e);
+					"error reading stove synthesis result page", e);
 		}
 
 	}
