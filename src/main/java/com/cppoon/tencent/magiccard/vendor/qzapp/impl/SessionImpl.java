@@ -691,6 +691,8 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 				return SynthesizeResult.STOVE_FULL;
 			} else if (html.contains("合成失败，可能是您的卡片被其他魔法师换走了，请查看后再试")) {
 				return SynthesizeResult.CARD_NOT_EXISTS;
+			} else if (html.contains("放入成功")) {
+				return SynthesizeResult.OK;
 			}
 			
 			// XXX can check the stoves.

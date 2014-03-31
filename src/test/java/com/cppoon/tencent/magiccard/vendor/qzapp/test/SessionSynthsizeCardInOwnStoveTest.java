@@ -116,5 +116,30 @@ public class SessionSynthsizeCardInOwnStoveTest {
 		assertEquals("synthesize card result", SynthesizeResult.CARD_NOT_EXISTS, result);
 		
 	}
+	
+	
+	/**
+	 * 
+	 */
+	@Test
+	public void testSynthesizeCard_OK() {
+		
+		Account account = TestAccount.getAccount("live");
+		account = TestAccount.getDefaultAccount();
+		
+		String username = account.getUsername();
+		String password = account.getPassword();
+		
+		DefaultSessionFactory sm = new DefaultSessionFactory();
+		sm.setCardManager(cardManager);
+		Session session = sm.createSession(username, password);
+		
+		int targetCardId = 40;
+		
+		SynthesizeResult result = session.synthesizeCard(targetCardId);
+
+		assertEquals("synthesize card result", SynthesizeResult.OK, result);
+		
+	}
 
 }
