@@ -63,14 +63,17 @@ public class StoveParser20140320 {
 
 		try {
 
+			boolean isNewSlotEncountered = false;
+			boolean isCardInfoFound = false;
+			
 			// read line by line and do parsing.
 			while (true) {
 				
 				s = br.readLine();
 
 				// true if a new slot is detected.
-				boolean isNewSlotEncountered = false;
-				boolean isCardInfoFound = false;
+				isNewSlotEncountered = false;
+				isCardInfoFound = false;
 				boolean eof = (s == null);
 
 				// ------------------------------ //
@@ -89,6 +92,7 @@ public class StoveParser20140320 {
 					mSlotIdentifer = getSlotIdentifer().matcher(s);
 					
 					if (mCardInfo.find()) {
+						
 						// slot with card inside is found.
 						isNewSlotEncountered = true;
 	
@@ -126,12 +130,14 @@ public class StoveParser20140320 {
 				// if this line contains card information, we have to extract
 				// it.
 				if (isCardInfoFound) {
+					
 					if (!parseCardInfo(si, mCardInfo)) {
 						return null; // error occurred.
 					} else {
 						// we are done with this line.
 						continue;
 					}
+					
 				} else if (isNewSlotEncountered) {
 
 					// if new slot is encountered but does not contain card
@@ -145,7 +151,7 @@ public class StoveParser20140320 {
 					} else {
 						// there should not be unknown text.
 						log.warn(
-								"unknonw text encountered in new slot string '{}'",
+								"unknown text encountered in new slot string '{}'",
 								s);
 						return null;
 					}
@@ -163,6 +169,8 @@ public class StoveParser20140320 {
 					na = tryParseSlotID(ret, si, s);
 					if (na == NextAction.SKIP_LINE) continue;
 					if (na == NextAction.ERROR) return null;
+					
+					
 				}
 			}
 
@@ -230,27 +238,24 @@ public class StoveParser20140320 {
 						"UTF-8");
 
 				String sSlotId = null;
-				
+				String sTargetId = null;
+
+				// first, find out the slot id and target ID.
 				for (NameValuePair nvp : nvps) {
-					
-					if ("target_id".equals(nvp.getName())
-							|| "slotid".equals(nvp.getName())) {
-						if (sSlotId == null) {
-							sSlotId = nvp.getValue();
-						} else if ("slotid".equals(nvp.getName())) {
-							// parameter 'slotid' has higher precedence.
-							sSlotId = nvp.getValue();
-							break;
-						}
+					if ("slotid".equals(nvp.getName())) {
+						sSlotId = nvp.getValue();
+					} else if ("target_id".equals(nvp.getName()) || "targetid".equals(nvp.getName())) {
+						sTargetId = nvp.getValue();
 					}
 				}
 				
+				// here, if slot ID is present, then target ID MUST BE the 
+				// card ID.
 				if (sSlotId != null) {
-					// we found it!
+					// we found the slot ID
 					try {
 						int slotId = Integer.parseInt(sSlotId);
 						ret.setSlotId(slotId);
-						return NextAction.SKIP_LINE;
 					} catch (NumberFormatException e) {
 						log.warn(
 								"failed to parse slot ID from stove slot link "
@@ -258,6 +263,26 @@ public class StoveParser20140320 {
 						return NextAction.ERROR;
 					}
 				}
+				
+				if (sTargetId != null) {
+					try {
+						int targetId = Integer.parseInt(sTargetId);
+						
+						if (sSlotId != null) {
+							ret.setCardId(targetId);
+						} else {
+							ret.setSlotId(targetId);
+						}
+						
+					} catch (NumberFormatException e) {
+						log.warn(
+								"failed to parse slot/target ID from stove slot link "
+										+ href, e);
+						return NextAction.ERROR;
+					}
+				}
+				
+				return NextAction.SKIP_LINE;
 
 			} catch (URISyntaxException e) {
 				log.warn("error parsing links in stove slots (link: " + href
@@ -297,65 +322,6 @@ public class StoveParser20140320 {
 		
 	}
 
-	public List<StoveInfo> parse_old(String html) {
-
-		Matcher m = getStovePattern().matcher(html);
-
-		ArrayList<StoveInfo> ret = new ArrayList<StoveInfo>();
-
-		while (m.find()) {
-
-			log.trace("parsed stove section: [[{}]]", m.group());
-
-			StoveInfo si = new StoveInfo();
-
-			Matcher mCardInfo = getCardInfoPatternWithoutLeadingDigit()
-					.matcher(m.group(2));
-			if (mCardInfo.find()) {
-
-				// the card is being refined.
-
-				// extract text and save to stove information.
-				String cardThemeName = StringUtils.trim(mCardInfo.group(1));
-				String cardName = StringUtils.trim(mCardInfo.group(2));
-				String sCardPrice = StringUtils.trim(mCardInfo.group(3));
-
-				si.setCardThemeName(cardThemeName);
-				si.setCardName(cardName);
-				try {
-					si.setCardPrice(Double.parseDouble(sCardPrice));
-				} catch (NumberFormatException e) {
-					log.warn("error parsing card price for card " + cardName
-							+ ", theme " + cardThemeName, e);
-					return null;
-				}
-
-			}
-
-			// parse stove status.
-			if (!parseStoveStatus(si, m.group(0))) {
-				return null;
-			}
-
-			if (si.getStatus() == StoveStatus.SYNTHESIZING) {
-				if (!parseSynthesisRemainingTime(si, m.group(0))) {
-					return null;
-				}
-			}
-
-			// parse slot ID
-			if (!parseSlotId(ret, si, m.group(0))) {
-				return null;
-			}
-
-			// parse slot I
-			ret.add(si);
-
-		}
-
-		return ret;
-
-	}
 
 	protected boolean parseStoveStatus(StoveInfo ret, String html) {
 

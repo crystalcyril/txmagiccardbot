@@ -24,6 +24,11 @@ public enum StoveStatus {
 	/**
 	 * The stove has finished synthesizing something.
 	 */
-	SYNTHESIZED
+	SYNTHESIZED,
+
+	/**
+	 * Waiting for synthesis.
+	 */
+	PEND_FOR_SYNTHESIS
 
 }

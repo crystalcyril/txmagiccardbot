@@ -16,6 +16,8 @@ public class StoveInfo {
 	private String cardThemeName;
 
 	private String cardName;
+	
+	private int cardId;
 
 	private double cardPrice;
 
@@ -53,6 +55,20 @@ public class StoveInfo {
 	 */
 	public void setCardName(String cardName) {
 		this.cardName = cardName;
+	}
+
+	/**
+	 * @return the cardId
+	 */
+	public int getCardId() {
+		return cardId;
+	}
+
+	/**
+	 * @param cardId the cardId to set
+	 */
+	public void setCardId(int cardId) {
+		this.cardId = cardId;
 	}
 
 	/**

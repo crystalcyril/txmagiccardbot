@@ -204,4 +204,18 @@ public class AccountOverview {
 		this.stolenStoves = stolenStoves;
 	}
 
+	/**
+	 * @return the stoves
+	 */
+	public List<StoveInfo> getStoves() {
+		return stoves;
+	}
+
+	/**
+	 * @param stoves the stoves to set
+	 */
+	public void setStoves(List<StoveInfo> stoves) {
+		this.stoves = stoves;
+	}
+	
 }
