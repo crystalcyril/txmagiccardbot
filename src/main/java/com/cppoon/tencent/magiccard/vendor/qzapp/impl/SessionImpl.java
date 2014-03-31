@@ -590,11 +590,6 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 
 	}
 	
-	private boolean isCardExistsInManager(int targetCardId) {
-		Card card = cardManager.findCardById(targetCardId);
-		return card != null;
-	}
-	
 	private int lookupThemeIdForCardId(int targetCardId) {
 
 		if (cardManager == null) {
