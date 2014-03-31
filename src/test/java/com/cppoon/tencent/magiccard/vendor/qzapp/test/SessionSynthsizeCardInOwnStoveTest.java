@@ -5,14 +5,23 @@ package com.cppoon.tencent.magiccard.vendor.qzapp.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.InputStream;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.cppoon.tencent.magiccard.StealStoveResult;
+import com.cppoon.tencent.magiccard.CardInfoSynchronizer;
+import com.cppoon.tencent.magiccard.CardManager;
+import com.cppoon.tencent.magiccard.CardThemeManager;
+import com.cppoon.tencent.magiccard.api.impl.DesktopSiteJsCardInfoSynchronizer;
+import com.cppoon.tencent.magiccard.impl.SimpleCardManager;
+import com.cppoon.tencent.magiccard.impl.SimpleCardThemeManager;
 import com.cppoon.tencent.magiccard.vendor.qzapp.Session;
-import com.cppoon.tencent.magiccard.vendor.qzapp.SessionFactory;
+import com.cppoon.tencent.magiccard.vendor.qzapp.SynthesizeResult;
 import com.cppoon.tencent.magiccard.vendor.qzapp.impl.DefaultSessionFactory;
+import com.cppoon.tencent.magiccard.vendor.qzapp.test.TestAccount.Account;
+import com.google.common.io.Resources;
 
 /**
  * Session test on synthesizing card in owned stoves.
@@ -22,13 +31,32 @@ import com.cppoon.tencent.magiccard.vendor.qzapp.impl.DefaultSessionFactory;
  */
 public class SessionSynthsizeCardInOwnStoveTest {
 
+	CardThemeManager cardThemeManager;
 	
+	CardManager cardManager;
+	
+	CardInfoSynchronizer synchronizer;
 	
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
+		
+		cardThemeManager = new SimpleCardThemeManager();
+		cardManager = new SimpleCardManager();
+		
+		DesktopSiteJsCardInfoSynchronizer synchronizer = new DesktopSiteJsCardInfoSynchronizer();
+		synchronizer.setCardManager(cardManager);
+		synchronizer.setCardThemeManager(cardThemeManager);
+		this.synchronizer = synchronizer;
+		
+		// syn the card information.
+		InputStream is = Resources
+				.getResource("com/cppoon/tencent/magiccard/api/test/card_info_v3.js")
+				.openStream();
+		synchronizer.synchronize(is);
+		
 	}
 
 	/**
@@ -36,26 +64,34 @@ public class SessionSynthsizeCardInOwnStoveTest {
 	 */
 	@After
 	public void tearDown() throws Exception {
+		
+		cardThemeManager = null;
+		cardManager = null;
+		synchronizer = null;
+		
 	}
 
 	/**
 	 * 
 	 */
 	@Test
-	public void testStealStove_001_Fail_NonFriend() {
+	public void testSynthesizeCard_Failed_StoveFull() {
 		
-		String username = TestAccount.getUsername();
-		String password = TestAccount.getPassword();
+		Account account = TestAccount.getAccount("live");
 		
-		SessionFactory sm = new DefaultSessionFactory();
+		String username = account.getUsername();
+		String password = account.getPassword();
+		
+		DefaultSessionFactory sm = new DefaultSessionFactory();
+		sm.setCardManager(cardManager);
 		Session session = sm.createSession(username, password);
 		
-		int targetUin = 383664207;
 		int targetCardId = 40;
 		
-		StealStoveResult result = session.stealStove(targetUin, targetCardId);
+		SynthesizeResult result = session.synthesizeCard(targetCardId);
+
 		
-		assertEquals("steal result", StealStoveResult.NOT_FRIEND, result);
+		assertEquals("synthesize card result", SynthesizeResult.STOVE_FULL, result);
 		
 		
 	}

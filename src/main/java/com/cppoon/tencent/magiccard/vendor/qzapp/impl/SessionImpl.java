@@ -39,6 +39,7 @@ import com.cppoon.tencent.magiccard.http.client.HttpClientFactory;
 import com.cppoon.tencent.magiccard.vendor.qzapp.AccountOverview;
 import com.cppoon.tencent.magiccard.vendor.qzapp.Session;
 import com.cppoon.tencent.magiccard.vendor.qzapp.SessionAuthStatus;
+import com.cppoon.tencent.magiccard.vendor.qzapp.SynthesizeResult;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.AccountHomePageParser;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.CardBoxInfo;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.CardRefineParser;
@@ -588,7 +589,7 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 		return null;
 
 	}
-
+	
 	private int lookupThemeIdForCardId(int targetCardId) {
 
 		if (cardManager == null) {
@@ -628,7 +629,109 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 		}
 
 	}
+	
 
+	@Override
+	public SynthesizeResult synthesizeCard(int targetCardId) {
+		
+		//
+		// the mobile version of application will synthesize the card
+		// with a random stove.
+		//
+		
+		ensureAuthentication();
+
+		// look up the card theme ID of the target card ID.
+		int themeId = lookupThemeIdForCardId(targetCardId);
+
+		// FIXME cyril: handle the case if theme ID is not found.
+		if (themeId == -1) {
+			return SynthesizeResult.THEME_NOT_FOUND;
+		}
+
+		// build the URL
+		SynthesizeCardInfo cardsForSynthesizing = getCardsForSynthesizing(themeId, targetCardId);
+
+		if (cardsForSynthesizing == null) {
+			throw new TxMagicCardException(
+					"unable to find the card ID for synthesizing");
+		}
+
+		// send the HTTP request
+		return doSynthesizeCard(cardsForSynthesizing);
+		
+	}
+
+	protected SynthesizeResult doSynthesizeCard(
+			SynthesizeCardInfo cardsForSynthesizing) {
+		
+		// build request
+		HttpGet request = new HttpGet(cardsForSynthesizing.getSynthesizeUrl());
+		request.setHeader(HttpHeaders.REFERER, 
+				UrlUtil.buildViewSynthsizableCardsForOwnedStoves(getSid(), cardsForSynthesizing.getCardThemeId()));
+
+		try {
+
+			HttpResponse response = executeRequest(request);
+			String html = EntityUtils.toString(response.getEntity());
+
+			// handle response.
+			if (html.contains("炼卡炉满了")) {
+				return SynthesizeResult.STOVE_FULL;
+			}
+			
+			// XXX can check the stolen stoves.
+
+			log.trace("unknown steal stove response: {}", html);
+			return SynthesizeResult.UNKNOWN_RESPONSE;
+
+		} catch (ClientProtocolException e) {
+			throw new TxMagicCardException(
+					"error reading steal stove result page", e);
+		} catch (IOException e) {
+			throw new TxMagicCardException(
+					"error reading steal stove result page", e);
+		}
+
+	}
+
+	protected SynthesizeCardInfo getCardsForSynthesizing(int themeId,
+			int targetCardId) {
+		
+		ensureAuthentication();
+
+		String url = UrlUtil.buildViewSynthsizableCardsForOwnedStoves(
+				getSid(), themeId);
+
+		HttpGet request = new HttpGet(url);
+
+		// send it
+		try {
+
+			HttpResponse response = executeRequest(request);
+
+			List<SynthesizeCardInfo> cardsForSynthesizing = cardRefineParser
+					.parse(response.getEntity().getContent());
+
+			for (SynthesizeCardInfo info : cardsForSynthesizing) {
+				if (info.getCardId() == targetCardId) {
+					return info;
+				}
+			}
+
+			// not found.
+			return null;
+
+		} catch (ClientProtocolException e) {
+			log.warn("error when reading game main page", e);
+		} catch (IOException e) {
+			log.warn("error when reading game main page", e);
+		}
+
+		// not found.
+		return null;
+		
+	}
 
 	protected String getSid() {
 		return sid;

@@ -58,4 +58,12 @@ public interface Session {
 	 */
 	StealStoveResult stealStove(int targetUin, int targetCardId);
 
+	/**
+	 * Synthesize the card.
+	 * 
+	 * @param targetCardId the ID of the card to synthesize.
+	 * @return the result.
+	 */
+	SynthesizeResult synthesizeCard(int targetCardId);
+
 }

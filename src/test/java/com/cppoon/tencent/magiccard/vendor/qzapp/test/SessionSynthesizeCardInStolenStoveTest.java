@@ -3,7 +3,7 @@
  */
 package com.cppoon.tencent.magiccard.vendor.qzapp.test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.io.InputStream;
 
@@ -21,7 +21,6 @@ import com.cppoon.tencent.magiccard.api.impl.DesktopSiteJsCardInfoSynchronizer;
 import com.cppoon.tencent.magiccard.impl.SimpleCardManager;
 import com.cppoon.tencent.magiccard.impl.SimpleCardThemeManager;
 import com.cppoon.tencent.magiccard.vendor.qzapp.Session;
-import com.cppoon.tencent.magiccard.vendor.qzapp.SessionFactory;
 import com.cppoon.tencent.magiccard.vendor.qzapp.impl.DefaultSessionFactory;
 import com.google.common.io.Resources;
 
