@@ -103,7 +103,7 @@ public class AccountHomePageParser20140319Test {
 		assertStoveInfo(acOverview.getStoves().get(0), "洛天", "斩仙", 4862, 540, 2, StoveStatus.SYNTHESIZING, 8445);
 		assertStoveInfo(acOverview.getStoves().get(1), "云华女侠", "斩仙", 4861, 150, 0, StoveStatus.SYNTHESIZING, 6168);
 		assertStoveInfo(acOverview.getStoves().get(2), "鼎脈蜻蜓", "蜻蜓款款飞", 2371, 40, 4, StoveStatus.PEND_FOR_SYNTHESIS, 3600);
-		assertStoveInfo(acOverview.getStoves().get(3), "碧伟蜓", "蜻蜓款款飞", 0, 40, 3, StoveStatus.SYNTHESIZED, 0);
+		assertStoveInfo(acOverview.getStoves().get(3), "碧伟蜓", "蜻蜓款款飞", -1, 40, 3, StoveStatus.SYNTHESIZED, 0);
 		assertStoveInfo(acOverview.getStoves().get(4), "长痣绿蜓", "蜻蜓款款飞", 2370, 40, 1, StoveStatus.SYNTHESIZING, 2726);
 		
 		// stolen stove checking

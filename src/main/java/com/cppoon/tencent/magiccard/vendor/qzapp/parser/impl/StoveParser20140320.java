@@ -123,6 +123,7 @@ public class StoveParser20140320 {
 					// create a new stove and have a new start.
 					if (isNewSlotEncountered) {
 						si = new StoveInfo();
+						si.setCardId(-1);
 					}
 				}
 				

@@ -70,8 +70,8 @@ public class StolenStoveParser20140319 {
 					if (si != null) {
 						ret.add(si);
 						si = null;
-						break;
 					}
+					break;
 				}
 				
 				Matcher mCardInfo = getCardInfoPattern().matcher(s);
