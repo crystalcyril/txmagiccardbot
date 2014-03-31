@@ -15,25 +15,38 @@ import java.util.regex.Pattern;
 public abstract class ParseUtil {
 
 	/**
-	 * Extracts the time with format <strong>hh:mm:ss</strong> to number of
-	 * seconds.
+	 * 
 	 * 
 	 * @param m
 	 * @return
 	 */
 	public static final Long parseClockToSeconds(Matcher m) {
+		return parseClockToSeconds(m, 0);
+	}
+
+	/**
+	 * Extracts the time with format <strong>hh:mm:ss</strong> to number of
+	 * seconds.
+	 * 
+	 * @param m
+	 * @param matchGroupOffset
+	 *            the offset used when calling Matcher.group() to retrieve the 
+	 *            captured value. Default is 0.
+	 * @return
+	 */
+	public static final Long parseClockToSeconds(Matcher m, int matchGroupOffset) {
 
 		if (m == null)
 			throw new IllegalArgumentException("missing matcher");
 
-		if (m.groupCount() != 3)
+		if (m.groupCount() < 3)
 			throw new IllegalArgumentException(
-					"matcher should have exactly 3 groups");
+					"matcher should have at least 3 groups");
 
 		long ret = 0;
 		long multiplier = 3600;
 		for (int i = 1; i <= 3; i++) {
-			String s = m.group(i);
+			String s = m.group(matchGroupOffset + i);
 			try {
 				long value = Long.parseLong(s);
 				ret += value * multiplier;
@@ -65,7 +78,7 @@ public abstract class ParseUtil {
 	 * @return
 	 */
 	public static Pattern getStoveSynthesizingPattern() {
-		return Pattern.compile("合成中\\s*(\\d+):(\\d+):(\\d+)");
+		return Pattern.compile("(合成中|待合成)\\s*(\\d+):(\\d+):(\\d+)");
 	}
 
 	/**
@@ -90,8 +103,8 @@ public abstract class ParseUtil {
 	 * <li>Card Price</li>
 	 * </ol>
 	 * 
-	 * This pattern can be applied to the stoves page, exchange card box
-	 * and safe box pages. An example is as follow:
+	 * This pattern can be applied to the stoves page, exchange card box and
+	 * safe box pages. An example is as follow:
 	 * 
 	 * <pre>
 	 * 1. 斩仙-云玉仙[10]

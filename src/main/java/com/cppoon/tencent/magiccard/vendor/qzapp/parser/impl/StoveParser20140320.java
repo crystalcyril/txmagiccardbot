@@ -23,6 +23,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cppoon.tencent.magiccard.TxMagicCardException;
 import com.cppoon.tencent.magiccard.api.StoveStatus;
 import com.cppoon.tencent.magiccard.vendor.qzapp.parser.StoveInfo;
 
@@ -191,10 +192,21 @@ public class StoveParser20140320 {
 			
 			// try to parse it
 			
-			Long remainingTime = ParseUtil.parseClockToSeconds(m);
+			String sStoveStatus = StringUtils.trim(m.group(1));
+			StoveStatus status = null;
+			if ("待合成".equals(sStoveStatus)) {
+				status = StoveStatus.PEND_FOR_SYNTHESIS;
+			} else if ("合成中".equals(sStoveStatus)) {
+				status = StoveStatus.SYNTHESIZING;
+			} else {
+				throw new TxMagicCardException("Unknown stove status value '" + sStoveStatus + "'");
+			}
+			
+			Long remainingTime = ParseUtil.parseClockToSeconds(m, 1);
 			if (remainingTime == null) return NextAction.ERROR;
 			
-			ret.setStatus(StoveStatus.SYNTHESIZING);
+			// save the result.
+			ret.setStatus(status);
 			ret.setSynthesisRemainingTime(remainingTime);
 			
 			return NextAction.SKIP_LINE;
@@ -268,7 +280,9 @@ public class StoveParser20140320 {
 					try {
 						int targetId = Integer.parseInt(sTargetId);
 						
-						if (sSlotId != null) {
+						// if slot ID present, this will be card ID,
+						// otherwise, it is slot ID
+						if (sSlotId != null) {	// slot ID present
 							ret.setCardId(targetId);
 						} else {
 							ret.setSlotId(targetId);
