@@ -71,7 +71,7 @@ public class SessionOverviewTest {
 		
 		
 		assertEquals("player level", 4, acOverview.getPlayerLevel());
-		assertEquals("coin", 23750.00, acOverview.getCoins(), 0.00);
+		assertEquals("coin", 23800.00, acOverview.getCoins(), 0.00);
 		assertEquals("cards in deck", 11, acOverview.getCardsInDeck());
 		assertEquals("available slots in exchange card box", 0, acOverview.getCardsInCardExchangeBox());
 		assertEquals("total slots in exchange card box", 10, acOverview.getCardExchangeBoxSize());
