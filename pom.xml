@@ -75,6 +75,14 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>cpsuite</groupId>
+			<artifactId>cpsuite</artifactId>
+			<version>1.2.6</version>
+			<scope>test</scope>
+		</dependency>
+		
 	</dependencies>
 
 	<inceptionYear>2013</inceptionYear>

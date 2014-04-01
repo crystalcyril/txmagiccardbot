@@ -99,8 +99,11 @@ public class SessionSafeBoxTest {
 
 	}
 
+	/**
+	 * Just read the safe box without any checking.
+	 */
 	@Test
-	public void testGetSafeBox_OK_NotEmpty_MultiPage() {
+	public void testGetSafeBox_OK_NotEmpty_MultiPage_NoChecking() {
 
 		String username = TestAccount.getAccount("live").getUsername();
 		String password = TestAccount.getAccount("live").getPassword();
@@ -112,6 +115,8 @@ public class SessionSafeBoxTest {
 		// WHEN
 		//
 		List<ExchangeBoxSlot> cards = session.getSafeBoxSlots();
+		
+		assertNotNull("getSafeBoxSlots() return value should not be null", cards);
 
 		int i = 1;
 		for (ExchangeBoxSlot slot : cards) {

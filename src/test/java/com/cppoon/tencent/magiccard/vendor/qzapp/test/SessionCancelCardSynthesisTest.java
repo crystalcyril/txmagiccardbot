@@ -182,7 +182,7 @@ public class SessionCancelCardSynthesisTest {
 		result = session.synthesizeCard(targetCard2Id);
 		assertEquals("synthesis result", SynthesizeResult.OK, result);
 		
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 		
 		// get the overview.
 		log.info("getting overview for second time");

@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import com.cppoon.tencent.magiccard.api.ThemeComposeListParser;
 import com.cppoon.tencent.magiccard.api.impl.SimpleThemeComposeListParser;
+import com.cppoon.tencent.magiccard.test.data.TestDataCard;
 import com.cppoon.tencent.magiccard.util.IOUtil;
 import com.google.common.io.Resources;
 
@@ -49,7 +50,7 @@ public class ThemeComposerListParserTest {
 		//
 
 		// check number of parsed cards.
-		assertEquals("number of compose rules", 3053, listener.getCount());
+		assertEquals("number of compose rules", TestDataCard.getTotalComposeRulesInCardInfoJsV3(), listener.getCount());
 
 		// check the first record
 		ThemeComposerListParserTestUtil.assertThemeComposeRuleOfCardIdIsCorrect(listener.getByCardId(42), 42);

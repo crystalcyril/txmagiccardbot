@@ -70,8 +70,8 @@ public class SessionExchangeBoxTest {
 	@Test
 	public void testGetExchangeBoxSlots_OK_MultiPage() {
 
-		String username = TestAccount.getAccount("live").getUsername();
-		String password = TestAccount.getAccount("live").getPassword();
+		String username = TestAccount.getDefaultAccount().getUsername();
+		String password = TestAccount.getDefaultAccount().getPassword();
 
 		SessionFactory sm = new DefaultSessionFactory();
 		Session session = sm.createSession(username, password);

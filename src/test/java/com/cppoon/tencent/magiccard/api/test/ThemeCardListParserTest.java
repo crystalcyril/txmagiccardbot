@@ -17,6 +17,7 @@ import org.junit.Test;
 import com.cppoon.tencent.magiccard.api.CardThemeInfo;
 import com.cppoon.tencent.magiccard.api.ThemeCardListParser;
 import com.cppoon.tencent.magiccard.api.impl.SimpleThemeCardListParser;
+import com.cppoon.tencent.magiccard.test.data.TestDataCard;
 import com.cppoon.tencent.magiccard.util.IOUtil;
 import com.google.common.io.Resources;
 
@@ -151,7 +152,9 @@ public class ThemeCardListParserTest {
 		//
 
 		// check number of parsed cards.
-		assertEquals("number of parsed themes", 254, listener.getThemeCount());
+		assertEquals("number of parsed themes",
+				TestDataCard.getTotalThemesInCardInfoJsV3(),
+				listener.getThemeCount());
 
 		// check the first theme.
 		CardThemeInfo cardTheme = listener.getThemeById(40);

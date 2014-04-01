@@ -10,6 +10,7 @@ import java.io.InputStream;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import com.cppoon.tencent.magiccard.CardInfoSynchronizer;
 import com.cppoon.tencent.magiccard.CardManager;
@@ -17,6 +18,7 @@ import com.cppoon.tencent.magiccard.CardThemeManager;
 import com.cppoon.tencent.magiccard.api.impl.DesktopSiteJsCardInfoSynchronizer;
 import com.cppoon.tencent.magiccard.impl.SimpleCardManager;
 import com.cppoon.tencent.magiccard.impl.SimpleCardThemeManager;
+import com.cppoon.tencent.magiccard.test.ManualTests;
 import com.cppoon.tencent.magiccard.vendor.qzapp.Session;
 import com.cppoon.tencent.magiccard.vendor.qzapp.SynthesizeResult;
 import com.cppoon.tencent.magiccard.vendor.qzapp.impl.DefaultSessionFactory;
@@ -75,6 +77,7 @@ public class SessionSynthsizeCardInOwnStoveTest {
 	 * 
 	 */
 	@Test
+	@Category(ManualTests.class)
 	public void testSynthesizeCard_Failed_StoveFull() {
 		
 		Account account = TestAccount.getAccount("live");
@@ -122,6 +125,7 @@ public class SessionSynthsizeCardInOwnStoveTest {
 	 * 
 	 */
 	@Test
+	@Category(ManualTests.class)
 	public void testSynthesizeCard_OK() {
 		
 		Account account = TestAccount.getAccount("live");

@@ -15,6 +15,7 @@ import org.junit.Test;
 import com.cppoon.tencent.magiccard.api.CardInfo;
 import com.cppoon.tencent.magiccard.api.CardInfoParser;
 import com.cppoon.tencent.magiccard.api.impl.SimpleCardInfoParser;
+import com.cppoon.tencent.magiccard.test.data.TestDataCard;
 import com.cppoon.tencent.magiccard.util.IOUtil;
 import com.google.common.io.Resources;
 
@@ -51,7 +52,8 @@ public class CardInfoParserTest {
 		//
 
 		// check number of parsed cards.
-		assertEquals("number of parsed cards in file " + file, 4776, listener.getCardCount());
+		assertEquals("number of parsed cards in file " + file, 
+				TestDataCard.getTotalCardsInCardInfoJsV3(), listener.getCardCount());
 
 		// check the first card.
 		CardInfo cardInfo = listener.getCardById(29);
