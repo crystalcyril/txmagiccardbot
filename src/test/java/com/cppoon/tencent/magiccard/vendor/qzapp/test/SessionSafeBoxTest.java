@@ -66,7 +66,7 @@ public class SessionSafeBoxTest {
 		//
 		assertNotNull("safe box cards", cards);
 
-		assertEquals("safe box cards count", 3, cards.size());
+		assertEquals("safe box cards count", 16, cards.size());
 
 		// check each card
 		ExchangeBoxSlot card;
