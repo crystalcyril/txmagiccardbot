@@ -772,6 +772,9 @@ public class SessionImpl extends AbstractSessionImpl implements Session {
 			return CancelSynthesisResult.SLOT_NOT_FOUND;
 		}
 		
+		if (!targetSlot.isCancellable()) {
+			return CancelSynthesisResult.ALREADY_CANCELLED;
+		}
 		
 		// we need authentication.
 		ensureAuthentication();

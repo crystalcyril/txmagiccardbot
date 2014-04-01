@@ -81,13 +81,17 @@ public class SessionCancelCardSynthesisTest {
 	}
 	
 	
+	/**
+	 * Test card synthesis cancellation, which only a total of one stove is
+	 * being used.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testCancel_OK_OneStove() throws Exception {
 		
-		
 		Account account = TestAccount.getAccount("live");
 		account = TestAccount.getDefaultAccount();
-		
 		String username = account.getUsername();
 		String password = account.getPassword();
 		
@@ -104,6 +108,8 @@ public class SessionCancelCardSynthesisTest {
 		//
 		AccountOverview acOverview_1 = session.getAccountOverview();
 		int freeStoveCountBeforeSynthesis = acOverview_1.getFreeStoveCount();
+		
+		assertEquals("all stoves should be free", acOverview_1.getStoveCount(), acOverview_1.getFreeStoveCount());
 		
 		SynthesizeResult result = session.synthesizeCard(targetCardId);
 		assertEquals("synthesis result", SynthesizeResult.OK, result);
@@ -151,7 +157,7 @@ public class SessionCancelCardSynthesisTest {
 	}
 	
 	@Test
-	public void testCancel_OK_TwoStove2() throws Exception {
+	public void testCancel_OK_TwoStoves() throws Exception {
 		
 		Account account = TestAccount.getAccount("live");
 		account = TestAccount.getDefaultAccount();
@@ -254,6 +260,53 @@ public class SessionCancelCardSynthesisTest {
 		
 		session.cancelSynthesis(cardSlot1Id);
 		
+	}
+	
+	
+	/**
+	 * Test card synthesis cancellation, which only a total of one stove is
+	 * being used.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testCancel_Failed_NoStoveIsBeingUsed() throws Exception {
+		
+		Account account = TestAccount.getAccount("live");
+		account = TestAccount.getDefaultAccount();
+		String username = account.getUsername();
+		String password = account.getPassword();
+		
+		DefaultSessionFactory sm = new DefaultSessionFactory();
+		sm.setCardManager(cardManager);
+		Session session = sm.createSession(username, password);
+		
+		
+		//
+		// GIVEN
+		//
+		AccountOverview acOverview_1 = session.getAccountOverview();
+		
+		// pre-condition: play with a clean account.
+		assertEquals("all stoves should be free", acOverview_1.getStoveCount(), acOverview_1.getFreeStoveCount());
+		
+		
+		//
+		// WHEN
+		//
+		CancelSynthesisResult cancelResult = session.cancelSynthesis(0);
+		
+		//
+		// THEN
+		//
+
+		assertEquals("cancel synthesis result", CancelSynthesisResult.ALREADY_CANCELLED, cancelResult);
+
+		// get account overview.
+		AccountOverview acOverview_3 = session.getAccountOverview();
+		
+		assertEquals("all stoves should be free", acOverview_3.getStoveCount(), acOverview_3.getFreeStoveCount());
+
 	}
 	
 }
