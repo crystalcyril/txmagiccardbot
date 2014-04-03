@@ -24,6 +24,6 @@ public interface Game {
 
 	SafeBox getSafeBox();
 	
-	
+	Stoves getStoves();
 
 }

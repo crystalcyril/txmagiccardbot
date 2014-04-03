@@ -12,7 +12,7 @@ import com.cppoon.tencent.magiccard.api.StoveStatus;
  * @since 0.1.0
  */
 public interface Stove {
-
+	
 	/**
 	 * Cancel any card synthesis on this stove.
 	 */
