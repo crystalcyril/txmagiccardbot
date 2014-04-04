@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.cppoon.tencent.magiccard.Game;
 import com.cppoon.tencent.magiccard.GameMaster;
+import com.cppoon.tencent.magiccard.vendor.qzapp.SessionFactory;
 
 /**
  * Basic implementation of <strong>GameMaster</strong>.
@@ -18,6 +19,8 @@ import com.cppoon.tencent.magiccard.GameMaster;
 public class BasicGameMaster implements GameMaster {
 
 	List<GameImpl> games;
+	
+	SessionFactory sessionFactory;
 	
 	/**
 	 * 
@@ -35,10 +38,28 @@ public class BasicGameMaster implements GameMaster {
 		// TODO cyril 2014-04-04 do duplicate check.
 		
 		GameImpl impl = new GameImpl(username, password);
+		impl.setSessionFactory(sessionFactory);
 		
 		this.games.add(impl);
 		
 		return impl;
+		
 	}
+
+	/**
+	 * @return the sessionFactory
+	 */
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	/**
+	 * @param sessionFactory the sessionFactory to set
+	 */
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+	
+	
 
 }

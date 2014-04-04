@@ -3,11 +3,19 @@
  */
 package com.cppoon.tencent.magiccard.vendor.qzapp.parser.impl;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,6 +80,12 @@ public class AccountHomePageParser20140318 implements AccountHomePageParser {
 		
 		// parse player level and experience together as they are in the
 		// same line.
+		if (!parseUin(ret, html)) {
+			return null;
+		}
+		
+		// parse player level and experience together as they are in the
+		// same line.
 		if (!parsePlayerLevelAndExperience(ret, html)) {
 			return null;
 		}
@@ -102,6 +116,58 @@ public class AccountHomePageParser20140318 implements AccountHomePageParser {
 		}
 		
 		return ret;
+	}
+
+	/**
+	 * Parse for UIN.
+	 * <p>
+	 * 
+	 * This information can be found in a link named "应用".
+	 * 
+	 * @param ret
+	 * @param html
+	 * @return
+	 */
+	protected boolean parseUin(AccountOverview ret, String html) {
+		
+		Document doc = Jsoup.parse(html);
+		
+		Elements elements = doc.select("a");
+		for (Element e : elements) {
+			
+			String linkText = StringUtils.trim(e.text());
+			// we are interested with link of matching text.
+			if (!"应用".equals(linkText)) {
+				continue;
+			}
+			
+			String url = StringUtils.trim(e.attr("href"));
+			if (StringUtils.isEmpty(url)) continue;
+			
+			// found the link, but we need to extract the uin. the parameter
+			// is named "B_UID".
+			try {
+				List<NameValuePair> nvps = URLEncodedUtils.parse(new URI(url), "UTF-8");
+				for (NameValuePair nvp : nvps) {
+					if (!"B_UID".equals(nvp.getName())) continue;
+					
+					try {
+						long uin = Long.parseLong(nvp.getValue());
+						ret.setUin(uin);
+						return true;
+					} catch (NumberFormatException ex) {
+						log.warn("error parsing value " + nvp.getValue() + " for uin from URL " + url + ". information maybe missed", ex);
+					}
+				}
+				
+			} catch (URISyntaxException ex) {
+				log.warn("error parsing url " + url + " for uin. information maybe missed", ex);
+			}
+			
+		}
+		
+		// not found.
+		return false;
 	}
 
 	/**

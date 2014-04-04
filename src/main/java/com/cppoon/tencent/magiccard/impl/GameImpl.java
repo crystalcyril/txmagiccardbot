@@ -8,6 +8,8 @@ import com.cppoon.tencent.magiccard.Game;
 import com.cppoon.tencent.magiccard.PlayerProfile;
 import com.cppoon.tencent.magiccard.SafeBox;
 import com.cppoon.tencent.magiccard.Stoves;
+import com.cppoon.tencent.magiccard.vendor.qzapp.Session;
+import com.cppoon.tencent.magiccard.vendor.qzapp.SessionFactory;
 
 /**
  * 
@@ -17,11 +19,24 @@ import com.cppoon.tencent.magiccard.Stoves;
  */
 public class GameImpl implements Game {
 	
+	protected String username;
+	
+	protected String password;
+	
+	PlayerProfileImpl playerProfile;
+	
+	SessionFactory sessionFactory;
+	
+	Session session;
+	
 	/**
 	 * 
 	 */
 	public GameImpl(String username, String password) {
 		super();
+		
+		this.username = username;
+		this.password = password;
 	}
 
 	/* (non-Javadoc)
@@ -29,8 +44,13 @@ public class GameImpl implements Game {
 	 */
 	@Override
 	public PlayerProfile getPlayerProfile() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		// XXX make this thread-safe
+		if (playerProfile == null) {
+			playerProfile = new PlayerProfileImpl(this);
+		}
+		
+		return playerProfile;
 	}
 
 	/* (non-Javadoc)
@@ -65,7 +85,14 @@ public class GameImpl implements Game {
 	 */
 	@Override
 	public void start() {
+		
+		Session session = sessionFactory.createSession(username, password);
+		this.session = session;
 
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 
 }

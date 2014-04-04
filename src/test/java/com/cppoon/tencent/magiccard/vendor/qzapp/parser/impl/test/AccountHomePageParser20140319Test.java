@@ -52,8 +52,8 @@ public class AccountHomePageParser20140319Test {
 		// Assertion
 		//
 		assertNotNull("parsed page should not be null", acOverview);
-		
-		
+
+		assertEquals("uin", 2904233460L, acOverview.getUin());
 		assertEquals("player level", 1, acOverview.getPlayerLevel());
 		assertEquals("coin", 13500, acOverview.getCoins(), 0);
 		assertEquals("cards in deck", 16, acOverview.getCardsInDeck());
@@ -89,7 +89,7 @@ public class AccountHomePageParser20140319Test {
 		//
 		assertNotNull("parsed page should not be null", acOverview);
 		
-		
+		assertEquals("uin", 1152915332L, acOverview.getUin());
 		assertEquals("player level", 65, acOverview.getPlayerLevel());
 		assertEquals("coin", 781616, acOverview.getCoins(), 0);
 		assertEquals("cards in deck", 8, acOverview.getCardsInDeck());
@@ -128,6 +128,7 @@ public class AccountHomePageParser20140319Test {
 		assertNotNull("parsed page should not be null", acOverview);
 		
 		
+		assertEquals("uin", 2904233460L, acOverview.getUin());
 		assertEquals("player level", 4, acOverview.getPlayerLevel());
 		assertEquals("coin", 23390, acOverview.getCoins(), 0);
 		assertEquals("cards in deck", 12, acOverview.getCardsInDeck());
@@ -164,6 +165,7 @@ public class AccountHomePageParser20140319Test {
 		assertNotNull("parsed page should not be null", acOverview);
 		
 		
+		assertEquals("uin", 2904233460L, acOverview.getUin());
 		assertEquals("player level", 4, acOverview.getPlayerLevel());
 		assertEquals("coin", 23330, acOverview.getCoins(), 0);
 		assertEquals("cards in deck", 12, acOverview.getCardsInDeck());

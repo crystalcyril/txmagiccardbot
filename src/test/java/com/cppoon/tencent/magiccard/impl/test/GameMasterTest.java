@@ -23,6 +23,8 @@ import com.cppoon.tencent.magiccard.GameMaster;
 import com.cppoon.tencent.magiccard.PlayerProfile;
 import com.cppoon.tencent.magiccard.impl.BasicGameMaster;
 import com.cppoon.tencent.magiccard.test.ManualTests;
+import com.cppoon.tencent.magiccard.vendor.qzapp.SessionFactory;
+import com.cppoon.tencent.magiccard.vendor.qzapp.impl.DefaultSessionFactory;
 import com.cppoon.tencent.magiccard.vendor.qzapp.test.TestAccount;
 import com.cppoon.tencent.magiccard.vendor.qzapp.test.TestAccount.Account;
 
@@ -42,6 +44,8 @@ public class GameMasterTest {
 	Game game;
 	
 	Account ac;
+	
+	SessionFactory sessionFactory = new DefaultSessionFactory();
 
 	/**
 	 * @throws java.lang.Exception
@@ -49,9 +53,13 @@ public class GameMasterTest {
 	@Before
 	public void setUp() throws Exception {
 		
+		sessionFactory = new DefaultSessionFactory();
+		
 		ac = TestAccount.getDefaultAccount();
 		
-		gm = new BasicGameMaster();
+		BasicGameMaster gm = new BasicGameMaster();
+		gm.setSessionFactory(sessionFactory);
+		this.gm = gm;
 		
 		game = gm.createGame(ac.getUsername(), ac.getPassword());
 		game.start();
@@ -79,6 +87,14 @@ public class GameMasterTest {
 		
 		// get overview
 		PlayerProfile profile = game.getPlayerProfile();
+		
+		if (profile != null) {
+			log.info("player profile:");
+			log.info("- nickname: {}", profile.getNickName());
+			log.info("- level   : {}", profile.getLevel());
+			log.info("- uin     : {}", profile.getUin());
+			log.info("- coins   : {}", profile.getCoins());
+		}
 		
 		// do some basic assertion
 		assertNotNull("player profile", profile);

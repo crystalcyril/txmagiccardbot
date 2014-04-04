@@ -31,6 +31,8 @@ public class AccountOverview {
 	
 	private int cardExchangeBoxSize;
 	
+	private long uin;
+	
 	List<StoveInfo> stoves;
 	
 	List<StolenStove> stolenStoves;
@@ -216,6 +218,20 @@ public class AccountOverview {
 	 */
 	public void setStoves(List<StoveInfo> stoves) {
 		this.stoves = stoves;
+	}
+
+	/**
+	 * @return the uin
+	 */
+	public long getUin() {
+		return uin;
+	}
+
+	/**
+	 * @param uin the uin to set
+	 */
+	public void setUin(long uin) {
+		this.uin = uin;
 	}
 	
 }
