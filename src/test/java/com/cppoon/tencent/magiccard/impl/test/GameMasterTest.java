@@ -153,7 +153,7 @@ public class GameMasterTest {
 	 */
 	@Test
 	@Category(ManualTests.class)
-	public void test_ExchangeBox_() {
+	public void test_ExchangeBox_OK() {
 		
 		// sizing check - the current number of slots (used and unused).
 		assertTrue("exchange box size should be >= 10", game.getExchangeBox().getSize() >= 10);
