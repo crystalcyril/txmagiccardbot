@@ -3,6 +3,10 @@
  */
 package com.cppoon.tencent.magiccard;
 
+import java.util.List;
+
+import com.cppoon.tencent.magiccard.ExchangeBox.Slot;
+
 /**
  * 
  * 
@@ -48,5 +52,28 @@ public interface ExchangeBox {
 		void sell();
 
 	}
+
+	/**
+	 * Returns the total number of slots in this box. This includes both used
+	 * and unused slots.
+	 * 
+	 * @return the total number of slots in this box.
+	 */
+	int getSize();
+
+	/**
+	 * Returns the number of occupied slots in this box.
+	 * 
+	 * @return the number of occupied slots in this box.
+	 */
+	int getUsedCount();
+
+	/**
+	 * Obtains a list of slots of this box. The list is <strong>not</strong>
+	 * backed by the box.
+	 * 
+	 * @return
+	 */
+	List<Slot> getSlots();
 
 }

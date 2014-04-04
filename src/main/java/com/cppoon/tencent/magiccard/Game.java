@@ -20,10 +20,30 @@ public interface Game {
 
 	// Market getMarket();
 
+	/**
+	 * Returns the exchange box of this game.
+	 * 
+	 * @return
+	 */
 	ExchangeBox getExchangeBox();
 
+	/**
+	 * Returns the safe box of this game.
+	 * 
+	 * @return
+	 */
 	SafeBox getSafeBox();
-	
+
+	/**
+	 * Returns all stoves of this game.
+	 * 
+	 * @return
+	 */
 	Stoves getStoves();
+
+	/**
+	 * Start the engine.
+	 */
+	void start();
 
 }
