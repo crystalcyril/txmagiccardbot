@@ -5,8 +5,6 @@ package com.cppoon.tencent.magiccard;
 
 import java.util.List;
 
-import com.cppoon.tencent.magiccard.ExchangeBox.Slot;
-
 /**
  * 
  * 

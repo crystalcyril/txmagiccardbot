@@ -23,11 +23,13 @@ public class GameImpl implements Game {
 	
 	protected String password;
 	
-	PlayerProfileImpl playerProfile;
-	
 	SessionFactory sessionFactory;
 	
 	Session session;
+	
+	PlayerProfileImpl playerProfile;
+	
+	ExchangeBoxImpl exchangeBox;
 	
 	/**
 	 * 
@@ -58,8 +60,14 @@ public class GameImpl implements Game {
 	 */
 	@Override
 	public ExchangeBox getExchangeBox() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		// XXX make this thread-safe
+		if (exchangeBox == null) {
+			exchangeBox = new ExchangeBoxImpl(this);
+		}
+		
+		return exchangeBox;
+		
 	}
 
 	/* (non-Javadoc)
