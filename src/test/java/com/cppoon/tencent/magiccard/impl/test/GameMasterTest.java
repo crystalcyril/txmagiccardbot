@@ -102,7 +102,7 @@ public class GameMasterTest {
 		assertTrue("coins should have less than 100000, current: " + profile.getCoins(), profile.getCoins() < 100000.00);
 		assertTrue("player level should be at least 4, current: " + profile.getLevel(), profile.getLevel() > 4);
 		assertTrue("player level should be less than 30, current: " + profile.getLevel(), profile.getLevel() < 30);
-		assertEquals("UIN", ac.getUsername(), profile.getUin());
+		assertEquals("UIN", Long.parseLong(ac.getUsername()), profile.getUin());
 		
 	}
 	

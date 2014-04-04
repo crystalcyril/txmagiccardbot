@@ -87,7 +87,7 @@ public class PlayerProfileImpl implements PlayerProfile {
 		if (ov != null) {
 			this.coins = ov.getCoins();
 			this.level = ov.getPlayerLevel();
-			
+			this.uin = ov.getUin();
 			this.lastUpdated = new Date();
 		}
 
