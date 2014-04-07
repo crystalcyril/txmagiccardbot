@@ -6,6 +6,7 @@ package com.cppoon.tencent.magiccard.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cppoon.tencent.magiccard.CardManager;
 import com.cppoon.tencent.magiccard.Game;
 import com.cppoon.tencent.magiccard.GameMaster;
 import com.cppoon.tencent.magiccard.vendor.qzapp.SessionFactory;
@@ -21,6 +22,8 @@ public class BasicGameMaster implements GameMaster {
 	List<GameImpl> games;
 	
 	SessionFactory sessionFactory;
+	
+	CardManager cardManager;
 	
 	/**
 	 * 
@@ -39,6 +42,7 @@ public class BasicGameMaster implements GameMaster {
 		
 		GameImpl impl = new GameImpl(username, password);
 		impl.setSessionFactory(sessionFactory);
+		impl.setCardManager(cardManager);
 		
 		this.games.add(impl);
 		
@@ -59,7 +63,12 @@ public class BasicGameMaster implements GameMaster {
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-	
-	
 
+	/**
+	 * @param cardManager the cardManager to set
+	 */
+	public void setCardManager(CardManager cardManager) {
+		this.cardManager = cardManager;
+	}
+	
 }

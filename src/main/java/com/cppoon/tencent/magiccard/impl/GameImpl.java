@@ -3,6 +3,7 @@
  */
 package com.cppoon.tencent.magiccard.impl;
 
+import com.cppoon.tencent.magiccard.CardManager;
 import com.cppoon.tencent.magiccard.ExchangeBox;
 import com.cppoon.tencent.magiccard.Game;
 import com.cppoon.tencent.magiccard.PlayerProfile;
@@ -26,6 +27,8 @@ public class GameImpl implements Game {
 	SessionFactory sessionFactory;
 	
 	Session session;
+	
+	CardManager cardManager;
 	
 	PlayerProfileImpl playerProfile;
 	
@@ -63,7 +66,9 @@ public class GameImpl implements Game {
 		
 		// XXX make this thread-safe
 		if (exchangeBox == null) {
-			exchangeBox = new ExchangeBoxImpl(this);
+			ExchangeBoxImpl exchangeBox = new ExchangeBoxImpl(this);
+			exchangeBox.setCardManager(cardManager);
+			this.exchangeBox = exchangeBox;
 		}
 		
 		return exchangeBox;
@@ -103,4 +108,11 @@ public class GameImpl implements Game {
 		this.sessionFactory = sessionFactory;
 	}
 
+	/**
+	 * @param cardManager the cardManager to set
+	 */
+	public void setCardManager(CardManager cardManager) {
+		this.cardManager = cardManager;
+	}
+	
 }
