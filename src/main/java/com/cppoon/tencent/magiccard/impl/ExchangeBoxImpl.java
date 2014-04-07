@@ -31,11 +31,17 @@ public class ExchangeBoxImpl implements ExchangeBox {
 		
 		private Card card;
 		
+		ExchangeBoxImpl parent;
+		
 		/**
 		 * 
 		 */
-		public BoxImpl(int id) {
+		public BoxImpl(ExchangeBoxImpl parent, int id) {
 			super();
+			
+			if (parent == null) {
+				throw new IllegalArgumentException("ExchangeBoxImpl should not be null");
+			}
 			
 			this.id = id;
 		}
@@ -45,6 +51,7 @@ public class ExchangeBoxImpl implements ExchangeBox {
 		 */
 		@Override
 		public int getId() {
+			refresh();
 			return id;
 		}
 
@@ -53,6 +60,7 @@ public class ExchangeBoxImpl implements ExchangeBox {
 		 */
 		@Override
 		public Card getCard() {
+			refresh();
 			return card;
 		}
 
@@ -74,6 +82,10 @@ public class ExchangeBoxImpl implements ExchangeBox {
 
 		public void setCard(Card card) {
 			this.card = card;
+		}
+		
+		protected void refresh() {
+			parent.refresh();
 		}
 		
 	}
@@ -202,7 +214,7 @@ public class ExchangeBoxImpl implements ExchangeBox {
 				
 				// this is a new slot
 				
-				BoxImpl box = new BoxImpl(xchgBox.getSlotId());
+				BoxImpl box = new BoxImpl(this, xchgBox.getSlotId());
 				
 				// update internal state
 				if (xchgBox.getCardId() != 0) {
